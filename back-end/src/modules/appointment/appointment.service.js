@@ -1,0 +1,136 @@
+import {
+	getAppointmentModel
+} from './appointment.model.js';
+import {
+	getServiceModel
+} from '../service/service.model.js';
+
+export class AppointmentService {
+	constructor() {
+		this.appointmentModel = getAppointmentModel();
+		this.serviceModel = getServiceModel();
+	}
+
+	async getAllAppointments(filters = {}) {
+		return await this.appointmentModel.find(filters);
+	}
+
+	async getAppointmentById(id) {
+		return await this.appointmentModel.findById(id);
+	}
+
+	async createAppointment(appointmentData) {
+		const {
+			appointment_date,
+			appointment_time,
+			service_id
+		} = appointmentData;
+
+		// 获取服务信息
+		const service = await this.serviceModel.findById(service_id);
+		if (!service) {
+			throw new Error('服务不存在');
+		}
+
+		// 计算结束时间并检查冲突
+		const duration = service.duration;
+		const [hours, minutes] = appointment_time.split(':').map(Number);
+		const totalMinutes = hours * 60 + minutes + duration;
+		const endHours = Math.floor(totalMinutes / 60);
+		const endMinutes = totalMinutes % 60;
+		const end_time = `${endHours.toString().padStart(2, '0')}:${endMinutes.toString().padStart(2, '0')}`;
+
+		const hasConflict = await this.appointmentModel.checkTimeConflict(
+			appointment_date,
+			appointment_time,
+			end_time
+		);
+
+		if (hasConflict) {
+			throw new Error('该时段已被预约，请选择其他时间');
+		}
+
+		return await this.appointmentModel.create({
+			...appointmentData,
+			end_time
+		});
+	}
+
+	async updateAppointmentStatus(id, status) {
+		const validStatuses = ['pending', 'confirmed', 'completed', 'cancelled'];
+		if (!validStatuses.includes(status)) {
+			throw new Error('无效的状态值');
+		}
+
+		return await this.appointmentModel.update(id, {
+			status
+		});
+	}
+
+	async getAvailableSlots(date, serviceId) {
+		const service = await this.serviceModel.findById(serviceId);
+		if (!service) {
+			throw new Error('服务不存在');
+		}
+
+		const appointments = await this.appointmentModel.find({
+			appointment_date: date,
+			status: {
+				$ne: 'cancelled'
+			}
+		});
+
+		const slots = this.generateTimeSlots(date, service.duration, appointments);
+
+		// 为每个时间段计算可用空位
+		return slots.map(slot => ({
+			...slot,
+			available_slots: this.calculateAvailableSlots(slot, appointments, service)
+		}));
+	}
+
+	calculateAvailableSlots(slot, appointments, service) {
+		// 模拟计算可用空位
+		// 实际业务中可以根据员工数量、服务能力等计算
+		const baseCapacity = 5; // 基础容量
+		const conflictingAppointments = appointments.filter(apt => {
+			return !(apt.end_time <= slot.start_time || apt.appointment_time >= slot.end_time);
+		});
+
+		return Math.max(0, baseCapacity - conflictingAppointments.length);
+	}
+
+
+	generateTimeSlots(date, duration, appointments) {
+		const slots = [];
+		const startHour = 9;
+		const endHour = 18;
+		const interval = 30;
+
+		for (let hour = startHour; hour < endHour; hour++) {
+			for (let minute = 0; minute < 60; minute += interval) {
+				const startTime = `${hour.toString().padStart(2, '0')}:${minute.toString().padStart(2, '0')}`;
+
+				const totalMinutes = hour * 60 + minute + duration;
+				const endHourValue = Math.floor(totalMinutes / 60);
+				const endMinuteValue = totalMinutes % 60;
+				const endTime = `${endHourValue.toString().padStart(2, '0')}:${endMinuteValue.toString().padStart(2, '0')}`;
+
+				if (endHourValue <= endHour) {
+					const hasConflict = appointments.some(apt => {
+						return !(apt.end_time <= startTime || apt.appointment_time >= endTime);
+					});
+
+					if (!hasConflict) {
+						slots.push({
+							start_time: startTime,
+							end_time: endTime
+						});
+					}
+				}
+			}
+		}
+
+		return slots;
+	}
+}

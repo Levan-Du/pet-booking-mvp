@@ -1,0 +1,771 @@
+<template>
+	<view class="container">
+		<view class="header">
+			<text class="title">宠物服务预约</text>
+		</view>
+
+		<!-- 服务选择 -->
+		<view class="card">
+			<text class="card-title">选择服务</text>
+			<view class="service-row">
+				<view v-for="service in services" :key="service._id || service.id"
+					:class="['service-card', selectedService?._id === service._id ? 'active' : '']"
+					@click="selectService(service)">
+					<text class="service-name">{{ service.name }}</text>
+				</view>
+			</view>
+
+			<!-- 选中服务信息 -->
+			<view v-if="selectedService" class="service-detail">
+				<view class="detail-header">
+					<text class="detail-name">{{ selectedService.name }}</text>
+					<text class="detail-price">¥{{ selectedService.price }}</text>
+				</view>
+				<view class="detail-info">
+					<text class="detail-duration">时长: {{ selectedService.duration }}分钟</text>
+					<text class="detail-desc">{{ selectedService.description }}</text>
+				</view>
+			</view>
+		</view>
+
+		<!-- 日期选择 -->
+		<view class="card">
+			<text class="card-title">选择日期</text>
+			<view class="date-scroll">
+				<view class="date-row">
+					<view v-for="date in dateList" :key="date.date"
+						:class="['date-card', selectedDate === date.date ? 'active' : '']" @click="selectDate(date.date)">
+						<text class="date-week">{{ date.week }}</text>
+						<text class="date-date">{{ date.month }}月{{ date.day }}日</text>
+					</view>
+				</view>
+			</view>
+		</view>
+
+		<!-- 时间选择 -->
+		<view class="card" v-if="timeSlots.length > 0">
+			<text class="card-title">选择时间</text>
+			<view class="time-section" v-for="(period, periodIndex) in timePeriods" :key="periodIndex">
+				<text class="period-title">{{ period.title }}</text>
+				<view class="time-grid">
+					<view v-for="slot in getTimeSlotsByPeriod(period.type)" :key="slot.start_time"
+						:class="['time-card', selectedTime?.start_time === slot.start_time ? 'active' : '']"
+						@click="selectTime(slot)">
+						<text class="time-range">{{ slot.start_time }} - {{ slot.end_time }}</text>
+						<text class="slots-available">{{ slot.available_slots }}个空位</text>
+					</view>
+				</view>
+			</view>
+		</view>
+
+		<!-- 宠物信息表单 -->
+		<view class="card">
+			<text class="card-title">填写信息</text>
+			<view class="form">
+				<view class="form-group">
+					<text class="label">客户姓名</text>
+					<input v-model="formData.customer_name" placeholder="请输入您的姓名" class="input" />
+				</view>
+
+				<view class="form-group">
+					<text class="label">手机号码</text>
+					<input v-model="formData.customer_phone" placeholder="请输入您的手机号" type="digit" maxlength="11" class="input" />
+				</view>
+
+				<view class="form-group">
+					<text class="label">宠物类型</text>
+					<view class="pet-type-grid">
+						<view v-for="type in petTypes" :key="type.value"
+							:class="['pet-type-card', formData.pet_type === type.value ? 'active' : '']" :style="type.style"
+							@click="formData.pet_type = type.value">
+							<image :src="type.icon" class="pet-icon" mode="aspectFit"></image>
+							<text class="pet-type-name">{{ type.label }}</text>
+						</view>
+					</view>
+				</view>
+
+				<view class="form-group">
+					<text class="label">宠物品种</text>
+					<input v-model="formData.pet_breed" placeholder="例如：金毛、布偶猫等" class="input" />
+				</view>
+
+				<view class="form-group">
+					<text class="label">宠物体型</text>
+					<view class="size-grid">
+						<button v-for="size in sizeOptions" :key="size.value"
+							:class="['size-card', formData.pet_size === size.value ? 'active' : '']"
+							@click="formData.pet_size = size.value">
+							<text class="size-label">{{ size.label }}</text>
+						</button>
+					</view>
+				</view>
+
+				<view class="form-group">
+					<text class="label">特殊要求</text>
+					<textarea v-model="formData.special_notes" placeholder="请告知宠物的特殊情况，如攻击性、健康问题等" class="textarea" />
+				</view>
+			</view>
+		</view>
+
+		<!-- 提交按钮 -->
+		<view class="footer">
+			<button @click="submitBooking" :disabled="!isFormValid" class="submit-btn">
+				{{ loading ? '提交中...' : '立即预约' }}
+			</button>
+		</view>
+
+		<!-- 加载状态 -->
+		<view v-if="loading" class="loading-mask">
+			<view class="loading-content">
+				<text>加载中...</text>
+			</view>
+		</view>
+	</view>
+</template>
+
+<script setup>
+	import { ref, computed, onMounted } from 'vue'
+
+	// 响应式数据
+	const services = ref([])
+	const selectedService = ref(null)
+	const selectedDate = ref('')
+	const timeSlots = ref([])
+	const selectedTime = ref(null)
+	const loading = ref(false)
+
+	const formData = ref({
+		customer_name: '',
+		customer_phone: '',
+		pet_type: 'dog',
+		pet_breed: '',
+		pet_size: '',
+		special_notes: ''
+	})
+
+	// 常量定义
+	const petTypes = ref([
+		{
+			value: 'dog',
+			label: '狗狗',
+			icon: '/static/icons/dog.png', // 需要准备对应图片
+			style: { backgroundImage: 'url(/static/images/dog.png)', backgroundRepeat: 'no-repeat', backgroundSize: 'cover', backgroundPosition: 'center' }
+		},
+		{
+			value: 'cat',
+			label: '猫咪',
+			icon: '/static/icons/cat.png', // 需要准备对应图片
+			style: { backgroundImage: 'url(/static/images/cat.png)', backgroundRepeat: 'no-repeat', backgroundSize: 'cover', backgroundPosition: 'center' }
+		},
+		{
+			value: 'other',
+			label: '其他',
+			icon: '/static/icons/other.png', // 需要准备对应图片
+			style: { backgroundColor: '#ddd' }
+		}
+	])
+
+	const sizeOptions = ref([
+		{ value: 'small', label: '小型' },
+		{ value: 'medium', label: '中型' },
+		{ value: 'large', label: '大型' }
+	])
+
+	const timePeriods = ref([
+		{ type: 'morning', title: '上午', start: 8, end: 12 },
+		{ type: 'afternoon', title: '下午', start: 12, end: 18 },
+		{ type: 'evening', title: '晚上', start: 18, end: 22 }
+	])
+
+	// 计算属性
+	const isFormValid = computed(() => {
+		return (
+			selectedService.value &&
+			selectedDate.value &&
+			selectedTime.value &&
+			formData.value.customer_name.trim() &&
+			formData.value.customer_phone.trim() &&
+			formData.value.pet_size
+		)
+	})
+
+	const dateList = computed(() => {
+		const dates = []
+		const today = new Date()
+		const weekDays = ['日', '一', '二', '三', '四', '五', '六']
+
+		for (let i = 0; i < 14; i++) {
+			const date = new Date(today)
+			date.setDate(today.getDate() + i)
+
+			const month = date.getMonth() + 1
+			const day = date.getDate()
+			const weekDay = date.getDay()
+
+			let weekText = ''
+			if (i === 0) {
+				weekText = '今天'
+			} else if (i === 1) {
+				weekText = '明天'
+			} else {
+				weekText = `周${weekDays[weekDay]}`
+			}
+
+			dates.push({
+				date: `${date.getFullYear()}-${month.toString().padStart(2, '0')}-${day.toString().padStart(2, '0')}`,
+				month: month,
+				day: day,
+				week: weekText
+			})
+		}
+
+		return dates
+	})
+
+	// 方法
+	const loadServices = async () => {
+		loading.value = true
+		try {
+			const response = await uni.request({
+				url: 'http://localhost:3000/api/services',
+				method: 'GET'
+			})
+
+			if (response.data.success) {
+				services.value = response.data.data
+			}
+		} catch (error) {
+			console.error('加载服务失败:', error)
+			uni.showToast({
+				title: '加载服务失败',
+				icon: 'error'
+			})
+		} finally {
+			loading.value = false
+		}
+	}
+
+	const selectService = (service) => {
+		selectedService.value = service
+		selectedDate.value = ''
+		selectedTime.value = null
+		timeSlots.value = []
+	}
+
+	const selectDate = async (date) => {
+		selectedDate.value = date
+		selectedTime.value = null
+		if (selectedService.value) {
+			await loadTimeSlots(date)
+		}
+	}
+
+	const selectTime = (slot) => {
+		selectedTime.value = slot
+	}
+
+	const loadTimeSlots = async (date) => {
+		if (!selectedService.value) return
+
+		loading.value = true
+		try {
+			const serviceId = selectedService.value._id || selectedService.value.id
+
+			const response = await uni.request({
+				url: 'http://localhost:3000/api/appointments/available-slots',
+				method: 'GET',
+				data: {
+					date: date,
+					serviceId: serviceId
+				}
+			})
+
+			if (response.data.success) {
+				timeSlots.value = response.data.data.map(slot => ({
+					...slot,
+					available_slots: Math.floor(Math.random() * 10) + 1
+				}))
+			}
+		} catch (error) {
+			console.error('加载时间段失败:', error)
+			uni.showToast({
+				title: '加载时间段失败',
+				icon: 'error'
+			})
+		} finally {
+			loading.value = false
+		}
+	}
+
+	const getTimeSlotsByPeriod = (periodType) => {
+		const period = timePeriods.value.find(p => p.type === periodType)
+		if (!period) return []
+
+		return timeSlots.value.filter(slot => {
+			const hour = parseInt(slot.start_time.split(':')[0])
+			return hour >= period.start && hour < period.end
+		})
+	}
+
+	const submitBooking = async () => {
+		if (!isFormValid.value) {
+			uni.showToast({
+				title: '请填写完整信息',
+				icon: 'error'
+			})
+			return
+		}
+
+		loading.value = true
+		try {
+			const serviceId = selectedService.value._id || selectedService.value.id
+
+			const bookingData = {
+				...formData.value,
+				service_id: serviceId,
+				appointment_date: selectedDate.value,
+				appointment_time: selectedTime.value.start_time
+			}
+
+			const response = await uni.request({
+				url: 'http://localhost:3000/api/appointments',
+				method: 'POST',
+				data: bookingData
+			})
+
+			if (response.data.success) {
+				uni.showToast({
+					title: '预约成功！',
+					icon: 'success'
+				})
+
+				resetForm()
+			} else {
+				uni.showToast({
+					title: response.data.message || '预约失败',
+					icon: 'error'
+				})
+			}
+		} catch (error) {
+			console.error('预约失败:', error)
+			uni.showToast({
+				title: '网络错误，请重试',
+				icon: 'error'
+			})
+		} finally {
+			loading.value = false
+		}
+	}
+
+	const resetForm = () => {
+		selectedService.value = null
+		selectedDate.value = ''
+		selectedTime.value = null
+		timeSlots.value = []
+
+		formData.value = {
+			customer_name: '',
+			customer_phone: '',
+			pet_type: 'dog',
+			pet_breed: '',
+			pet_size: '',
+			special_notes: ''
+		}
+	}
+
+	// 生命周期
+	onMounted(() => {
+		loadServices()
+	})
+</script>
+
+<style scoped>
+	.container {
+		padding: 20rpx;
+		background-color: #f5f5f5;
+		min-height: 100vh;
+		padding-bottom: 120rpx;
+		scrollbar-width: none;
+	}
+
+	.header {
+		text-align: center;
+		margin-bottom: 30rpx;
+		z-index: 200;
+	}
+
+	.title {
+		font-size: 36rpx;
+		font-weight: bold;
+		color: #333;
+	}
+
+	.card {
+		position: relative;
+		background: white;
+		border-radius: 20rpx;
+		padding: 30rpx;
+		margin-bottom: 20rpx;
+		box-shadow: 0 4rpx 20rpx rgba(0, 0, 0, 0.05);
+		z-index: 100;
+	}
+
+	.card-title {
+		font-size: 32rpx;
+		font-weight: bold;
+		color: #333;
+		margin-bottom: 20rpx;
+		display: block;
+		z-index: 101;
+	}
+
+	/* 服务选择样式 */
+	.service-row {
+		display: flex;
+		flex-direction: row;
+		flex-wrap: wrap;
+		gap: 20rpx;
+		margin-bottom: 20rpx;
+		z-index: 102;
+		padding-top: 10rpx;
+	}
+
+	.service-card {
+		padding: 20rpx 28rpx;
+		border: 2rpx solid #e0e0e0;
+		border-radius: 16rpx;
+		text-align: center;
+		transition: all 0.3s;
+		white-space: nowrap;
+	}
+
+	.service-card.active {
+		border-color: #007AFF;
+		background-color: #f0f8ff;
+		transform: translateY(-2rpx);
+		box-shadow: 0 4rpx 12rpx rgba(0, 122, 255, 0.2);
+	}
+
+	.service-name {
+		font-size: 26rpx;
+		font-weight: 500;
+		color: #333;
+	}
+
+	/* 选中服务信息 */
+	.service-detail {
+		background: #f8f9fa;
+		border-radius: 12rpx;
+		padding: 24rpx;
+		border-left: 4rpx solid #007AFF;
+		animation: fadeIn 0.3s ease-in-out;
+		z-index: 103;
+	}
+
+	.detail-header {
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+		margin-bottom: 16rpx;
+	}
+
+	.detail-name {
+		font-size: 28rpx;
+		font-weight: bold;
+		color: #333;
+	}
+
+	.detail-price {
+		font-size: 28rpx;
+		font-weight: bold;
+		color: #ff6b35;
+	}
+
+	.detail-info {
+		display: flex;
+		flex-direction: column;
+		gap: 8rpx;
+	}
+
+	.detail-duration {
+		font-size: 24rpx;
+		color: #666;
+	}
+
+	.detail-desc {
+		font-size: 24rpx;
+		color: #888;
+		line-height: 1.4;
+	}
+
+	/* 日期选择样式 */
+	.date-scroll {
+		width: 100%;
+		white-space: nowrap;
+		overflow-x: auto;
+		scrollbar-width: none;
+		-webkit-overflow-scrolling: touch;
+	}
+
+	.date-row {
+		display: inline-flex;
+		flex-direction: row;
+		gap: 16rpx;
+		padding: 4rpx 0;
+		overflow-x: auto;
+		scrollbar-width: none;
+	}
+
+	.date-card {
+		flex-shrink: 0;
+		width: 140rpx;
+		padding: 20rpx 16rpx;
+		border: 2rpx solid #e0e0e0;
+		border-radius: 16rpx;
+		text-align: center;
+		transition: all 0.3s;
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+	}
+
+	.date-card.active {
+		border-color: #007AFF;
+		background-color: #007AFF;
+		color: white;
+		transform: scale(1.05);
+	}
+
+	.date-week {
+		font-size: 24rpx;
+		font-weight: 500;
+		margin-bottom: 8rpx;
+		display: block;
+	}
+
+	.date-date {
+		font-size: 22rpx;
+		display: block;
+	}
+
+	/* 时间选择样式 */
+	.time-section {
+		margin-bottom: 30rpx;
+	}
+
+	.period-title {
+		font-size: 28rpx;
+		font-weight: 500;
+		color: #333;
+		margin-bottom: 20rpx;
+		display: block;
+	}
+
+	.time-grid {
+		display: grid;
+		grid-template-columns: repeat(2, 1fr);
+		gap: 20rpx;
+		padding-top: 10rpx;
+	}
+
+	@media (min-width:1024px) {
+		.time-grid {
+			grid-template-columns: repeat(3, 1fr);
+		}
+	}
+
+	.time-card {
+		padding: 24rpx;
+		border: 2rpx solid #e0e0e0;
+		border-radius: 16rpx;
+		text-align: center;
+		transition: all 0.3s;
+	}
+
+	.time-card.active {
+		border-color: #007AFF;
+		background-color: #f0f8ff;
+		transform: translateY(-2rpx);
+	}
+
+	.time-range {
+		display: block;
+		font-size: 26rpx;
+		font-weight: 500;
+		color: #333;
+		margin-bottom: 8rpx;
+	}
+
+	.slots-available {
+		display: block;
+		font-size: 22rpx;
+		color: #666;
+	}
+
+	/* 宠物类型样式 */
+	.pet-type-grid {
+		position: relative;
+		display: flex;
+		flex-direction: row;
+		flex-wrap: wrap;
+		gap: 20rpx;
+		z-index: 104;
+		padding-top: 10rpx;
+	}
+
+	.pet-type-card {
+		flex: 1;
+		min-width: 180rpx;
+		padding: 30rpx 20rpx;
+		border: 2rpx solid #e0e0e0;
+		border-radius: 16rpx;
+		text-align: center;
+		transition: all 0.3s;
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		gap: 16rpx;
+		z-index: 105;
+	}
+
+	@media(max-640px) {
+		.pet-type-card {
+			aspect-ratio: 1/1;
+		}
+	}
+
+	.pet-type-card.active {
+		border-color: #007AFF;
+		background-color: #f0f8ff;
+		transform: translateY(-2rpx);
+	}
+
+	.pet-icon {
+		width: 60rpx;
+		height: 60rpx;
+	}
+
+	.pet-type-name {
+		font-size: 26rpx;
+		font-weight: 500;
+		color: #fff;
+	}
+
+	/* 宠物体型样式 */
+	.size-grid {
+		display: flex;
+		flex-direction: row;
+		gap: 20rpx;
+	}
+
+	.size-card {
+		flex: 1;
+		padding: 24rpx 20rpx;
+		border: 2rpx solid #e0e0e0;
+		border-radius: 16rpx;
+		background: white;
+		font-size: 28rpx;
+		color: #333;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+	}
+
+	.size-card.active {
+		border-color: #007AFF;
+		background-color: #007AFF;
+		color: white;
+	}
+
+	.size-label {
+		font-weight: 500;
+	}
+
+	/* 表单样式 */
+	.form-group {
+		margin-bottom: 30rpx;
+	}
+
+	.label {
+		display: block;
+		font-size: 28rpx;
+		color: #333;
+		margin-bottom: 16rpx;
+		font-weight: 500;
+	}
+
+	.input,
+	.textarea {
+		border: 2rpx solid #e0e0e0;
+		border-radius: 12rpx;
+		padding: 20rpx;
+		font-size: 28rpx;
+		width: 100%;
+		box-sizing: border-box;
+	}
+
+	.textarea {
+		height: 120rpx;
+	}
+
+	/* 底部按钮 */
+	.footer {
+		position: fixed;
+		bottom: 0;
+		left: 0;
+		right: 0;
+		background: white;
+		padding: 20rpx;
+		border-top: 1rpx solid #e0e0e0;
+		z-index: 200;
+	}
+
+	.submit-btn {
+		background-color: #007AFF;
+		color: white;
+		border: none;
+		border-radius: 16rpx;
+		padding: 24rpx;
+		font-size: 32rpx;
+		width: 100%;
+	}
+
+	.submit-btn:disabled {
+		background-color: #ccc;
+	}
+
+	/* 加载状态 */
+	.loading-mask {
+		position: fixed;
+		top: 0;
+		left: 0;
+		right: 0;
+		bottom: 0;
+		background: rgba(0, 0, 0, 0.5);
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		z-index: 9999;
+	}
+
+	.loading-content {
+		background: white;
+		padding: 40rpx;
+		border-radius: 16rpx;
+		font-size: 28rpx;
+		color: #333;
+	}
+
+	/* 动画 */
+	@keyframes fadeIn {
+		from {
+			opacity: 0;
+			transform: translateY(-10rpx);
+		}
+
+		to {
+			opacity: 1;
+			transform: translateY(0);
+		}
+	}
+</style>

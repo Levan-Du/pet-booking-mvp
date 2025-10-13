@@ -1,0 +1,131 @@
+<template>
+	<view class="container">
+		<view class="login-form">
+			<text class="title">管理员登录</text>
+
+			<view class="form-item">
+				<text class="label">用户名</text>
+				<input v-model="username" placeholder="请输入用户名" class="input" />
+			</view>
+
+			<view class="form-item">
+				<text class="label">密码</text>
+				<input v-model="password" placeholder="请输入密码" password class="input" />
+			</view>
+
+			<button @click="handleLogin" class="login-btn">
+				登录
+			</button>
+		</view>
+	</view>
+</template>
+
+<script setup>
+	import { ref } from 'vue'
+
+	const username = ref('')
+	const password = ref('')
+
+	const handleLogin = async () => {
+		if (!username.value || !password.value) {
+			uni.showToast({
+				title: '请输入用户名和密码',
+				icon: 'error'
+			})
+			return
+		}
+
+		try {
+			const response = await uni.request({
+				url: 'http://localhost:3000/api/admin/login',
+				method: 'POST',
+				data: {
+					username: username.value,
+					password: password.value
+				}
+			})
+
+			if (response.data.success) {
+				uni.showToast({
+					title: '登录成功',
+					icon: 'success'
+				})
+
+				// 跳转到管理后台
+				uni.navigateTo({
+					url: '/dashboard'
+				})
+			} else {
+				uni.showToast({
+					title: response.data.message || '登录失败',
+					icon: 'error'
+				})
+			}
+		} catch (error) {
+			console.error('登录失败:', error)
+			uni.showToast({
+				title: '网络错误，请重试',
+				icon: 'error'
+			})
+		}
+	}
+</script>
+
+<style>
+	.container {
+		padding: 40rpx;
+		background-color: #f5f5f5;
+		min-height: 100vh;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+	}
+
+	.login-form {
+		background: white;
+		border-radius: 16rpx;
+		padding: 60rpx 40rpx;
+		width: 100%;
+		max-width: 600rpx;
+	}
+
+	.title {
+		font-size: 36rpx;
+		font-weight: bold;
+		color: #333;
+		text-align: center;
+		margin-bottom: 60rpx;
+	}
+
+	.form-item {
+		margin-bottom: 40rpx;
+	}
+
+	.label {
+		display: block;
+		font-size: 28rpx;
+		color: #333;
+		margin-bottom: 16rpx;
+		font-weight: 500;
+	}
+
+	.input {
+		border: 2rpx solid #e0e0e0;
+		border-radius: 12rpx;
+		padding: 20rpx;
+		font-size: 28rpx;
+		width: 100%;
+		box-sizing: border-box;
+	}
+
+	.login-btn {
+		background-color: #007AFF;
+		color: white;
+		border: none;
+		border-radius: 12rpx;
+		padding: 24rpx;
+		font-size: 32rpx;
+		width: 100%;
+		margin-top: 40rpx;
+	}
+</style>
