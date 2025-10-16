@@ -13,15 +13,10 @@
 
 多端支持
 📱 微信小程序
-
 🌐 H5 网页版
-
 📱 Android App
-
 📱 iOS App
-
 💻 管理后台
-
 🏗️ 项目架构
 text
 pet-booking-mvp/
@@ -43,6 +38,8 @@ pet-booking-mvp/
 │   ├── .env                   # 环境变量
 │   └── package.json
 └── README.md
+
+
 🚀 快速开始
 环境要求
 Node.js 16+
