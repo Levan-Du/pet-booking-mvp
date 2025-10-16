@@ -1,0 +1,54 @@
+# ─── 系统 / 编辑器 ───
+.DS_Store
+Thumbs.db
+*.log
+*.swp
+*.swo
+*~
+.vscode/*
+!.vscode/extensions.json
+.idea/
+
+# ─── Node ───
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# ─── Taro 构建输出 ───
+dist/
+temp/
+rn_temp/
+.rn_temp/
+.taro/
+
+# ─── 环境变量（永远不要提交真实密钥）───
+.env
+.env.local
+.env.development
+.env.production
+.env.test
+*.env.*.local
+
+# ─── 小程序相关 ───
+project.config.json      # 微信小程序开发者工具配置（含 appId，各人不同）
+project.private.config.json
+miniprogram_npm/
+
+# ─── 日志 / 覆盖率 / 缓存 ───
+logs/
+*.log
+coverage/
+.nyc_output/
+.cache/
+.parcel-cache/
+
+# ─── 其他可选 ───
+# 如果你用 husky + lint-staged，可以忽略 husky 安装后生成的 .husky/_
+.husky/_
+
+# 若使用 lerna / nx / pnpm-workspace 产生的临时文件
+.lerna/
+nx-cache/
+.pnpm-store/
