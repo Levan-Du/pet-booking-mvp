@@ -4,7 +4,8 @@ export default {
     'pages/admin/login',
     'pages/dashboard/dashboard',
     'pages/databoard/databoard',
-    'pages/reports/reports'
+    'pages/reports/reports',
+    'pages/store/store'
   ],
   window: {
     backgroundTextStyle: 'light',

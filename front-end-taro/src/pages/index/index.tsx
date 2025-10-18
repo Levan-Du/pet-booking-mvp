@@ -4,6 +4,7 @@ import Taro, { useReady } from '@tarojs/taro'
 import { jwtDecode } from 'jwt-decode'
 import { authUtils } from '../../utils/authUtils'
 import { apiRequest } from '../../utils/requestUtils'
+import CustomNavbar from '../../components/custom-navbar'
 import './index.scss'
 
 interface Service {
@@ -62,7 +63,7 @@ const Index: React.FC = () => {
   const isFormValid = selectedService && selectedDate && selectedTime &&
     formData.customer_name.trim() && formData.customer_phone.trim() && formData.pet_size
 
-  const [dateList, setDateList] = React.useState<any[]>([])
+  const [dateList, setDateList] = React.useState<Array<{date: string, month: number, day: number, week: string}>>([])
 
   React.useEffect(() => {
     generateDateList()
@@ -291,6 +292,10 @@ const Index: React.FC = () => {
     Taro.navigateTo({ url: '/pages/reports/reports' })
   }
 
+  const goToStore = () => {
+    Taro.navigateTo({ url: '/pages/store/store' })
+  }
+
   // 生命周期
   React.useEffect(() => {
     const token = authUtils.getToken()
@@ -307,10 +312,15 @@ const Index: React.FC = () => {
 
   return (
     <View className='layout'>
-      {/* 手动添加导航栏 */}
-      <View className='custom-navbar'>
-        <Text className='navbar-title'>宠物服务预约</Text>
-      </View>
+      {/* 自定义导航栏 */}
+      <CustomNavbar 
+        title="宠物服务预约" 
+        showBack={false}
+        rightButton={{
+          text: '进店看看',
+          onClick: goToStore
+        }}
+      />
       <View className='container'>
         <View className='content-container'>
           {adminInfo?.role === 'pet-admin' && (

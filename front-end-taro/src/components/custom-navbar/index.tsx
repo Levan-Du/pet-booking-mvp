@@ -7,12 +7,17 @@ interface CustomNavbarProps {
   title: string
   showBack?: boolean
   backText?: string
+  rightButton?: {
+    text: string
+    onClick: () => void
+  }
 }
 
 const CustomNavbar: React.FC<CustomNavbarProps> = ({ 
   title, 
   showBack = true,
-  backText = '返回'
+  backText = '返回',
+  rightButton
 }) => {
   const handleBack = () => {
     Taro.navigateBack()
@@ -27,6 +32,11 @@ const CustomNavbar: React.FC<CustomNavbarProps> = ({
         </View>
       )}
       <Text className='navbar-title'>{title}</Text>
+      {rightButton && (
+        <View className='navbar-right' onClick={rightButton.onClick}>
+          <Text className='right-button'>{rightButton.text}</Text>
+        </View>
+      )}
     </View>
   )
 }

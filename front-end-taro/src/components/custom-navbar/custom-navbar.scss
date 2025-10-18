@@ -39,4 +39,27 @@
     font-weight: 600;
     color: #000;
   }
+
+  .navbar-right {
+    position: absolute;
+    right: 15px;
+    display: flex;
+    align-items: center;
+    height: 100%;
+    padding: 0 10px;
+    cursor: pointer;
+
+    .right-button {
+      font-size: 14px;
+      color: #007aff;
+      padding: 6px 12px;
+      border: 1px solid #007aff;
+      border-radius: 4px;
+      background-color: transparent;
+      
+      &:active {
+        background-color: #f0f8ff;
+      }
+    }
+  }
 }

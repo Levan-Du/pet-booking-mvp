@@ -39,7 +39,7 @@
 .service-card {
   display: flex;
   align-items: center;
-  padding: 20rpx 28rpx;
+  padding: 10rpx;
   border: 2rpx solid #e0e0e0;
   border-radius: 16rpx;
   text-align: center;
@@ -215,7 +215,7 @@
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
-  gap: 20rpx;
+  gap: 30rpx;
   z-index: 104;
   padding-top: 10rpx;
   box-sizing: border-box;
@@ -223,6 +223,7 @@
 
 .pet-type-card {
   flex: 1;
+  aspect-ratio: 1/1;
   min-width: 180rpx;
   padding: 30rpx 20rpx;
   border: 2rpx solid #e0e0e0;
@@ -272,7 +273,7 @@
 
 .size-card {
   flex: 1;
-  padding: 24rpx 20rpx;
+  // padding: 24rpx 20rpx;
   border: 2rpx solid #e0e0e0;
   border-radius: 16rpx;
   background: white;

@@ -1,0 +1,134 @@
+.store-page {
+  min-height: 100vh;
+  background-color: #f5f5f5;
+}
+
+.store-content {
+  height: calc(100vh - 88rpx);
+  padding: 20rpx;
+  margin-top: 88rpx;
+}
+
+.store-banner {
+  background: linear-gradient(135deg, #007AFF 0%, #5AC8FA 100%);
+  border-radius: 20rpx;
+  padding: 40rpx;
+  text-align: center;
+  margin-bottom: 30rpx;
+  color: white;
+}
+
+.store-logo {
+  width: 120rpx;
+  height: 120rpx;
+  border-radius: 60rpx;
+  margin-bottom: 20rpx;
+  background-color: white;
+}
+
+.store-name {
+  font-size: 36rpx;
+  font-weight: bold;
+}
+
+.info-section,
+.services-section,
+.features-section {
+  background: white;
+  border-radius: 16rpx;
+  padding: 30rpx;
+  margin-bottom: 30rpx;
+}
+
+.section-title {
+  font-size: 32rpx;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 20rpx;
+  border-left: 6rpx solid #007AFF;
+  padding-left: 20rpx;
+}
+
+.info-item {
+  display: flex;
+  align-items: center;
+  margin-bottom: 20rpx;
+  padding: 15rpx 0;
+  border-bottom: 1rpx solid #f0f0f0;
+}
+
+.info-item:last-child {
+  border-bottom: none;
+  margin-bottom: 0;
+}
+
+.info-label {
+  font-size: 28rpx;
+  color: #666;
+  min-width: 120rpx;
+}
+
+.info-value {
+  font-size: 28rpx;
+  color: #333;
+  flex: 1;
+}
+
+.info-value.phone {
+  color: #007AFF;
+  text-decoration: underline;
+}
+
+.service-item {
+  background: #f8f9fa;
+  border-radius: 12rpx;
+  padding: 24rpx;
+  margin-bottom: 20rpx;
+  border-left: 4rpx solid #007AFF;
+}
+
+.service-item:last-child {
+  margin-bottom: 0;
+}
+
+.service-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12rpx;
+}
+
+.service-name {
+  font-size: 30rpx;
+  font-weight: bold;
+  color: #333;
+}
+
+.service-price {
+  font-size: 28rpx;
+  color: #ff6b35;
+  font-weight: bold;
+}
+
+.service-desc {
+  font-size: 26rpx;
+  color: #666;
+  line-height: 1.5;
+}
+
+.features-list {
+  display: flex;
+  flex-direction: column;
+  gap: 15rpx;
+}
+
+.feature {
+  font-size: 28rpx;
+  color: #333;
+  padding: 12rpx 0;
+  border-bottom: 1rpx solid #f0f0f0;
+}
+
+.feature:last-child {
+  border-bottom: none;
+}
