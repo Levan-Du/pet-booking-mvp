@@ -1,0 +1,52 @@
+/* 自定义导航栏样式 */
+.custom-navbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 88rpx;
+  background-color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-bottom: 1rpx solid #e0e0e0;
+  z-index: 1000;
+}
+
+.data-row {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20rpx;
+  gap: 20rpx;
+}
+
+.data-row .card {
+  flex: 1;
+  aspect-ratio: 1/1;
+}
+
+.charts {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 100%;
+  gap: 20rpx;
+}
+
+.summary-row {
+  display: flex;
+  flex-direction: row;
+  padding: 10rpx;
+}
+
+.value {
+  color: greenyellow;
+  flex: 1;
+  margin-left: 20rpx;
+}
+
+.charts-box {
+  // height: 300rpx;
+}

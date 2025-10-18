@@ -9,8 +9,8 @@ import {
 	validateRequest
 } from '../../core/middleware/validation.middleware.js';
 import {
-	authenticateAdmin
-} from '../auth/auth.middleware.js';
+	authenticateAdminToken
+} from '../../core/middleware/auth.middleware.js';
 
 const router = express.Router();
 const appointmentController = new AppointmentController();
@@ -24,12 +24,13 @@ router.post(
 );
 
 // 需要管理员认证的路由
-router.get('/', authenticateAdmin, appointmentController.getAppointments.bind(appointmentController));
-router.get('/today', authenticateAdmin, appointmentController.getTodayAppointments.bind(appointmentController));
-router.get('/:id', authenticateAdmin, appointmentController.getAppointmentById.bind(appointmentController));
+router.get('/', authenticateAdminToken, appointmentController.getAppointments.bind(appointmentController));
+router.get('/today', authenticateAdminToken, appointmentController.getTodayAppointments.bind(appointmentController));
+// router.get('/stats', authenticateAdminToken, appointmentController.getStats.bind(appointmentController));
+router.get('/:id', authenticateAdminToken, appointmentController.getAppointmentById.bind(appointmentController));
 router.put(
 	'/:id/status',
-	authenticateAdmin,
+	authenticateAdminToken,
 	validateRequest(appointmentValidation.updateStatus),
 	appointmentController.updateAppointmentStatus.bind(appointmentController)
 );

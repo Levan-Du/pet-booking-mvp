@@ -12,7 +12,7 @@ timeout /t 3 /nobreak > nul
 
 echo.
 echo 🌐 2. 启动前端项目...
-cd ../front-end
+cd ../front-end-taro
 start "Frontend Dev" cmd /k "npm run dev:h5"
 
 echo.

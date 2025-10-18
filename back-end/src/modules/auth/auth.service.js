@@ -1,11 +1,9 @@
 import bcrypt from 'bcryptjs';
-import {
-	AuthModel
-} from './auth.model.js';
+import { getAuthModel } from '../model.factory.js';
 
 export class AuthService {
 	constructor() {
-		this.authModel = new AuthModel();
+		this.authModel = getAuthModel();
 	}
 
 	async validateAdminCredentials(username, password) {

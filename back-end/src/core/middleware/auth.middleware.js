@@ -4,6 +4,7 @@ import {
 
 // JWT Token 认证中间件（如果需要）
 export const authenticateAdminToken = async (req, res, next) => {
+	// console.log('appointment.middleware.js -> authenticateAdminToken -> authorization', req.headers.authorization);
 	try {
 		const authHeader = req.headers.authorization;
 		// console.log('11111.auth.middleware.js -> authenticateAdminToken -> authHeader', authHeader)
@@ -26,7 +27,7 @@ export const authenticateAdminToken = async (req, res, next) => {
 		}
 
 		const payload = JWTUtil.verifyToken(token)
-		console.log('11111.auth.middleware.js -> authenticateAdminToken -> payload', payload)
+		// console.log('11111.auth.middleware.js -> authenticateAdminToken -> payload', payload)
 		if (!payload) {
 			return res.status(401).json({
 				success: false,

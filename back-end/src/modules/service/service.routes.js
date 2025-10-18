@@ -9,8 +9,8 @@ import {
 	validateRequest
 } from '../../core/middleware/validation.middleware.js';
 import {
-	authenticateAdmin
-} from '../auth/auth.middleware.js';
+	authenticateAdminToken
+} from '../../core/middleware/auth.middleware.js';
 
 const router = express.Router();
 const serviceController = new ServiceController();
@@ -22,21 +22,21 @@ router.get('/:id', serviceController.getServiceById.bind(serviceController));
 // 需要管理员认证的路由
 router.post(
 	'/',
-	authenticateAdmin,
+	authenticateAdminToken,
 	validateRequest(serviceValidation.create),
 	serviceController.createService.bind(serviceController)
 );
 
 router.put(
 	'/:id',
-	authenticateAdmin,
+	authenticateAdminToken,
 	validateRequest(serviceValidation.update),
 	serviceController.updateService.bind(serviceController)
 );
 
 router.delete(
 	'/:id',
-	authenticateAdmin,
+	authenticateAdminToken,
 	serviceController.deleteService.bind(serviceController)
 );
 

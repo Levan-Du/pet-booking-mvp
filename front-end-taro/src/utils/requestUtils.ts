@@ -16,8 +16,8 @@ export const apiRequest = async (options: RequestOptions) => {
 
     const requestOptions = {
       ...options,
-      header: { 
-        ...(options.header ? options.header : {}), 
+      header: {
+        ...(options.header ? options.header : {}),
         'Content-Type': 'application/json',
         authorization: token ? `Bearer ${token}` : ''
       },

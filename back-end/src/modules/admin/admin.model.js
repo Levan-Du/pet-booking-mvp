@@ -1,160 +1,143 @@
-import {
-	getDBType
-} from '../../core/database/database.config.js';
-import {
-	getPostgresPool
-} from '../../core/database/postgres.config.js';
-import {
-	getMongoDB
-} from '../../core/database/mongodb.config.js';
-import {
-	ObjectId
-} from 'mongodb';
+import { getDBType } from '../../core/database/database.config.js';
+import { MongoModel } from '../mongo.model.js';
+import { PgModel } from '../pg.model.js';
 
-export class AdminModel {
+class AdminMongoModel extends MongoModel {
 	constructor() {
-		this.dbType = getDBType();
+		super('admins');
 	}
 
 	async findByUsername(username) {
-		if (this.dbType === 'postgres') {
-			const pool = getPostgresPool();
-			const result = await pool.query(
-				'SELECT * FROM admins WHERE username = $1',
-				[username]
-			);
-			return result.rows[0] || null;
-		} else {
-			const db = getMongoDB();
-			return await db.collection('admins').findOne({
-				username
-			});
-		}
-	}
-
-	async findById(id) {
-		if (this.dbType === 'postgres') {
-			const pool = getPostgresPool();
-			const result = await pool.query(
-				'SELECT id, username, created_at FROM admins WHERE id = $1',
-				[id]
-			);
-			return result.rows[0] || null;
-		} else {
-			const db = getMongoDB();
-			return await db.collection('admins').findOne({
-				_id: new ObjectId(id)
-			}, {
-				projection: {
-					password_hash: 0
-				}
-			});
-		}
+		return await this.getCollection().findOne({
+			username: username
+		});
 	}
 
 	async updatePassword(id, newPasswordHash) {
-		if (this.dbType === 'postgres') {
-			const pool = getPostgresPool();
-			const result = await pool.query(
-				'UPDATE admins SET password_hash = $1 WHERE id = $2 RETURNING id',
-				[newPasswordHash, id]
-			);
-			return result.rows.length > 0;
-		} else {
-			const db = getMongoDB();
-			const result = await db.collection('admins').updateOne({
-				_id: new ObjectId(id)
-			}, {
-				$set: {
+		const result = await this.getCollection().updateOne(
+			{ _id: this.getObjectId(id) },
+			{ 
+				$set: { 
 					password_hash: newPasswordHash,
 					updated_at: new Date()
 				}
-			});
-			return result.modifiedCount > 0;
-		}
-	}
-
-	async create(adminData) {
-		if (this.dbType === 'postgres') {
-			const pool = getPostgresPool();
-			const {
-				username,
-				password_hash
-			} = adminData;
-			const result = await pool.query(
-				'INSERT INTO admins (username, password_hash) VALUES ($1, $2) RETURNING *',
-				[username, password_hash]
-			);
-			return result.rows[0];
-		} else {
-			const db = getMongoDB();
-			const admin = {
-				...adminData,
-				created_at: new Date()
-			};
-			const result = await db.collection('admins').insertOne(admin);
-			return {
-				...admin,
-				_id: result.insertedId
-			};
-		}
+			}
+		);
+		return result.modifiedCount > 0;
 	}
 
 	async getStats() {
-		if (this.dbType === 'postgres') {
-			const pool = getPostgresPool();
+		const db = this.getCollection();
+		const today = new Date().toISOString().split('T')[0];
 
-			const todayResult = await pool.query(
-				`SELECT COUNT(*) as count FROM appointments 
-         WHERE appointment_date = CURRENT_DATE`
-			);
+		const todayAppointments = await db.countDocuments({
+			appointment_date: today
+		});
 
-			const totalResult = await pool.query(
-				'SELECT COUNT(*) as count FROM appointments'
-			);
+		const totalAppointments = await db.countDocuments();
 
-			const pendingResult = await pool.query(
-				`SELECT COUNT(*) as count FROM appointments 
-         WHERE status = 'pending' AND appointment_date >= CURRENT_DATE`
-			);
+		const pendingAppointments = await db.countDocuments({
+			status: APPOINTMENT_STATUS.PENDING,
+			appointment_date: { $gte: today }
+		});
 
-			const servicesResult = await pool.query(
-				'SELECT COUNT(*) as count FROM services WHERE is_active = true'
-			);
+		const activeServices = await db.countDocuments({
+			is_active: true
+		});
 
-			return {
-				todayAppointments: parseInt(todayResult.rows[0].count),
-				totalAppointments: parseInt(totalResult.rows[0].count),
-				pendingAppointments: parseInt(pendingResult.rows[0].count),
-				activeServices: parseInt(servicesResult.rows[0].count)
-			};
-		} else {
-			const db = getMongoDB();
-			const today = new Date().toISOString().split('T')[0];
-
-			const todayAppointments = await db.collection('appointments').countDocuments({
-				appointment_date: today
-			});
-
-			const totalAppointments = await db.collection('appointments').countDocuments();
-
-			const pendingAppointments = await db.collection('appointments').countDocuments({
-				status: 'pending',
-				appointment_date: {
-					$gte: today
-				}
-			});
-
-			const activeServices = await db.collection('services').countDocuments({
-				is_active: true
-			});
-
-			return {
-				todayAppointments,
-				totalAppointments,
-				pendingAppointments,
-				activeServices
-			};
-		}
+		return {
+			todayAppointments,
+			totalAppointments,
+			pendingAppointments,
+			activeServices
+		};
 	}
+
+	async updateAccessToken(adminId, token) {
+		const result = await this.getCollection().updateOne(
+			{ _id: this.getObjectId(adminId) },
+			{ 
+				$set: { 
+					access_token: token,
+					updated_at: new Date()
+				}
+			}
+		);
+		return result.modifiedCount > 0;
+	}
+}
+
+class AdminPgModel extends PgModel {
+	constructor() {
+		super('admins');
+	}
+
+	async findByUsername(username) {
+		const pool = this.getPool();
+		const result = await pool.query(
+			`SELECT * FROM ${this.collectionName} WHERE username = $1`,
+			[username]
+		);
+		return result.rows[0] || null;
+	}
+
+	async updatePassword(id, newPasswordHash) {
+		const pool = this.getPool();
+		const result = await pool.query(
+			`UPDATE ${this.collectionName} SET password_hash = $1 WHERE id = $2 RETURNING id`,
+			[newPasswordHash, id]
+		);
+		return result.rows.length > 0;
+	}
+
+	async getStats() {
+		const pool = this.getPool();
+
+		const todayResult = await pool.query(
+			`SELECT COUNT(*) as count FROM appointments 
+			 WHERE appointment_date = CURRENT_DATE`
+		);
+
+		const totalResult = await pool.query(
+			'SELECT COUNT(*) as count FROM appointments'
+		);
+
+		const pendingResult = await pool.query(
+			`SELECT COUNT(*) as count FROM appointments 
+			 WHERE status = '${APPOINTMENT_STATUS.PENDING}' AND appointment_date >= CURRENT_DATE`
+		);
+
+		const servicesResult = await pool.query(
+			'SELECT COUNT(*) as count FROM services WHERE is_active = true'
+		);
+
+		return {
+			todayAppointments: parseInt(todayResult.rows[0].count),
+			totalAppointments: parseInt(totalResult.rows[0].count),
+			pendingAppointments: parseInt(pendingResult.rows[0].count),
+			activeServices: parseInt(servicesResult.rows[0].count)
+		};
+	}
+
+	async updateAccessToken(adminId, token) {
+		const pool = this.getPool();
+		const result = await pool.query(
+			`UPDATE ${this.collectionName} SET access_token = $1 WHERE id = $2 RETURNING id`,
+			[token, adminId]
+		);
+		return result.rows.length > 0;
+	}
+}
+
+let AdminModel = null;
+
+export function getAdminModel() {
+  if (AdminModel) {
+    return AdminModel;
+  }
+
+  const dbType = getDBType();
+  AdminModel = dbType === 'postgres' ? new AdminPgModel() : new AdminMongoModel();
+
+  return AdminModel;
 }

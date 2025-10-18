@@ -38,6 +38,8 @@ const Index: React.FC = () => {
   const [selectedTime, setSelectedTime] = useState<TimeSlot | null>(null)
   const [loading, setLoading] = useState(false)
   const [adminInfo, setAdminInfo] = useState<any>(null)
+  const [petTypes, setPetTypes] = useState<any[]>([])
+  const [sizeOptions, setSizeOptions] = useState<any[]>([])
 
   const [formData, setFormData] = useState<FormData>({
     customer_name: '',
@@ -48,29 +50,7 @@ const Index: React.FC = () => {
     special_notes: ''
   })
 
-  const petTypes = [
-    {
-      value: 'dog',
-      label: '狗狗',
-      icon: '/static/images/dog.png'
-    },
-    {
-      value: 'cat',
-      label: '猫咪',
-      icon: '/static/images/cat.png'
-    },
-    {
-      value: 'other',
-      label: '其他',
-      icon: ''
-    }
-  ]
 
-  const sizeOptions = [
-    { value: 'small', label: '小型' },
-    { value: 'medium', label: '中型' },
-    { value: 'large', label: '大型' }
-  ]
 
   const timePeriods = [
     { type: 'morning', title: '上午', start: 8, end: 12 },
@@ -82,7 +62,13 @@ const Index: React.FC = () => {
   const isFormValid = selectedService && selectedDate && selectedTime &&
     formData.customer_name.trim() && formData.customer_phone.trim() && formData.pet_size
 
-  const dateList = (() => {
+  const [dateList, setDateList] = useState<any[]>([])
+
+  useEffect(() => {
+    generateDateList()
+  }, [])
+
+  const generateDateList = () => {
     const dates = []
     const today = new Date()
     const weekDays = ['日', '一', '二', '三', '四', '五', '六']
@@ -112,10 +98,37 @@ const Index: React.FC = () => {
       })
     }
 
-    return dates
-  })()
+    setDateList(dates)
+  }
 
   // 方法
+  const loadEnums = async () => {
+    try {
+      const response = await apiRequest({
+        url: 'http://localhost:3000/api/enums',
+        method: 'GET'
+      })
+
+      if (response.data.success) {
+        setPetTypes(response.data.data.petTypes)
+        setSizeOptions(response.data.data.petSizes)
+      }
+    } catch (error) {
+      console.error('加载枚举数据失败:', error)
+      // 如果后端API不可用，使用默认值
+      setPetTypes([
+        { value: 'dog', label: '狗狗', icon: '/static/images/dog.png' },
+        { value: 'cat', label: '猫咪', icon: '/static/images/cat.png' },
+        { value: 'other', label: '其他', icon: '/static/images/other.png' }
+      ])
+      setSizeOptions([
+        { value: 'small', label: '小型' },
+        { value: 'medium', label: '中型' },
+        { value: 'large', label: '大型' }
+      ])
+    }
+  }
+
   const loadServices = async () => {
     setLoading(true)
     try {
@@ -139,13 +152,6 @@ const Index: React.FC = () => {
   }
 
   useReady(() => {
-    Taro.setNavigationBarTitle({
-      title: '管理面板'
-    }).then(() => {
-      console.log('setNavigationBarTitle 执行成功')
-    }).catch((error) => {
-      console.error('setNavigationBarTitle 执行失败:', error)
-    })
     console.log('Page loaded.')
   })
 
@@ -278,11 +284,11 @@ const Index: React.FC = () => {
   }
 
   const goToAdmin = () => {
-    Taro.navigateTo({ url: '/pages/dashboard' })
+    Taro.navigateTo({ url: '/pages/dashboard/dashboard' })
   }
 
   const goToReports = () => {
-    Taro.navigateTo({ url: '/pages/reports' })
+    Taro.navigateTo({ url: '/pages/reports/reports' })
   }
 
   // 生命周期
@@ -295,11 +301,16 @@ const Index: React.FC = () => {
         console.error('解析token失败:', error)
       }
     }
+    loadEnums()
     loadServices()
   }, [])
 
   return (
     <View className='layout'>
+      {/* 手动添加导航栏 */}
+      <View className='custom-navbar'>
+        <Text className='navbar-title'>宠物服务预约</Text>
+      </View>
       <View className='container'>
         {adminInfo?.role === 'pet-admin' && (
           <>

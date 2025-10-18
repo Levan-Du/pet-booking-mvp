@@ -9,8 +9,8 @@ import {
 	validateRequest
 } from '../../core/middleware/validation.middleware.js';
 import {
-	authenticateAdmin
-} from '../auth/auth.middleware.js';
+	authenticateAdminToken
+} from '../../core/middleware/auth.middleware.js';
 
 const router = express.Router();
 const adminController = new AdminController();
@@ -23,11 +23,11 @@ router.post(
 );
 
 // 需要认证的路由
-router.get('/profile', authenticateAdmin, adminController.getProfile.bind(adminController));
-router.get('/stats', authenticateAdmin, adminController.getStats.bind(adminController));
+router.get('/profile', authenticateAdminToken, adminController.getProfile.bind(adminController));
+router.get('/stats', authenticateAdminToken, adminController.getStats.bind(adminController));
 router.put(
 	'/change-password',
-	authenticateAdmin,
+	authenticateAdminToken,
 	validateRequest(adminValidation.changePassword),
 	adminController.changePassword.bind(adminController)
 );

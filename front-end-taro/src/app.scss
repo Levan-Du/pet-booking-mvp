@@ -1,3 +1,10 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+}
+
 /* 每个页面公共css */
 .uni-row {
   flex-direction: row;
@@ -71,13 +78,90 @@ page {
 .textarea {
   border: 2rpx solid #e0e0e0;
   border-radius: 12rpx;
-  padding: 20rpx;
   font-size: 28rpx;
   width: 100%;
   box-sizing: border-box;
 }
 
+taro-input-core {
+  height: 66rpx !important;
+  line-height: 66rpx !important;
+  padding: 0 10rpx;
+}
+
 .textarea {
+  padding: 10rpx;
   height: 120rpx;
   resize: none;
+}
+
+.taro-textarea {
+  height: 100% !important;
+}
+
+.layout {
+  width: 100%;
+  height: 100%;
+  overflow-y: auto;
+  background-color: #f5f5f5;
+}
+
+/* 自定义导航栏样式 */
+.custom-navbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 88rpx;
+  background-color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-bottom: 1rpx solid #e0e0e0;
+  z-index: 1000;
+}
+
+.navbar-title {
+  font-size: 36rpx;
+  font-weight: bold;
+  color: #333;
+}
+
+.container {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 100%;
+  background-color: #f5f5f5;
+  padding: 20rpx;
+  padding-top: 108rpx;
+  padding-bottom: 170rpx;
+  gap: 10rpx;
+  box-sizing: border-box;
+  overflow: auto;
+  scrollbar-width: none;
+
+  ::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+.card {
+  display: flex;
+  flex-direction: column;
+  background: white;
+  border-radius: 16rpx;
+  padding: 20rpx 20rpx;
+  box-shadow: 0 4rpx 12rpx rgba(0, 0, 0, 0.1),
+    0 2rpx 4rpx rgba(0, 0, 0, 0.06);
+  margin-bottom: 20rpx;
+}
+
+.card-title,
+.card .title {
+  font-size: 28rpx;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 16rpx;
+  display: block;
 }

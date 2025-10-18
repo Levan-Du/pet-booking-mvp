@@ -5,7 +5,7 @@ import dotenv from 'dotenv';
 import {
 	connectDatabase
 } from './core/database/database.config.js';
-import routes from './routes.js';
+import routes from './routes/index.js';
 import {
 	errorHandler,
 	notFoundHandler

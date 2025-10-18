@@ -10,28 +10,28 @@ const Login: React.FC = () => {
   const [password, setPassword] = useState('')
 
   useEffect(() => {
-    checkToken()
+    // checkToken()
   }, [])
 
   const checkToken = async () => {
-    try {
-      const response = await apiRequest({
-        url: 'http://localhost:3000/api/admin/checkLogin',
-        method: 'POST',
-        data: {
-          username: username,
-          password: password
-        }
-      })
+    // try {
+    //   const response = await apiRequest({
+    //     url: 'http://localhost:3000/api/admin/checkToken',
+    //     method: 'POST',
+    //     data: {
+    //       username: username,
+    //       password: password
+    //     }
+    //   })
 
-      if (response.data.success) {
-        Taro.navigateTo({
-          url: '/pages/dashboard'
-        })
-      }
-    } catch (error) {
-      // Token检查失败，继续显示登录页面
-    }
+    //   if (response.data.success) {
+    //     Taro.navigateTo({
+    //       url: '/pages/dashboard/dashboard'
+    //     })
+    //   }
+    // } catch (error) {
+    //   // Token检查失败，继续显示登录页面
+    // }
   }
 
   const handleLogin = async () => {
@@ -61,6 +61,7 @@ const Login: React.FC = () => {
         // 存储访问令牌（accessToken）而不是刷新令牌
         const accessToken = response.data.data.accessToken
         authUtils.setToken(accessToken)
+        console.log('login -> Login -> authUtils.getToken', authUtils.getToken())
 
         Taro.showToast({
           title: '登录成功',
@@ -68,7 +69,7 @@ const Login: React.FC = () => {
         })
 
         Taro.navigateTo({
-          url: '/pages/dashboard'
+          url: '/pages/dashboard/dashboard'
         })
       } else {
         Taro.showToast({

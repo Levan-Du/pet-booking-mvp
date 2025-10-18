@@ -1,9 +1,5 @@
-import {
-	getAppointmentModel
-} from './appointment.model.js';
-import {
-	getServiceModel
-} from '../service/service.model.js';
+import { getAppointmentModel, getServiceModel } from '../model.factory.js';
+import { APPOINTMENT_STATUS, VALID_STATUSES } from '../../shared/enums/appointment-status.js';
 
 export class AppointmentService {
 	constructor() {
@@ -12,6 +8,7 @@ export class AppointmentService {
 	}
 
 	async getAllAppointments(filters = {}) {
+		console.log('appointments.service.js -> getAllAppointments -> filters:', filters);
 		return await this.appointmentModel.find(filters);
 	}
 
@@ -57,8 +54,7 @@ export class AppointmentService {
 	}
 
 	async updateAppointmentStatus(id, status) {
-		const validStatuses = ['pending', 'confirmed', 'completed', 'cancelled'];
-		if (!validStatuses.includes(status)) {
+		if (!VALID_STATUSES.includes(status)) {
 			throw new Error('无效的状态值');
 		}
 

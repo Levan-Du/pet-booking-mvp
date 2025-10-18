@@ -1,11 +1,10 @@
 import bcrypt from 'bcryptjs';
-import {
-	AdminModel
-} from './admin.model.js';
+import { getAdminModel } from '../model.factory.js';
+import { JWTUtil } from '../../core/utils/jwt.util.js';
 
 export class AdminService {
 	constructor() {
-		this.adminModel = new AdminModel();
+		this.adminModel = getAdminModel();
 	}
 
 	async login(username, password) {
@@ -20,10 +19,21 @@ export class AdminService {
 			throw new Error('用户名或密码错误');
 		}
 
-		return {
+		let payload = {
 			id: admin._id || admin.id,
-			username: admin.username
-		};
+			username: admin.username,
+			role: 'pet-admin'
+		}
+		let accessToken = JWTUtil.generateAccessToken(payload);
+		this.saveAccessToken(admin._id || admin.id, accessToken);
+
+		return { ...payload, accessToken };
+	}
+
+	saveAccessToken(adminId, token) {
+		// 这里可以实现将 token 存储到数据库或缓存中，以便后续验证
+		// 例如，更新管理员记录中的 token 字段
+		return this.adminModel.updateAccessToken(adminId, token);
 	}
 
 	async getProfile(adminId) {

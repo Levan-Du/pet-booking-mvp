@@ -1,4 +1,5 @@
 import Joi from 'joi';
+import { VALID_STATUSES } from '../../shared/enums/appointment-status.js';
 
 export const appointmentValidation = {
 	create: Joi.object({
@@ -54,6 +55,6 @@ export const appointmentValidation = {
 	}),
 
 	updateStatus: Joi.object({
-		status: Joi.string().valid('pending', 'confirmed', 'completed', 'cancelled').required()
+		status: Joi.string().valid(...VALID_STATUSES).required()
 	})
 };

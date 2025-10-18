@@ -1,6 +1,7 @@
 import {
 	AdminService
 } from './admin.service.js';
+import { JWTUtil } from '../../core/utils/jwt.util.js';
 
 const adminService = new AdminService();
 
@@ -26,6 +27,43 @@ export class AdminController {
 				});
 			}
 			next(error);
+		}
+	}
+
+	async checkToken(req, res, next) {
+		try {
+			const authHeader = req.headers.authorization;
+			if (!authHeader || !authHeader.startsWith('Bearer ')) {
+				return res.status(401).json({
+					success: false,
+					message: '需要Token认证'
+				});
+			}
+			const token = authHeader.slice(7);
+			if (!token) {
+				return res.status(401).json({
+					success: false,
+					message: 'Token不能为空'
+				});
+			}
+			const payload = JWTUtil.verifyToken(token);
+			if (!payload) {
+				return res.status(401).json({
+					success: false,
+					message: 'Token无效'
+				});
+			}
+			res.json({
+				success: true,
+				message: 'Token有效',
+				data: payload
+			});
+		} catch (error) {
+			console.error('Token认证错误:', error);
+			res.status(500).json({
+				success: false,
+				message: '服务器错误'
+			});
 		}
 	}
 

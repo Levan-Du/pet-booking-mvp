@@ -9,6 +9,9 @@ Thumbs.db
 !.vscode/extensions.json
 .idea/
 
+# 忽略 front-end-uniappx 目录
+front-end-uniappx/
+
 # ─── Node ───
 node_modules/
 npm-debug.log*

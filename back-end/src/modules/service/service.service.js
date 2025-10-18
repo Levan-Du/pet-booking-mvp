@@ -1,6 +1,4 @@
-import {
-	getServiceModel
-} from './service.model.js';
+import { getServiceModel } from '../model.factory.js';
 
 export class ServiceService {
 	constructor() {
