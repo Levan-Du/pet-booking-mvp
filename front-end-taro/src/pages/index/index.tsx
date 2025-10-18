@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React from 'react'
 import { View, Text, Button, Input, Textarea, Image, ScrollView } from '@tarojs/components'
 import Taro, { useReady } from '@tarojs/taro'
 import { jwtDecode } from 'jwt-decode'
@@ -31,17 +31,17 @@ interface FormData {
 }
 
 const Index: React.FC = () => {
-  const [services, setServices] = useState<Service[]>([])
-  const [selectedService, setSelectedService] = useState<Service | null>(null)
-  const [selectedDate, setSelectedDate] = useState('')
-  const [timeSlots, setTimeSlots] = useState<TimeSlot[]>([])
-  const [selectedTime, setSelectedTime] = useState<TimeSlot | null>(null)
-  const [loading, setLoading] = useState(false)
-  const [adminInfo, setAdminInfo] = useState<any>(null)
-  const [petTypes, setPetTypes] = useState<any[]>([])
-  const [sizeOptions, setSizeOptions] = useState<any[]>([])
+  const [services, setServices] = React.useState<Service[]>([])
+  const [selectedService, setSelectedService] = React.useState<Service | null>(null)
+  const [selectedDate, setSelectedDate] = React.useState('')
+  const [timeSlots, setTimeSlots] = React.useState<TimeSlot[]>([])
+  const [selectedTime, setSelectedTime] = React.useState<TimeSlot | null>(null)
+  const [loading, setLoading] = React.useState(false)
+  const [adminInfo, setAdminInfo] = React.useState<any>(null)
+  const [petTypes, setPetTypes] = React.useState<any[]>([])
+  const [sizeOptions, setSizeOptions] = React.useState<any[]>([])
 
-  const [formData, setFormData] = useState<FormData>({
+  const [formData, setFormData] = React.useState<FormData>({
     customer_name: '',
     customer_phone: '',
     pet_type: 'dog',
@@ -62,9 +62,9 @@ const Index: React.FC = () => {
   const isFormValid = selectedService && selectedDate && selectedTime &&
     formData.customer_name.trim() && formData.customer_phone.trim() && formData.pet_size
 
-  const [dateList, setDateList] = useState<any[]>([])
+  const [dateList, setDateList] = React.useState<any[]>([])
 
-  useEffect(() => {
+  React.useEffect(() => {
     generateDateList()
   }, [])
 
@@ -292,7 +292,7 @@ const Index: React.FC = () => {
   }
 
   // 生命周期
-  useEffect(() => {
+  React.useEffect(() => {
     const token = authUtils.getToken()
     if (token) {
       try {

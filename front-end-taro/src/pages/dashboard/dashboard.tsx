@@ -1,8 +1,9 @@
-import React, { useState, useEffect } from 'react'
+import React from 'react'
 import { View, Text, Button, Picker, ScrollView } from '@tarojs/components'
 import Taro from '@tarojs/taro'
 import { apiRequest } from '../../utils/requestUtils'
 import { formatDate } from '../../utils/time.util'
+import CustomNavbar from '../../components/custom-navbar'
 import './dashboard.scss'
 
 interface Appointment {
@@ -27,11 +28,11 @@ const Dashboard: React.FC = () => {
     { value: 'completed', label: '已完成', active: true },
     { value: 'cancelled', label: '已取消', active: true }
   ]
-  const [appointments, setAppointments] = useState<Appointment[]>([])
-  const [loading, setLoading] = useState(false)
-  const [selectedStatus, setSelectedStatus] = useState(statusOptions[0])
-  const [selectedStatusIndex, setSelectedStatusIndex] = useState(0)
-  const [selectedDate, setSelectedDate] = useState('')
+  const [appointments, setAppointments] = React.useState<Appointment[]>([])
+  const [loading, setLoading] = React.useState(false)
+  const [selectedStatus, setSelectedStatus] = React.useState(statusOptions[0])
+  const [selectedStatusIndex, setSelectedStatusIndex] = React.useState(0)
+  const [selectedDate, setSelectedDate] = React.useState('')
 
   const loadAppointments = async () => {
     setLoading(true)
@@ -122,20 +123,18 @@ const Dashboard: React.FC = () => {
   }
 
   // 监听筛选条件变化
-  useEffect(() => {
+  React.useEffect(() => {
     loadAppointments()
   }, [selectedStatusIndex, selectedDate])
 
-  useEffect(() => {
+  React.useEffect(() => {
     loadAppointments()
   }, [])
 
   return (
     <View className="layout">
       {/* 手动添加导航栏 */}
-      <View className='custom-navbar'>
-        <Text className='navbar-title'>预约管理</Text>
-      </View>
+      <CustomNavbar title="预约管理" />
       <View className='container'>
         <View className='content-container'>
           <View className='title-row card'>

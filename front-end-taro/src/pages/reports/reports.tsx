@@ -1,17 +1,18 @@
-import React, { useState } from 'react'
+import React from 'react'
 import { View, Text, ScrollView } from '@tarojs/components'
 import SimpleBarChart from '../../components/simple-bar-chart/simple-bar-chart'
 import SimplePieChart from '../../components/simple-pie-chart/simple-pie-chart'
+import CustomNavbar from '../../components/custom-navbar'
 import './reports.scss'
 
 const Reports: React.FC = () => {
-  const [todayAppointments] = useState(0)
-  const [todayBreakedAppointments] = useState(0)
-  const [todayCancelAppointments] = useState(0)
-  const [completedAndBrokonAppointments] = useState({ completed: 0, broken: 0 })
-  const [servicesAppointments] = useState([])
+  const [todayAppointments] = React.useState(0)
+  const [todayBreakedAppointments] = React.useState(0)
+  const [todayCancelAppointments] = React.useState(0)
+  const [completedAndBrokonAppointments] = React.useState({ completed: 0, broken: 0 })
+  const [servicesAppointments] = React.useState([])
 
-  const [chartData] = useState([
+  const [chartData] = React.useState([
     { name: "一月", value: 120 },
     { name: "二月", value: 200 },
     { name: "三月", value: 150 },
@@ -22,9 +23,7 @@ const Reports: React.FC = () => {
 
   return (
     <View className='layout'>
-      <View className='custom-navbar'>
-        <Text className='navbar-title'>报表看板</Text>
-      </View>
+      <CustomNavbar title="报表看板" />
       <View className='container'>
         <View className='content-container'>
           <View className='charts-box card'>

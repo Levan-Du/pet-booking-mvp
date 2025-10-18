@@ -1,14 +1,15 @@
-import React, { useState } from 'react'
+import React from 'react'
 import { View, Text, ScrollView } from '@tarojs/components'
 import './databoard.scss'
 import Taro from '@tarojs/taro'
+import CustomNavbar from '../../components/custom-navbar'
 
 const DataBoard: React.FC = () => {
-  const [todayAppointments] = useState(0)
-  const [todayBreakedAppointments] = useState(0)
-  const [todayCancelAppointments] = useState(0)
-  const [completedAndBrokonAppointments] = useState({ completed: 0, broken: 0 })
-  const [servicesAppointments] = useState([])
+  const [todayAppointments] = React.useState(0)
+  const [todayBreakedAppointments] = React.useState(0)
+  const [todayCancelAppointments] = React.useState(0)
+  const [completedAndBrokonAppointments] = React.useState({ completed: 0, broken: 0 })
+  const [servicesAppointments] = React.useState([])
 
   const gotoReport = () => {
     Taro.navigateTo({
@@ -22,9 +23,7 @@ const DataBoard: React.FC = () => {
 
   return (
     <View className='layout'>
-      <View className='custom-navbar'>
-        <Text className='navbar-title'>数据看板</Text>
-      </View>
+      <CustomNavbar title="数据看板" />
       <View className='container'>
         <View className='content-container'>
           <View className='data-row card'>

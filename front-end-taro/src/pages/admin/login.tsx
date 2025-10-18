@@ -1,15 +1,16 @@
-import React, { useState, useEffect } from 'react'
+import React from 'react'
 import { View, Text, Input, Button } from '@tarojs/components'
 import Taro from '@tarojs/taro'
 import { authUtils } from '../../utils/authUtils'
 import { apiRequest } from '../../utils/requestUtils'
+import CustomNavbar from '../../components/custom-navbar'
 import './login.scss'
 
 const Login: React.FC = () => {
-  const [username, setUsername] = useState('')
-  const [password, setPassword] = useState('')
+  const [username, setUsername] = React.useState('')
+  const [password, setPassword] = React.useState('')
 
-  useEffect(() => {
+  React.useEffect(() => {
     // checkToken()
   }, [])
 
@@ -87,34 +88,37 @@ const Login: React.FC = () => {
   }
 
   return (
-    <View className='container'>
-      <View className='login-form'>
-        <Text className='title'>管理员登录</Text>
+    <View className='layout'>
+      <CustomNavbar title="管理员登录" showBack={false} />
+      <View className='container'>
+        <View className='login-form'>
+          <Text className='title'>管理员登录</Text>
 
-        <View className='form-item'>
-          <Text className='label'>用户名</Text>
-          <Input
-            value={username}
-            placeholder='请输入用户名'
-            className='input'
-            onInput={(e) => setUsername(e.detail.value)}
-          />
+          <View className='form-item'>
+            <Text className='label'>用户名</Text>
+            <Input
+              value={username}
+              placeholder='请输入用户名'
+              className='input'
+              onInput={(e) => setUsername(e.detail.value)}
+            />
+          </View>
+
+          <View className='form-item'>
+            <Text className='label'>密码</Text>
+            <Input
+              value={password}
+              placeholder='请输入密码'
+              type='password'
+              className='input'
+              onInput={(e) => setPassword(e.detail.value)}
+            />
+          </View>
+
+          <Button onClick={handleLogin} className='login-btn'>
+            登录
+          </Button>
         </View>
-
-        <View className='form-item'>
-          <Text className='label'>密码</Text>
-          <Input
-            value={password}
-            placeholder='请输入密码'
-            type='password'
-            className='input'
-            onInput={(e) => setPassword(e.detail.value)}
-          />
-        </View>
-
-        <Button onClick={handleLogin} className='login-btn'>
-          登录
-        </Button>
       </View>
     </View>
   )
