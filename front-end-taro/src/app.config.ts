@@ -3,6 +3,7 @@ export default {
     'pages/index/index',
     'pages/admin/login',
     'pages/dashboard/dashboard',
+    'pages/databoard/databoard',
     'pages/reports/reports'
   ],
   window: {

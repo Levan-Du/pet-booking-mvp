@@ -312,196 +312,196 @@ const Index: React.FC = () => {
         <Text className='navbar-title'>宠物服务预约</Text>
       </View>
       <View className='container'>
-        {adminInfo?.role === 'pet-admin' && (
-          <>
-            <View className='header'>
-              <Button className='btn btn-primary' onClick={goToAdmin}>管理后台</Button>
-            </View>
-            <View className='header'>
-              <Button className='btn btn-primary' onClick={goToReports}>报表</Button>
-            </View>
-          </>
-        )}
-
-        {/* 服务选择 */}
-        <View className='card'>
-          <Text className='card-title'>选择服务</Text>
-          <View className='service-row'>
-            {services.map(service => (
-              <View
-                key={service._id || service.id}
-                className={`service-card ${selectedService?._id === service._id ? 'active' : ''}`}
-                onClick={() => selectService(service)}
-              >
-                <Text className='service-name'>{service.name}</Text>
+        <View className='content-container'>
+          {adminInfo?.role === 'pet-admin' && (
+            <>
+              <View className='header'>
+                <Button className='btn btn-primary' onClick={goToAdmin}>预约管理</Button>
               </View>
-            ))}
-          </View>
-
-          {/* 选中服务信息 */}
-          {selectedService && (
-            <View className='service-detail'>
-              <View className='detail-header'>
-                <Text className='detail-name'>{selectedService.name}</Text>
-                <Text className='detail-price'>¥{selectedService.price}</Text>
-              </View>
-              <View className='detail-info'>
-                <Text className='detail-duration'>时长: {selectedService.duration}分钟</Text>
-                <Text className='detail-desc'>{selectedService.description}</Text>
-              </View>
-            </View>
+            </>
           )}
-        </View>
 
-        {/* 日期选择 */}
-        <View className='card'>
-          <Text className='card-title'>选择日期</Text>
-          <ScrollView className='date-scroll' scrollX>
-            <View className='date-row'>
-              {dateList.map(date => (
+          {/* 服务选择 */}
+          <View className='card'>
+            <Text className='card-title'>选择服务</Text>
+            <View className='service-row'>
+              {services.map(service => (
                 <View
-                  key={date.date}
-                  className={`date-card ${selectedDate === date.date ? 'active' : ''}`}
-                  onClick={() => selectDate(date.date)}
+                  key={service._id || service.id}
+                  className={`service-card ${selectedService?._id === service._id ? 'active' : ''}`}
+                  onClick={() => selectService(service)}
                 >
-                  <Text className='date-week'>{date.week}</Text>
-                  <Text className='date-date'>{date.month}月{date.day}日</Text>
+                  <Text className='service-name'>{service.name}</Text>
                 </View>
               ))}
             </View>
-          </ScrollView>
-        </View>
 
-        {/* 时间选择 */}
-        {timeSlots.length > 0 && (
-          <View className='card'>
-            <Text className='card-title'>选择时间</Text>
-            {timePeriods.map(period => {
-              const periodSlots = getTimeSlotsByPeriod(period.type)
-              if (periodSlots.length === 0) return null
-
-              return (
-                <View key={period.type} className='time-section'>
-                  <Text className='period-title'>{period.title}</Text>
-                  <View className='time-grid'>
-                    {periodSlots.map(slot => (
-                      <View
-                        key={slot.start_time}
-                        className={`time-card ${selectedTime?.start_time === slot.start_time ? 'active' : ''}`}
-                        onClick={() => selectTime(slot)}
-                      >
-                        <Text className='time-range'>{slot.start_time} - {slot.end_time}</Text>
-                        <Text className='slots-available'>{slot.available_slots}个空位</Text>
-                      </View>
-                    ))}
-                  </View>
+            {/* 选中服务信息 */}
+            {selectedService && (
+              <View className='service-detail'>
+                <View className='detail-header'>
+                  <Text className='detail-name'>{selectedService.name}</Text>
+                  <Text className='detail-price'>¥{selectedService.price}</Text>
                 </View>
-              )
-            })}
+                <View className='detail-info'>
+                  <Text className='detail-duration'>时长: {selectedService.duration}分钟</Text>
+                  <Text className='detail-desc'>{selectedService.description}</Text>
+                </View>
+              </View>
+            )}
           </View>
-        )}
 
-        {/* 宠物信息表单 */}
-        <View className='card'>
-          <Text className='card-title'>填写信息</Text>
-          <View className='form'>
-            <View className='form-group'>
-              <Text className='label'>客户姓名</Text>
-              <Input
-                value={formData.customer_name}
-                placeholder='请输入您的姓名'
-                className='input'
-                onInput={(e) => setFormData({ ...formData, customer_name: e.detail.value })}
-              />
-            </View>
-
-            <View className='form-group'>
-              <Text className='label'>手机号码</Text>
-              <Input
-                value={formData.customer_phone}
-                placeholder='请输入您的手机号'
-                type='number'
-                maxlength={11}
-                className='input'
-                onInput={(e) => setFormData({ ...formData, customer_phone: e.detail.value })}
-              />
-            </View>
-
-            <View className='form-group'>
-              <Text className='label'>宠物类型</Text>
-              <View className='pet-type-grid'>
-                {petTypes.map(type => (
+          {/* 日期选择 */}
+          <View className='card'>
+            <Text className='card-title'>选择日期</Text>
+            <ScrollView className='date-scroll' scrollX>
+              <View className='date-row'>
+                {dateList.map(date => (
                   <View
-                    key={type.value}
-                    className={`pet-type-card ${formData.pet_type === type.value ? 'active' : ''}`}
-                    onClick={() => setFormData({ ...formData, pet_type: type.value })}
-                    style={` background-image: url(${type.icon}); background-repeat: no-repeat; background-size: cover; background-position: center`}
+                    key={date.date}
+                    className={`date-card ${selectedDate === date.date ? 'active' : ''}`}
+                    onClick={() => selectDate(date.date)}
                   >
-                    <Image src={type.icon} className='pet-icon' mode='aspectFit' />
-                    <Text className='pet-type-name'>{type.label}</Text>
+                    <Text className='date-week'>{date.week}</Text>
+                    <Text className='date-date'>{date.month}月{date.day}日</Text>
                   </View>
                 ))}
               </View>
-            </View>
+            </ScrollView>
+          </View>
 
-            <View className='form-group'>
-              <Text className='label'>宠物品种</Text>
-              <Input
-                value={formData.pet_breed}
-                placeholder='例如：金毛、布偶猫等'
-                className='input'
-                onInput={(e) => setFormData({ ...formData, pet_breed: e.detail.value })}
-              />
-            </View>
+          {/* 时间选择 */}
+          {timeSlots.length > 0 && (
+            <View className='card'>
+              <Text className='card-title'>选择时间</Text>
+              {timePeriods.map(period => {
+                const periodSlots = getTimeSlotsByPeriod(period.type)
+                if (periodSlots.length === 0) return null
 
-            <View className='form-group'>
-              <Text className='label'>宠物体型</Text>
-              <View className='size-grid'>
-                {sizeOptions.map(size => (
-                  <Button
-                    key={size.value}
-                    className={`size-card ${formData.pet_size === size.value ? 'active' : ''}`}
-                    onClick={() => setFormData({ ...formData, pet_size: size.value })}
-                  >
-                    <Text className='size-label'>{size.label}</Text>
-                  </Button>
-                ))}
+                return (
+                  <View key={period.type} className='time-section'>
+                    <Text className='period-title'>{period.title}</Text>
+                    <View className='time-grid'>
+                      {periodSlots.map(slot => (
+                        <View
+                          key={slot.start_time}
+                          className={`time-card ${selectedTime?.start_time === slot.start_time ? 'active' : ''}`}
+                          onClick={() => selectTime(slot)}
+                        >
+                          <Text className='time-range'>{slot.start_time} - {slot.end_time}</Text>
+                          <Text className='slots-available'>{slot.available_slots}个空位</Text>
+                        </View>
+                      ))}
+                    </View>
+                  </View>
+                )
+              })}
+            </View>
+          )}
+
+          {/* 宠物信息表单 */}
+          <View className='card'>
+            <Text className='card-title'>填写信息</Text>
+            <View className='form'>
+              <View className='form-group'>
+                <Text className='label'>客户姓名</Text>
+                <Input
+                  value={formData.customer_name}
+                  placeholder='请输入您的姓名'
+                  className='input'
+                  onInput={(e) => setFormData({ ...formData, customer_name: e.detail.value })}
+                />
+              </View>
+
+              <View className='form-group'>
+                <Text className='label'>手机号码</Text>
+                <Input
+                  value={formData.customer_phone}
+                  placeholder='请输入您的手机号'
+                  type='number'
+                  maxlength={11}
+                  className='input'
+                  onInput={(e) => setFormData({ ...formData, customer_phone: e.detail.value })}
+                />
+              </View>
+
+              <View className='form-group'>
+                <Text className='label'>宠物类型</Text>
+                <View className='pet-type-grid'>
+                  {petTypes.map(type => (
+                    <View
+                      key={type.value}
+                      className={`pet-type-card ${formData.pet_type === type.value ? 'active' : ''}`}
+                      onClick={() => setFormData({ ...formData, pet_type: type.value })}
+                      style={` background-image: url(${type.icon}); background-repeat: no-repeat; background-size: cover; background-position: center`}
+                    >
+                      <Image src={type.icon} className='pet-icon' mode='aspectFit' />
+                      <Text className='pet-type-name'>{type.label}</Text>
+                    </View>
+                  ))}
+                </View>
+              </View>
+
+              <View className='form-group'>
+                <Text className='label'>宠物品种</Text>
+                <Input
+                  value={formData.pet_breed}
+                  placeholder='例如：金毛、布偶猫等'
+                  className='input'
+                  onInput={(e) => setFormData({ ...formData, pet_breed: e.detail.value })}
+                />
+              </View>
+
+              <View className='form-group'>
+                <Text className='label'>宠物体型</Text>
+                <View className='size-grid'>
+                  {sizeOptions.map(size => (
+                    <Button
+                      key={size.value}
+                      className={`size-card ${formData.pet_size === size.value ? 'active' : ''}`}
+                      onClick={() => setFormData({ ...formData, pet_size: size.value })}
+                    >
+                      <Text className='size-label'>{size.label}</Text>
+                    </Button>
+                  ))}
+                </View>
+              </View>
+
+              <View className='form-group end'>
+                <Text className='label'>特殊要求</Text>
+                <Textarea
+                  id='special_notes'
+                  value={formData.special_notes}
+                  placeholder='请告知宠物的特殊情况，如攻击性、健康问题等'
+                  className='textarea'
+                  onInput={(e) => setFormData({ ...formData, special_notes: e.detail.value })}
+                />
               </View>
             </View>
-
-            <View className='form-group end'>
-              <Text className='label'>特殊要求</Text>
-              <Textarea
-                id='special_notes'
-                value={formData.special_notes}
-                placeholder='请告知宠物的特殊情况，如攻击性、健康问题等'
-                className='textarea'
-                onInput={(e) => setFormData({ ...formData, special_notes: e.detail.value })}
-              />
-            </View>
           </View>
         </View>
-
-        {/* 提交按钮 */}
-        <View className='footer'>
-          <Button
-            onClick={submitBooking}
-            disabled={!isFormValid}
-            className='submit-btn'
-          >
-            {loading ? '提交中...' : '立即预约'}
-          </Button>
-        </View>
-
-        {/* 加载状态 */}
-        {loading && (
-          <View className='loading-mask'>
-            <View className='loading-content'>
-              <Text>加载中...</Text>
-            </View>
-          </View>
-        )}
       </View>
+
+
+      {/* 提交按钮 */}
+      <View className='footer'>
+        <Button
+          onClick={submitBooking}
+          disabled={!isFormValid}
+          className='submit-btn'
+        >
+          {loading ? '提交中...' : '立即预约'}
+        </Button>
+      </View>
+
+      {/* 加载状态 */}
+      {loading && (
+        <View className='loading-mask'>
+          <View className='loading-content'>
+            <Text>加载中...</Text>
+          </View>
+        </View>
+      )}
     </View>
   )
 }

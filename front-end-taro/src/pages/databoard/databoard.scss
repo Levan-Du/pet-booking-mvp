@@ -1,25 +1,5 @@
-/* 自定义导航栏样式 */
-.custom-navbar {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 88rpx;
-  background-color: #fff;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-bottom: 1rpx solid #e0e0e0;
-  z-index: 1000;
-}
-
 .container {
-  display: flex;
-  flex: 1;
-  margin-top: 0;
-  margin-bottom: 0;
-  padding-top: 0;
-  padding-bottom: 0;
+  bottom: 0;
 }
 
 .data-row {
@@ -27,8 +7,8 @@
   grid-template-columns: 1fr 1fr;
   justify-content: space-between;
   align-items: center;
-  padding: 20rpx;
-  gap: 20rpx;
+  padding: 40rpx;
+  gap: 40rpx;
 }
 
 .data-row .card {
@@ -40,6 +20,15 @@
   align-items: center;
   overflow: hidden;
   margin-bottom: 0;
+}
+
+.data-row-title {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background-color: #f2f2f2;
 }
 
 .data-row .title {
@@ -65,8 +54,25 @@
   color: rgb(225, 53, 6);
 }
 
+.tool-row {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  gap: 20rpx;
+}
+
+.tool-row .card {
+  width: 100%;
+  align-items: center;
+}
+
+.tool-row .btn-card {
+  width: 100%;
+  background-color: #007AFF;
+  color: #fff;
+}
+
 .charts {
-  flex: 1;
   display: flex;
   flex-direction: column;
   width: 100%;

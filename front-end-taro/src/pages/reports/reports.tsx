@@ -26,28 +26,21 @@ const Reports: React.FC = () => {
         <Text className='navbar-title'>报表看板</Text>
       </View>
       <View className='container'>
-        <View className='data-row card'>
-          <View className='card'>
-            <Text className='title'>今日预约数:</Text>
-            <Text className='value'>{todayAppointments}</Text>
-          </View>
-          <View className='data-row card'>
-            <Text className='title'>爽约数:</Text>
-            <Text className='value'>{todayBreakedAppointments}</Text>
-          </View>
-          <View className='data-row card'>
-            <Text className='title'>取消数:</Text>
-            <Text className='value'>{todayCancelAppointments}</Text>
-          </View>
-        </View>
-        <View className='charts'>
+        <View className='content-container'>
           <View className='charts-box card'>
-            {/* <SimplePieChart title='完成数/爽约数饼状图' data={chartData} width={360} height={300} /> */}
+            <SimplePieChart title='完成数/爽约数饼状图' data={chartData} />
           </View>
           <View className='charts-box card'>
             <SimpleBarChart title='各服务预约数柱状图' data={chartData} />
           </View>
         </View>
+      </View>
+
+      <View className='custom-toolbar'>
+        <View className="toolbar-item">一二</View>
+        <View className="toolbar-item">三四</View>
+        <View className="toolbar-item">五六</View>
+        <View className="toolbar-item">七八</View>
       </View>
     </View>
   )
