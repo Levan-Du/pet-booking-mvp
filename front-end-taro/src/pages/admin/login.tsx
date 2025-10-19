@@ -89,35 +89,37 @@ const Login: React.FC = () => {
 
   return (
     <View className='layout'>
-      <CustomNavbar title="管理员登录" showBack={false} />
-      <View className='container'>
-        <View className='login-form'>
-          <Text className='title'>管理员登录</Text>
+      <CustomNavbar title="管理员登录" showBack={false} showMenu={false} />
+      <View className='container login'>
+        <View className="content-container login">
+          <View className='login-form'>
+            <Text className='title'>管理员登录</Text>
 
-          <View className='form-item'>
-            <Text className='label'>用户名</Text>
-            <Input
-              value={username}
-              placeholder='请输入用户名'
-              className='input'
-              onInput={(e) => setUsername(e.detail.value)}
-            />
+            <View className='form-item'>
+              <Text className='label'>用户名</Text>
+              <Input
+                value={username}
+                placeholder='请输入用户名'
+                className='input'
+                onInput={(e) => setUsername(e.detail.value)}
+              />
+            </View>
+
+            <View className='form-item'>
+              <Text className='label'>密码</Text>
+              <Input
+                value={password}
+                placeholder='请输入密码'
+                type='password'
+                className='input'
+                onInput={(e) => setPassword(e.detail.value)}
+              />
+            </View>
+
+            <Button onClick={handleLogin} className='login-btn'>
+              登录
+            </Button>
           </View>
-
-          <View className='form-item'>
-            <Text className='label'>密码</Text>
-            <Input
-              value={password}
-              placeholder='请输入密码'
-              type='password'
-              className='input'
-              onInput={(e) => setPassword(e.detail.value)}
-            />
-          </View>
-
-          <Button onClick={handleLogin} className='login-btn'>
-            登录
-          </Button>
         </View>
       </View>
     </View>

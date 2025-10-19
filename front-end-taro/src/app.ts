@@ -1,17 +1,14 @@
-import { PropsWithChildren } from 'react'
-import { useLaunch } from '@tarojs/taro'
-
+import React from 'react'
+import Taro from '@tarojs/taro'
+import { LanguageProvider } from './shared/i18n/LanguageContext'
 import './app.scss'
 
-function App({ children }: PropsWithChildren<any>) {
-  useLaunch(() => {
+function App({ children }: any) {
+  Taro.useLaunch(() => {
     console.log('App launched.')
   })
 
-  // children 是将要会渲染的页面
-  return children
+  return React.createElement(LanguageProvider, null, children)
 }
-
-
 
 export default App

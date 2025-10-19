@@ -1,6 +1,8 @@
 import React from 'react'
 import { View, Text } from '@tarojs/components'
 import Taro from '@tarojs/taro'
+import { useLanguage } from '../../shared/i18n/LanguageContext'
+import NavbarMenu from '../navbar-menu'
 import './custom-navbar.scss'
 
 interface CustomNavbarProps {
@@ -11,14 +13,23 @@ interface CustomNavbarProps {
     text: string
     onClick: () => void
   }
+  showLanguageSwitcher?: boolean
+  showScanButton?: boolean
+  showMenu?: boolean
+  onScanClick?: () => void
 }
 
-const CustomNavbar: React.FC<CustomNavbarProps> = ({ 
-  title, 
+const CustomNavbar: React.FC<CustomNavbarProps> = ({
+  title,
   showBack = true,
   backText = '返回',
-  rightButton
+  rightButton,
+  showLanguageSwitcher = true,
+  showScanButton = false,
+  showMenu = true,
+  onScanClick
 }) => {
+  const { t } = useLanguage()
   const handleBack = () => {
     Taro.navigateBack()
   }
@@ -32,11 +43,18 @@ const CustomNavbar: React.FC<CustomNavbarProps> = ({
         </View>
       )}
       <Text className='navbar-title'>{title}</Text>
-      {rightButton && (
-        <View className='navbar-right' onClick={rightButton.onClick}>
-          <Text className='right-button'>{rightButton.text}</Text>
-        </View>
-      )}
+      <View className='navbar-right'>
+        {showMenu && <NavbarMenu
+          showScanButton={showScanButton}
+          onScanClick={onScanClick}
+          showLanguageSwitcher={showLanguageSwitcher}
+        />}
+        {rightButton && (
+          <View className='right-button-container' onClick={rightButton.onClick}>
+            <Text className='right-button'>{rightButton.text}</Text>
+          </View>
+        )}
+      </View>
     </View>
   )
 }

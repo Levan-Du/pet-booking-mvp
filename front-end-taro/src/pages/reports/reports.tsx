@@ -6,12 +6,6 @@ import CustomNavbar from '../../components/custom-navbar'
 import './reports.scss'
 
 const Reports: React.FC = () => {
-  const [todayAppointments] = React.useState(0)
-  const [todayBreakedAppointments] = React.useState(0)
-  const [todayCancelAppointments] = React.useState(0)
-  const [completedAndBrokonAppointments] = React.useState({ completed: 0, broken: 0 })
-  const [servicesAppointments] = React.useState([])
-
   const [chartData] = React.useState([
     { name: "一月", value: 120 },
     { name: "二月", value: 200 },
@@ -35,12 +29,6 @@ const Reports: React.FC = () => {
         </View>
       </View>
 
-      <View className='custom-toolbar'>
-        <View className="toolbar-item">一二</View>
-        <View className="toolbar-item">三四</View>
-        <View className="toolbar-item">五六</View>
-        <View className="toolbar-item">七八</View>
-      </View>
     </View>
   )
 }

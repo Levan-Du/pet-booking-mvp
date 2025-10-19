@@ -1,0 +1,121 @@
+export default {
+  common: {
+    loading: '加载中...',
+    submit: '提交',
+    confirm: '确认',
+    cancel: '取消',
+    save: '保存',
+    edit: '编辑',
+    delete: '删除',
+    search: '搜索',
+    reset: '重置',
+    back: '返回',
+    next: '下一步',
+    prev: '上一步',
+    close: '关闭',
+    yes: '是',
+    no: '否',
+    ok: '确定',
+    unknown: '未知品种'
+  },
+  nav: {
+    home: '首页',
+    booking: '预约',
+    dashboard: '预约管理',
+    databoard: '数据看板',
+    reports: '报表',
+    store: '进店看看',
+    admin: '管理员'
+  },
+  booking: {
+    title: '宠物服务预约',
+    selectService: '选择服务',
+    selectDate: '选择日期',
+    selectTime: '选择时间',
+    fillInfo: '填写信息',
+    customerName: '客户姓名',
+    customerPhone: '手机号码',
+    petType: '宠物类型',
+    petBreed: '宠物品种',
+    petSize: '宠物体型',
+    specialNotes: '特殊要求',
+    submitBooking: '立即预约',
+    submitting: '提交中...',
+    bookingSuccess: '预约成功！',
+    bookingFailed: '预约失败',
+    networkError: '网络错误，请重试',
+    completeInfo: '请填写完整信息',
+    today: '今天',
+    tomorrow: '明天',
+    morning: '上午',
+    afternoon: '下午',
+    evening: '晚上',
+    availableSlots: '个空位',
+    duration: '时长',
+    minutes: '分钟'
+  },
+  dashboard: {
+    title: '预约管理',
+    allStatus: '全部状态',
+    pending: '待确认',
+    confirmed: '已确认',
+    in_progress: '进行中',
+    completed: '已完成',
+    cancelled: '已取消',
+    no_show: '客户爽约',
+    selectDate: '选择日期',
+    customer: '客户',
+    phone: '电话',
+    pet: '宠物',
+    time: '时间',
+    notes: '备注',
+    confirm: '确认',
+    start_service: '开始服务',
+    complete: '完成',
+    cancel: '取消',
+    mark_no_show: '标记爽约',
+    scan_qr: '扫码签到',
+    noData: '暂无预约数据',
+    loadFailed: '加载数据失败',
+    updateSuccess: '状态更新成功',
+    updateFailed: '更新失败',
+    networkError: '网络错误，请重试'
+  },
+  petTypes: {
+    dog: '狗狗',
+    cat: '猫咪',
+    other: '其他'
+  },
+  sizes: {
+    small: '小型',
+    medium: '中型',
+    large: '大型'
+  },
+  errors: {
+    required: '此项为必填项',
+    invalidPhone: '请输入有效的手机号码',
+    networkError: '网络错误，请重试'
+  },
+  language: {
+    select_language: '选择语言'
+  },
+  navbar: {
+    scan_signin: '扫码签到',
+    switch_language: '切换语言',
+    operation_log: '操作记录',
+    data_report: '数据统计'
+  },
+  databoard: {
+    title: '数据看板',
+    today_data: '今日数据',
+    total_appointments: '预约总数',
+    pending: '待确认',
+    confirmed: '已确认',
+    in_progress: '进行中',
+    completed: '已完成',
+    no_show: '客户爽约',
+    cancelled: '已取消',
+    refresh: '刷新数据',
+    last_update: '最后更新'
+  }
+}

@@ -1,0 +1,72 @@
+.container {
+  bottom: 0;
+}
+
+.content-container {
+  padding: 20rpx;
+}
+
+.log-list {
+  height: calc(100vh - 200rpx);
+  gap: 20rpx;
+  display: flex;
+  flex-direction: column;
+}
+
+.log-card {
+  background: white;
+  border-radius: 16rpx;
+  padding: 30rpx;
+  border-left: 8rpx solid #007AFF;
+}
+
+.log-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20rpx;
+}
+
+.log-type {
+  font-size: 28rpx;
+  font-weight: 600;
+  color: #333;
+}
+
+.log-time {
+  font-size: 24rpx;
+  color: #666;
+}
+
+.log-content {
+  gap: 12rpx;
+  display: flex;
+  flex-direction: column;
+}
+
+.log-row {
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  min-height: 36rpx;
+}
+
+.label {
+  font-size: 24rpx;
+  color: #666;
+  min-width: 140rpx;
+}
+
+.value {
+  font-size: 24rpx;
+  color: #333;
+  flex: 1;
+}
+
+.loading,
+.empty {
+  text-align: center;
+  padding: 60rpx;
+  color: #666;
+  font-size: 28rpx;
+}

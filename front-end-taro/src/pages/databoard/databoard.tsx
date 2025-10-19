@@ -1,60 +1,88 @@
 import React from 'react'
 import { View, Text, ScrollView } from '@tarojs/components'
 import './databoard.scss'
-import Taro from '@tarojs/taro'
+import Taro, { useReady } from '@tarojs/taro'
 import CustomNavbar from '../../components/custom-navbar'
+import { apiRequest } from '../../utils/requestUtils'
+import { useLanguage } from '../../shared/i18n/LanguageContext'
 
 const DataBoard: React.FC = () => {
-  const [todayAppointments] = React.useState(0)
-  const [todayBreakedAppointments] = React.useState(0)
-  const [todayCancelAppointments] = React.useState(0)
-  const [completedAndBrokonAppointments] = React.useState({ completed: 0, broken: 0 })
-  const [servicesAppointments] = React.useState([])
+  const { t } = useLanguage()
+  const [todayStats, setTodayStats] = React.useState({
+    total: 0,
+    pending: 0,
+    confirmed: 0,
+    in_progress: 0,
+    completed: 0,
+    cancelled: 0,
+    no_show: 0
+  })
 
-  const gotoReport = () => {
-    Taro.navigateTo({
-      url: '/pages/reports/reports'
-    })
+  const loadTodayStats = async () => {
+    try {
+      const response = await apiRequest({
+        url: 'http://localhost:3000/api/reports/today',
+        method: 'GET'
+      })
+
+      if (response.data.success) {
+        setTodayStats(response.data.data)
+      }
+    } catch (error) {
+      console.error('加载今日统计数据失败:', error)
+    }
   }
 
-  const goBack = () => {
-    Taro.navigateBack()
-  }
+  useReady(() => {
+    loadTodayStats()
+
+    // 每分钟查询一次数据
+    const interval = setInterval(loadTodayStats, 60000)
+
+    return () => clearInterval(interval)
+  })
 
   return (
     <View className='layout'>
-      <CustomNavbar title="数据看板" />
-      <View className='container'>
-        <View className='content-container'>
+      <CustomNavbar title={t('nav.databoard')} />
+      <View className='container databoard'>
+        <View className='content-container databoard'>
           <View className='data-row card'>
-            <View className="data-row-title card"><Text>今日数据</Text></View>
-            <View className='card'>
-              <Text className='title'>预约数:</Text>
-              <Text className='value'>{todayAppointments}</Text>
+            <View className="data-row-title card">
+              <Text>{t('databoard.today_data')}</Text>
             </View>
             <View className='card'>
-              <Text className='title'>完成数:</Text>
-              <Text className='value completed'>{todayBreakedAppointments}</Text>
+              <Text className='title'>{t('databoard.total_appointments')}:</Text>
+              <Text className='value'>{todayStats.total}</Text>
             </View>
             <View className='card'>
-              <Text className='title'>确认数:</Text>
-              <Text className='value comfirmed'>{todayBreakedAppointments}</Text>
+              <Text className='title'>{t('databoard.pending')}:</Text>
+              <Text className='value pending'>{todayStats.pending}</Text>
             </View>
             <View className='card'>
-              <Text className='title'>爽约数:</Text>
-              <Text className='value broken'>{todayBreakedAppointments}</Text>
+              <Text className='title'>{t('databoard.confirmed')}:</Text>
+              <Text className='value confirmed'>{todayStats.confirmed}</Text>
             </View>
             <View className='card'>
-              <Text className='title'>取消数:</Text>
-              <Text className='value cancel'>{todayCancelAppointments}</Text>
+              <Text className='title'>{t('databoard.in_progress')}:</Text>
+              <Text className='value in-progress'>{todayStats.in_progress}</Text>
             </View>
-          </View>
-          <View className='tool-row card'>
-            <View className="card" onClick={gotoReport}><Text>数据图表</Text></View>
-            <View className="card btn-card" onClick={goBack}><Text>返回</Text></View>
+            <View className='card'>
+              <Text className='title'>{t('databoard.completed')}:</Text>
+              <Text className='value completed'>{todayStats.completed}</Text>
+            </View>
+            <View className='card'>
+              <Text className='title'>{t('databoard.no_show')}:</Text>
+              <Text className='value no-show'>{todayStats.no_show}</Text>
+            </View>
+            <View className='card'>
+              <Text className='title'>{t('databoard.cancelled')}:</Text>
+              <Text className='value cancelled'>{todayStats.cancelled}</Text>
+            </View>
           </View>
         </View>
       </View>
+
     </View>
   )
 }

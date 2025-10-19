@@ -150,4 +150,18 @@ export class AppointmentController {
 			next(error);
 		}
 	}
+
+	async getTodayStats(req, res, next) {
+		try {
+			const today = new Date().toISOString().split('T')[0];
+			const stats = await appointmentService.getTodayStats(today);
+
+			res.json({
+				success: true,
+				data: stats
+			});
+		} catch (error) {
+			next(error);
+		}
+	}
 }

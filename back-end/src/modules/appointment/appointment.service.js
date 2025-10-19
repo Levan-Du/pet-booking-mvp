@@ -129,4 +129,45 @@ export class AppointmentService {
 
 		return slots;
 	}
+
+	async getTodayStats(date) {
+		const appointments = await this.getAllAppointments({
+			appointment_date: date
+		});
+
+		const stats = {
+			total: appointments.length,
+			pending: 0,
+			confirmed: 0,
+			in_progress: 0,
+			completed: 0,
+			cancelled: 0,
+			no_show: 0
+		};
+
+		appointments.forEach(appointment => {
+			switch (appointment.status) {
+				case APPOINTMENT_STATUS.PENDING:
+					stats.pending++;
+					break;
+				case APPOINTMENT_STATUS.CONFIRMED:
+					stats.confirmed++;
+					break;
+				case APPOINTMENT_STATUS.IN_PROGRESS:
+					stats.in_progress++;
+					break;
+				case APPOINTMENT_STATUS.COMPLETED:
+					stats.completed++;
+					break;
+				case APPOINTMENT_STATUS.CANCELLED:
+					stats.cancelled++;
+					break;
+				case APPOINTMENT_STATUS.NO_SHOW:
+					stats.no_show++;
+					break;
+			}
+		});
+
+		return stats;
+	}
 }
