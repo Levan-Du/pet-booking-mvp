@@ -103,7 +103,7 @@ router.get('/appointment-status', (req, res) => {
       data: appointmentStatus
     });
   } catch (error) {
-    console.error('获取预约状态枚举失败:', error);
+    // console.error('获取预约状态枚举失败:', error);
     res.status(500).json({
       success: false,
       message: '获取预约状态枚举失败'

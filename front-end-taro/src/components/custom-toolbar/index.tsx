@@ -10,8 +10,8 @@ interface CustomToolbarProps {
 const CustomToolbar: React.FC<CustomToolbarProps> = ({ currentPage = '' }) => {
   const handleNavigate = (page: string) => {
     switch (page) {
-      case 'dashboard':
-        Taro.redirectTo({ url: '/pages/dashboard/dashboard' })
+      case 'management':
+        Taro.redirectTo({ url: '/pages/management/management' })
         break
       case 'databoard':
         Taro.redirectTo({ url: '/pages/databoard/databoard' })
@@ -27,8 +27,8 @@ const CustomToolbar: React.FC<CustomToolbarProps> = ({ currentPage = '' }) => {
   return (
     <View className='custom-toolbar'>
       <View 
-        className={`toolbar-item ${currentPage === 'dashboard' ? 'active' : ''}`}
-        onClick={() => handleNavigate('dashboard')}
+        className={`toolbar-item ${currentPage === 'management' ? 'active' : ''}`}
+        onClick={() => handleNavigate('management')}
       >
         <Text>管理主页</Text>
       </View>

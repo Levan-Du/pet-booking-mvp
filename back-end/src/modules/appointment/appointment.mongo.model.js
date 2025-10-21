@@ -21,19 +21,19 @@ export class AppointmentMongoModel extends MongoModel {
 
   async find(query = {}) {
     const pipeline = [{
-        $lookup: {
-          from: 'services',
-          localField: 'service_id',
-          foreignField: '_id',
-          as: 'service'
-        }
-      },
-      {
-        $unwind: {
-          path: '$service',
-          preserveNullAndEmptyArrays: true
-        }
+      $lookup: {
+        from: 'services',
+        localField: 'service_id',
+        foreignField: '_id',
+        as: 'service'
       }
+    },
+    {
+      $unwind: {
+        path: '$service',
+        preserveNullAndEmptyArrays: true
+      }
+    }
     ];
 
     const matchStage = {};
@@ -53,6 +53,7 @@ export class AppointmentMongoModel extends MongoModel {
     pipeline.push({
       $project: {
         _id: 1,
+        appointment_no: 1,
         customer_name: 1,
         customer_phone: 1,
         pet_type: 1,
@@ -88,15 +89,15 @@ export class AppointmentMongoModel extends MongoModel {
         $ne: APPOINTMENT_STATUS.CANCELLED
       },
       $nor: [{
-          end_time: {
-            $lte: appointment_time
-          }
-        },
-        {
-          appointment_time: {
-            $gte: end_time
-          }
+        end_time: {
+          $lte: appointment_time
         }
+      },
+      {
+        appointment_time: {
+          $gte: end_time
+        }
+      }
       ]
     };
 

@@ -3,7 +3,8 @@ import { View, Text, Input, Button } from '@tarojs/components'
 import Taro from '@tarojs/taro'
 import { authUtils } from '../../utils/authUtils'
 import { apiRequest } from '../../utils/requestUtils'
-import CustomNavbar from '../../components/custom-navbar'
+import CustomNavbar from '../../components/custom-navbar/custom-navbar'
+import { API_URLS } from '../../shared/constants'
 import './login.scss'
 
 const Login: React.FC = () => {
@@ -46,7 +47,7 @@ const Login: React.FC = () => {
 
     try {
       const response = await Taro.request({
-        url: 'http://localhost:3000/api/admin/login',
+        url: API_URLS.ADMIN_LOGIN_URL,
         method: 'POST',
         header: {
           'Content-Type': 'application/json'
@@ -58,11 +59,9 @@ const Login: React.FC = () => {
       })
 
       if (response.data.success) {
-        console.log('login -> Login -> response', response)
         // 存储访问令牌（accessToken）而不是刷新令牌
         const accessToken = response.data.data.accessToken
         authUtils.setToken(accessToken)
-        console.log('login -> Login -> authUtils.getToken', authUtils.getToken())
 
         Taro.showToast({
           title: '登录成功',
@@ -70,7 +69,7 @@ const Login: React.FC = () => {
         })
 
         Taro.navigateTo({
-          url: '/pages/dashboard/dashboard'
+          url: '/pages/management/management'
         })
       } else {
         Taro.showToast({
@@ -79,7 +78,6 @@ const Login: React.FC = () => {
         })
       }
     } catch (error) {
-      console.error('登录失败:', error)
       Taro.showToast({
         title: '网络错误，请重试',
         icon: 'error'
@@ -88,10 +86,10 @@ const Login: React.FC = () => {
   }
 
   return (
-    <View className='layout'>
+    <View className='layout page-login'>
       <CustomNavbar title="管理员登录" showBack={false} showMenu={false} />
-      <View className='container login'>
-        <View className="content-container login">
+      <View className='container'>
+        <View className="content-container">
           <View className='login-form'>
             <Text className='title'>管理员登录</Text>
 

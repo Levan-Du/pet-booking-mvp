@@ -2,8 +2,9 @@ import React from 'react'
 import { View, Text, ScrollView } from '@tarojs/components'
 import Taro from '@tarojs/taro'
 import { apiRequest } from '../../utils/requestUtils'
-import CustomNavbar from '../../components/custom-navbar'
+import CustomNavbar from '../../components/custom-navbar/custom-navbar'
 import { useLanguage } from '../../shared/i18n/LanguageContext'
+import { API_URLS } from '../../shared/constants'
 import './operation-log.scss'
 
 interface OperationLog {
@@ -26,7 +27,7 @@ const OperationLog: React.FC = () => {
     setLoading(true)
     try {
       const response = await apiRequest({
-        url: 'http://localhost:3000/api/operation-logs',
+        url: API_URLS.OPERATION_LOGS_URL,
         method: 'GET'
       })
 
@@ -34,7 +35,6 @@ const OperationLog: React.FC = () => {
         setLogs(response.data.data.logs || [])
       }
     } catch (error) {
-      console.error('加载操作日志失败:', error)
       Taro.showToast({
         title: t('operation_log.loadFailed'),
         icon: 'error'
@@ -67,7 +67,7 @@ const OperationLog: React.FC = () => {
       'in_progress': t('appointment_status.in_progress'),
       'completed': t('appointment_status.completed'),
       'cancelled': t('appointment_status.cancelled'),
-      'no_show': t('appointment_status.no_show')
+      'broken': t('appointment_status.broken')
     }
     return statusMap[status] || status
   }
@@ -77,7 +77,7 @@ const OperationLog: React.FC = () => {
   }, [])
 
   return (
-    <View className="layout">
+    <View className="layout page-log">
       <CustomNavbar title={t('operation_log.title')} />
       <View className='container'>
         <View className='content-container'>
@@ -88,27 +88,27 @@ const OperationLog: React.FC = () => {
                   <Text className='log-type'>{getOperationTypeText(log.operation_type)}</Text>
                   <Text className='log-time'>{formatDateTime(log.operation_time)}</Text>
                 </View>
-                
+
                 <View className='log-content'>
                   <View className='log-row'>
                     <Text className='label'>{t('operation_log.operator')}:</Text>
                     <Text className='value'>{log.operator}</Text>
                   </View>
-                  
+
                   {log.target_appointment_no && (
                     <View className='log-row'>
                       <Text className='label'>{t('operation_log.appointment_no')}:</Text>
                       <Text className='value'>#{log.target_appointment_no}</Text>
                     </View>
                   )}
-                  
+
                   {log.old_status && log.new_status && (
                     <View className='log-row'>
                       <Text className='label'>{t('operation_log.status_change')}:</Text>
                       <Text className='value'>{getStatusText(log.old_status)} → {getStatusText(log.new_status)}</Text>
                     </View>
                   )}
-                  
+
                   {log.details && (
                     <View className='log-row'>
                       <Text className='label'>{t('operation_log.details')}:</Text>

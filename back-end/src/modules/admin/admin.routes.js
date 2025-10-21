@@ -16,18 +16,19 @@ const router = express.Router();
 const adminController = new AdminController();
 
 // 公开路由 - 登录
-router.post(
-	'/login',
-	validateRequest(adminValidation.login),
-	adminController.login.bind(adminController)
-);
+router.post('/login', validateRequest(adminValidation.login),
+	adminController.login.bind(adminController));
+
+router.get('/checktoken', adminController.checkToken);
 
 // 需要认证的路由
-router.get('/profile', authenticateAdminToken, adminController.getProfile.bind(adminController));
-router.get('/stats', authenticateAdminToken, adminController.getStats.bind(adminController));
-router.put(
-	'/change-password',
-	authenticateAdminToken,
+router.get('/profile', authenticateAdminToken,
+	adminController.getProfile.bind(adminController));
+
+router.get('/stats', authenticateAdminToken,
+	adminController.getStats.bind(adminController));
+
+router.put('/change-password', authenticateAdminToken,
 	validateRequest(adminValidation.changePassword),
 	adminController.changePassword.bind(adminController)
 );

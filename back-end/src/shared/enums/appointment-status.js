@@ -9,7 +9,7 @@ export const APPOINTMENT_STATUS = {
   IN_PROGRESS: 'in_progress',
   COMPLETED: 'completed',
   CANCELLED: 'cancelled',
-  NO_SHOW: 'no_show'
+  BROKEN: 'broken'
 };
 
 // 状态显示文本映射

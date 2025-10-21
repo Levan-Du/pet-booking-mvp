@@ -23,11 +23,13 @@
 
 .navbar-left {
   position: absolute;
-  left: 30rpx;
+  left: 20rpx;
   display: flex;
   align-items: center;
+  width: 80rpx;
   height: 100%;
-  padding: 0 20rpx;
+  padding: 0 30rpx;
+  // background-color: #007aff;
   cursor: pointer;
 
   .back-icon {
@@ -44,25 +46,25 @@
 
 .navbar-right {
   position: absolute;
-  right: 30rpx;
+  right: 80rpx;
   display: flex;
   align-items: center;
   height: 100%;
   padding: 0 20rpx;
   gap: 16rpx;
 
-  .right-button-container {
+  .personal-center-container {
     cursor: pointer;
     display: flex;
     flex-direction: row;
     align-items: center;
 
-    .right-button {
+    .personal-center {
       font-size: 24rpx;
       color: #007aff;
       padding: 12rpx 24rpx;
       border: 1rpx solid #007aff;
-      border-radius: 8rpx;
+      border-radius: 20rpx;
       background-color: transparent;
 
       &:active {

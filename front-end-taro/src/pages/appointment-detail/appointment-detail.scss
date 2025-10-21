@@ -1,142 +1,145 @@
-.container {
-  bottom: 0;
-}
+.page-apm-detail {
+  .container {
+    bottom: 0;
+  }
 
-.content-container {
-  padding: 30rpx;
-  gap: 30rpx;
-  display: flex;
-  flex-direction: column;
-}
+  .content-container {
+    padding: 30rpx;
+    gap: 30rpx;
+    display: flex;
+    flex-direction: column;
+  }
 
-.info-card {
-  background: white;
-  border-radius: 16rpx;
-  padding: 30rpx;
-}
+  .info-card {
+    background: white;
+    border-radius: 16rpx;
+    padding: 30rpx;
+  }
 
-.card-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 20rpx;
-}
+  .card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20rpx;
+  }
 
-.service-name {
-  font-size: 32rpx;
-  font-weight: bold;
-  color: #333;
-}
+  .service-name {
+    font-size: 32rpx;
+    font-weight: bold;
+    color: #333;
+  }
 
-.status-badge {
-  padding: 8rpx 16rpx;
-  border-radius: 20rpx;
-  font-size: 24rpx;
-  font-weight: 500;
-}
+  .status-badge {
+    padding: 8rpx 16rpx;
+    border-radius: 20rpx;
+    font-size: 24rpx;
+    font-weight: 500;
+  }
 
-.status-badge.pending {
-  background-color: #fff3cd;
-  color: #856404;
-}
+  .status-badge.pending {
+    background-color: #fff3cd;
+    color: #856404;
+  }
 
-.status-badge.confirmed {
-  background-color: #d1ecf1;
-  color: #0c5460;
-}
+  .status-badge.confirmed {
+    background-color: #d1ecf1;
+    color: #0c5460;
+  }
 
-.status-badge.in_progress {
-  background-color: #d1ecf1;
-  color: #0c5460;
-}
+  .status-badge.in_progress {
+    background-color: #d1ecf1;
+    color: #0c5460;
+  }
 
-.status-badge.completed {
-  background-color: #d4edda;
-  color: #155724;
-}
+  .status-badge.completed {
+    background-color: #d4edda;
+    color: #155724;
+  }
 
-.status-badge.cancelled {
-  background-color: #f8d7da;
-  color: #721c24;
-}
+  .status-badge.cancelled {
+    background-color: #f8d7da;
+    color: #721c24;
+  }
 
-.status-badge.no_show {
-  background-color: #e9ecef;
-  color: #495057;
-}
+  .status-badge.broken {
+    background-color: #e9ecef;
+    color: #495057;
+  }
 
-.card-content {
-  gap: 12rpx;
-  display: flex;
-  flex-direction: column;
-}
+  .card-content {
+    gap: 12rpx;
+    display: flex;
+    flex-direction: column;
+  }
 
-.info-row {
-  display: flex;
-  flex-direction: row;
-  width: 100%;
-  height: 36rpx;
-}
+  .info-row {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    height: 36rpx;
+  }
 
-.label {
-  font-size: 28rpx;
-  color: #666;
-  min-width: 120rpx;
-}
+  .label {
+    font-size: 28rpx;
+    color: #666;
+    min-width: 120rpx;
+  }
 
-.value {
-  font-size: 28rpx;
-  color: #333;
-}
+  .value {
+    font-size: 28rpx;
+    color: #333;
+  }
 
-.value.notes {
-  color: #e74c3c;
-}
+  .value.notes {
+    color: #e74c3c;
+  }
 
-.qr-card {
-  background: white;
-  border-radius: 16rpx;
-  padding: 40rpx;
-  text-align: center;
-}
+  .qr-card {
+    background: white;
+    border-radius: 16rpx;
+    padding: 40rpx;
+    text-align: center;
+  }
 
-.qr-title {
-  font-size: 32rpx;
-  font-weight: bold;
-  color: #333;
-  display: block;
-  margin-bottom: 10rpx;
-}
+  .qr-title {
+    font-size: 32rpx;
+    font-weight: bold;
+    color: #333;
+    display: block;
+    margin-bottom: 10rpx;
+  }
 
-.qr-desc {
-  font-size: 26rpx;
-  color: #666;
-  display: block;
-  margin-bottom: 30rpx;
-}
+  .qr-desc {
+    font-size: 26rpx;
+    color: #666;
+    display: block;
+    margin-bottom: 30rpx;
+  }
 
-.qr-code-container {
-  display: flex;
-  justify-content: center;
-  margin-bottom: 20rpx;
-}
+  .qr-code-container {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 20rpx;
+  }
 
-.qr-code {
-  width: 300rpx;
-  height: 300rpx;
-  border: 2rpx solid #e0e0e0;
-  border-radius: 8rpx;
-}
+  .qr-code {
+    width: 300rpx;
+    height: 300rpx;
+    border: 2rpx solid #e0e0e0;
+    border-radius: 8rpx;
+  }
 
-.qr-tip {
-  font-size: 24rpx;
-  color: #999;
-  display: block;
-}
+  .qr-tip {
+    font-size: 24rpx;
+    color: #999;
+    display: block;
+  }
 
-.loading, .error {
-  text-align: center;
-  padding: 60rpx;
-  color: #666;
-  font-size: 28rpx;
+  .loading,
+  .error {
+    text-align: center;
+    padding: 60rpx;
+    color: #666;
+    font-size: 28rpx;
+  }
 }

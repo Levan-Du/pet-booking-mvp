@@ -43,9 +43,25 @@ CREATE TABLE IF NOT EXISTS admin_sessions (
   created_at TIMESTAMP DEFAULT NOW()
 );
 
+-- 操作日志表
+CREATE TABLE IF NOT EXISTS operation_logs (
+  id SERIAL PRIMARY KEY,
+  operation_type VARCHAR(50) NOT NULL,
+  operator VARCHAR(100) NOT NULL,
+  target_appointment_id INTEGER REFERENCES appointments(id),
+  old_status VARCHAR(20),
+  new_status VARCHAR(20),
+  details TEXT,
+  created_at TIMESTAMP DEFAULT NOW(),
+  updated_at TIMESTAMP DEFAULT NOW()
+);
+
 -- 创建索引
 CREATE INDEX idx_admin_sessions_token ON admin_sessions(token);
 CREATE INDEX idx_admin_sessions_expires_at ON admin_sessions(expires_at);
+CREATE INDEX idx_operation_logs_appointment_id ON operation_logs(target_appointment_id);
+CREATE INDEX idx_operation_logs_operator ON operation_logs(operator);
+CREATE INDEX idx_operation_logs_created_at ON operation_logs(created_at);
 
 -- 插入初始服务数据
 INSERT INTO services (name, description, duration, price) VALUES 

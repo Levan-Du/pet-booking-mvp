@@ -1,9 +1,9 @@
 宠物店预约系统 (Pet Booking System) 🐕🐈
-一个完整的全栈宠物店在线预约系统，包含 UniApp X 前端和 Node.js 后端，支持微信小程序、H5 等多端部署。
+一个完整的全栈宠物店在线预约系统，包含 Taro 前端和 Node.js 后端，支持微信小程序、H5 等多端部署。
 
 🌟 项目特色
 全栈解决方案
-前端: UniApp X - 一套代码多端部署
+前端: Taro - 一套代码多端部署
 
 后端: Node.js + Express - 高性能 API 服务
 
@@ -18,26 +18,35 @@
 📱 iOS App
 💻 管理后台
 🏗️ 项目架构
-text
+```
 pet-booking-mvp/
-├── frontend/                    # UniApp X 前端
-│   ├── pages/                  # 页面文件
-│   │   ├── index/             # 预约首页
-│   │   └── admin/             # 管理后台
-│   ├── static/                # 静态资源
-│   ├── manifest.json          # 应用配置
-│   ├── pages.json             # 页面配置
-│   └── App.vue                # 应用入口
-├── backend/                   # Node.js 后端
+├── front-end-taro/             # Taro + React 前端
 │   ├── src/
-│   │   ├── modules/           # 功能模块
-│   │   ├── core/              # 核心组件
-│   │   ├── app.js             # 应用入口
-│   │   └── routes.js          # 路由聚合
-│   ├── scripts/               # 脚本文件
-│   ├── .env                   # 环境变量
+│   │   ├── pages/             # 页面文件
+│   │   │   ├── index/        # 用户预约首页
+│   │   │   ├── user/         # 用户中心页面
+│   │   │   ├── dashboard/    # 预约管理后台
+│   │   │   ├── databoard/    # 数据看板
+│   │   │   ├── reports/      # 报表统计
+│   │   │   ├── store/        # 店铺介绍
+│   │   │   ├── operation-log/# 操作日志
+│   │   │   └── admin/        # 管理员登录
+│   │   ├── components/       # 公共组件
+│   │   ├── utils/            # 工具函数
+│   │   ├── shared/           # 共享资源
+│   │   └── static/           # 静态资源
+│   ├── config/               # 构建配置
+│   └── package.json
+├── back-end/                  # Node.js + Express 后端
+│   ├── src/
+│   │   ├── modules/          # 业务模块
+│   │   ├── core/             # 核心组件
+│   │   ├── routes/           # API路由
+│   │   └── shared/           # 共享资源
+│   ├── scripts/              # 脚本文件
 │   └── package.json
 └── README.md
+```
 
 
 🚀 快速开始
@@ -46,7 +55,7 @@ Node.js 16+
 
 MongoDB 4.4+ 或 PostgreSQL 12+
 
-HBuilder X (前端开发)
+Taro 3.x(前端开发)
 
 1. 克隆项目
 bash
@@ -91,85 +100,107 @@ npm start
 后端服务将在 http://localhost:3000 启动
 
 3. 前端配置
-使用 HBuilder X 打开项目
-下载并安装 HBuilder X
-
-打开 HBuilder X
-
-文件 → 打开 → 选择 frontend 文件夹
+安装前端依赖
+```bash
+cd front-end-taro
+npm install
+```
 
 配置 API 地址
-在 frontend 项目中，确保 API 请求地址指向后端服务：
+在 `front-end-taro/src/utils/tokenUtils.ts` 和页面文件中，确保 API 请求地址指向后端服务：
 
-javascript
-// 在页面中使用的请求示例
-const response = await uni.request({
-  url: 'http://localhost:3000/api/services', // 确保这是正确的后端地址
-  method: 'GET'
-});
+```javascript
+// API基础URL配置
+const API_BASE_URL = 'http://localhost:3001/api'
+```
+
 运行前端
-在 HBuilder X 中：
+```bash
+# 开发模式
+npm run dev:weapp    # 微信小程序
+npm run dev:h5       # H5网页版
 
-选择运行 → 运行到浏览器 → Chrome
+# 构建模式
+npm run build:weapp  # 构建微信小程序
+npm run build:h5     # 构建H5网页版
+```
 
-或选择运行到小程序模拟器
+多端支持
+- 📱 微信小程序: `npm run dev:weapp`
+- 🌐 H5网页版: `npm run dev:h5`
+- 📱 React Native: 支持但需要额外配置
 
 📱 功能模块
-用户端功能
-🐾 服务浏览 - 查看宠物服务项目和价格
 
-📅 在线预约 - 选择服务、日期和时间
+## 用户端页面
+**index (预约首页)**
+- 🐾 服务浏览 - 查看宠物服务项目和价格
+- 📅 在线预约 - 选择服务、日期和时间
+- 🐕 宠物信息 - 记录宠物类型、品种、体型
+- 🔔 消息提醒 - 预约确认和提醒
 
-🐕 宠物信息 - 记录宠物类型、品种、体型
+**user (用户中心)**
+- 👤 个人信息 - 用户资料和注册信息
+- 📋 预约管理 - 查看和管理个人预约记录
+- 🏪 店铺介绍 - 查看店铺信息和服务项目
+- 🐶 宠物档案 - 管理宠物信息
+- 💳 消费记录 - 查看历史消费记录
 
-📋 预约管理 - 查看和管理个人预约
+## 管理后台页面
+**dashboard (预约管理)**
+- 📊 预约管理 - 确认、完成、取消预约
+- 🔄 状态管理 - 待确认、已确认、进行中、已完成、已取消、客户爽约
+- 📱 扫码签到 - 二维码扫描签到功能
 
-🔔 消息提醒 - 预约确认和提醒
+**databoard (数据看板)**
+- 📈 实时统计 - 今日各状态预约数量统计
+- ⏰ 自动刷新 - 每分钟自动更新数据
+- 📊 可视化展示 - 图表形式展示业务数据
 
-管理端功能
-👥 客户管理 - 查看客户和宠物信息
+**reports (报表统计)**
+- 📋 详细报表 - 预约数据统计和分析
+- 📅 时间筛选 - 按日期范围查询数据
+- 📊 多维度分析 - 服务类型、时间段等多维度统计
 
-📊 预约管理 - 确认、完成、取消预约
+**operation-log (操作日志)**
+- 📝 操作记录 - 记录所有用户和管理员操作
+- 🔍 日志查询 - 支持按时间、操作类型筛选
+- 📋 详细记录 - 操作时间、用户、操作内容等信息
 
-💼 服务管理 - 添加、编辑、删除服务项目
+**store (店铺介绍)**
+- 🏪 店铺信息 - 店铺介绍、地址、联系方式
+- 💼 服务项目 - 详细的服务列表和价格
+- 📞 客服联系 - 在线客服和联系方式
 
-📈 数据统计 - 业务数据分析和报表
-
-🔐 权限管理 - 管理员账户和权限控制
+**admin/login (管理员登录)**
+- 🔐 身份验证 - 管理员登录认证
+- 🔒 安全防护 - JWT token验证机制
+- 👥 权限管理 - 不同角色的权限控制
 
 🔧 技术栈详情
-前端技术栈
-框架: UniApp X (基于 Vue 3)
 
-语言: UTS (Universal TypeScript)
+## 前端技术栈 (Taro + React)
+- **框架**: Taro 3.x (支持多端开发)
+- **语言**: TypeScript + React
+- **UI组件**: Taro UI 组件 + 自定义组件
+- **状态管理**: React Context API
+- **网络请求**: Taro.request
+- **国际化**: 自定义多语言支持
+- **路由**: Taro 原生路由系统
+- **样式**: SCSS + rpx 响应式单位
 
-UI 组件: 原生组件 + 自定义样式
-
-状态管理: 组合式 API
-
-网络请求: uni.request
-
-后端技术栈
-运行时: Node.js
-
-框架: Express.js
-
-数据库:
-
-MongoDB with Mongoose
-
-PostgreSQL with pg
-
-认证: Basic Authentication
-
-验证: Joi
-
-安全: bcryptjs 密码加密
-
-CORS: 跨域支持
+## 后端技术栈 (Node.js + Express)
+- **运行时**: Node.js
+- **框架**: Express.js
+- **数据库**: 支持 MongoDB 和 PostgreSQL 双数据库
+- **认证**: JWT Token 认证
+- **安全**: bcryptjs 密码加密 + 输入验证
+- **CORS**: 跨域支持
+- **日志**: 自定义操作日志系统
+- **工具**: 响应式工具类 + 错误处理中间件
 
 开发工具
-IDE: HBuilder X (前端) + VS Code (后端)
+IDE: VS Code (前端和后端开发)
 
 包管理: npm
 
@@ -262,19 +293,19 @@ EXPOSE 3000
 CMD ["npm", "start"]
 前端部署
 H5 部署
-在 HBuilder X 中选择 发行 → 网站-PC Web 或手机 H5
-
-将生成的 dist 文件部署到 Web 服务器
+```bash
+npm run build:h5
+```
+将生成的 dist 目录部署到 Web 服务器
 
 小程序部署
-在 HBuilder X 中选择 发行 → 小程序-微信
-
+```bash
+npm run build:weapp
+```
 使用微信开发者工具上传审核
 
 App 部署
-在 HBuilder X 中选择 发行 → 原生 App-云打包
-
-生成 Android APK 或 iOS IPA
+Taro 支持 React Native 构建，需要额外配置
 
 🧪 测试指南
 后端测试
@@ -290,9 +321,10 @@ curl -X POST http://localhost:3000/api/admin/login \
   -H "Content-Type: application/json" \
   -d '{"username":"admin","password":"admin123"}'
 前端测试
-在 HBuilder X 中运行到浏览器
-
-测试预约流程
+```bash
+npm run dev:h5
+```
+在浏览器中测试预约流程
 
 测试管理后台功能
 
@@ -311,7 +343,7 @@ curl -X POST http://localhost:3000/api/admin/login \
 代码规范
 使用 ESLint 进行代码检查
 
-遵循 Vue 3 组合式 API 最佳实践
+遵循 React 函数式组件最佳实践
 
 统一的错误处理机制
 
@@ -360,17 +392,24 @@ curl -X POST http://localhost:3000/api/admin/login \
 
 📈 业务逻辑
 预约流程
-用户选择服务项目
+## 用户预约流程
+1. **服务选择** - 用户在首页选择宠物服务项目
+2. **时间选择** - 选择预约日期和可用时间段
+3. **信息填写** - 填写客户信息、宠物信息、特殊要求
+4. **预约提交** - 系统生成预约单号和用户token
+5. **状态管理** - 预约状态流转：待确认 → 已确认 → 进行中 → 已完成
 
-系统显示可预约时段
+## 用户token系统
+- **首次预约** - 自动生成用户token和设备ID
+- **页面跳转** - 根据token和预约状态自动跳转
+- **状态检查** - 有token有预约 → 用户中心"我的"页面
+- **状态检查** - 有token无预约 → 用户中心"预约"页面
 
-用户填写宠物和联系信息
-
-系统检查时间冲突
-
-创建预约记录
-
-管理员确认预约
+## 多语言支持
+- 🌐 国际化架构 - React Context API 管理语言状态
+- 🔄 语言切换 - 支持中英文切换
+- 📱 响应式设计 - 适配不同屏幕尺寸
+- 🎨 现代UI - 美观的用户界面和交互体验
 
 时间管理
 营业时间: 9:00 - 18:00

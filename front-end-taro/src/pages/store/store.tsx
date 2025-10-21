@@ -1,20 +1,22 @@
 import React from 'react'
 import { View, Text, Image, ScrollView } from '@tarojs/components'
 import Taro from '@tarojs/taro'
-import CustomNavbar from '../../components/custom-navbar'
+import CustomNavbar from '../../components/custom-navbar/custom-navbar'
+import { useLanguage } from '../../shared/i18n/LanguageContext'
 import './store.scss'
 
 const Store: React.FC = () => {
+  const { t } = useLanguage()
   const storeInfo = {
-    name: '宠物美容服务中心',
-    address: '北京市朝阳区建国路88号',
-    phone: '400-123-4567',
-    businessHours: '周一至周日 9:00-21:00',
+    name: t('store.name'),
+    address: t('store.address'),
+    phone: t('store.phone'),
+    businessHours: t('store.businessHours'),
     services: [
-      { name: '宠物美容', price: '¥80-200', desc: '专业洗护、造型设计' },
-      { name: '健康护理', price: '¥50-150', desc: '体检、驱虫、疫苗接种' },
-      { name: '寄养服务', price: '¥60/天', desc: '舒适环境，专人看护' },
-      { name: '宠物用品', price: '¥20-500', desc: '食品、玩具、用品齐全' }
+      { name: t('store.services.grooming.name'), price: t('store.services.grooming.price'), desc: t('store.services.grooming.desc') },
+      { name: t('store.services.health.name'), price: t('store.services.health.price'), desc: t('store.services.health.desc') },
+      { name: t('store.services.boarding.name'), price: t('store.services.boarding.price'), desc: t('store.services.boarding.desc') },
+      { name: t('store.services.supplies.name'), price: t('store.services.supplies.price'), desc: t('store.services.supplies.desc') }
     ]
   }
 
@@ -35,7 +37,7 @@ const Store: React.FC = () => {
 
   return (
     <View className='store-page'>
-      <CustomNavbar title='店铺介绍' showBack={true} />
+      <CustomNavbar title={t('store.title')} showBack={true} />
       <ScrollView className='store-content' scrollY>
         {/* 店铺招牌 */}
         <View className='store-banner'>
@@ -49,24 +51,24 @@ const Store: React.FC = () => {
 
         {/* 店铺信息 */}
         <View className='info-section'>
-          <Text className='section-title'>店铺信息</Text>
+          <Text className='section-title'>{t('store.store_info')}</Text>
           <View className='info-item'>
-            <Text className='info-label'>地址：</Text>
+            <Text className='info-label'>{t('store.address_label')}</Text>
             <Text className='info-value' onClick={handleNavigate}>{storeInfo.address}</Text>
           </View>
           <View className='info-item'>
-            <Text className='info-label'>电话：</Text>
+            <Text className='info-label'>{t('store.phone_label')}</Text>
             <Text className='info-value phone' onClick={handleCall}>{storeInfo.phone}</Text>
           </View>
           <View className='info-item'>
-            <Text className='info-label'>营业时间：</Text>
+            <Text className='info-label'>{t('store.hours_label')}</Text>
             <Text className='info-value'>{storeInfo.businessHours}</Text>
           </View>
         </View>
 
         {/* 服务项目 */}
         <View className='services-section'>
-          <Text className='section-title'>服务项目</Text>
+          <Text className='section-title'>{t('store.services_title')}</Text>
           {storeInfo.services.map((service, index) => (
             <View key={index} className='service-item'>
               <View className='service-header'>
@@ -80,7 +82,7 @@ const Store: React.FC = () => {
 
         {/* 店铺特色 */}
         <View className='features-section'>
-          <Text className='section-title'>店铺特色</Text>
+          <Text className='section-title'>{t('store.features_title')}</Text>
           <View className='features-list'>
             <Text className='feature'>✓ 专业宠物美容师团队</Text>
             <Text className='feature'>✓ 进口宠物护理产品</Text>

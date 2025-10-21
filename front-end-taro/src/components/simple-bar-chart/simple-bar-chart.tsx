@@ -3,6 +3,7 @@ import { View, Canvas } from '@tarojs/components'
 import Taro, { useReady } from '@tarojs/taro'
 import './simple-bar-chart.scss'
 import { Button } from '@tarojs/components'
+import { isChineseChar } from '../../utils/charUtils'
 
 interface ChartDataItem {
   name: string
@@ -11,10 +12,11 @@ interface ChartDataItem {
 
 interface SimpleBarChartProps {
   title: string
+  type: string
   data: ChartDataItem[]
 }
 
-const SimpleBarChart: React.FC<SimpleBarChartProps> = ({ title, data }) => {
+const SimpleBarChart: React.FC<SimpleBarChartProps> = ({ title, type, data }) => {
   const dpr = Taro.getSystemInfoSync().pixelRatio || 1
 
   const [dimensions, setDimensions] = React.useState({
@@ -22,8 +24,21 @@ const SimpleBarChart: React.FC<SimpleBarChartProps> = ({ title, data }) => {
     height: 250 * dpr
   })
 
+  const [chartData, setChartData] = React.useState(data)
+
+  React.useEffect(() => {
+    console.log('simple-bar-chart -> useEffect -> data', data)
+    setChartData(data)
+    if (dimensions.width > 0 && data.length > 0) {
+      setTimeout(() => {
+        drawChart()
+      }, 100)
+    }
+  }, [data, title, dimensions])
+
   const drawChart = async () => {
     try {
+      const data = chartData
       if (!data.length) return
 
       const { width, height } = dimensions
@@ -31,7 +46,7 @@ const SimpleBarChart: React.FC<SimpleBarChartProps> = ({ title, data }) => {
       const padding = width * 0.05
       const titleHeight = padding
       const titleMarginBottom = padding * 0.5
-      const titleFontSize = titleHeight * 0.9
+      const titleFontSize = titleHeight * 0.8
       const titleY = padding
       const labelFontSize = titleFontSize * 0.8
       const labelHeight = titleFontSize
@@ -50,12 +65,8 @@ const SimpleBarChart: React.FC<SimpleBarChartProps> = ({ title, data }) => {
       const xAxis_end_x = width - barSpacing / 2
       const xAxis_end_y = height - padding
 
-      console.log('simple-bar-chart -> drawChart -> padding, yAxis_start_x, yAxis_start_y', padding, yAxis_start_x, yAxis_start_y)
-
       const ctx = Taro.createCanvasContext('barChart')
 
-      // ctx.width = width
-      // ctx.height = height
       // ctx.scale(dpr, dpr); // 根据设备像素比进行缩放
 
       // 清空画布
@@ -94,11 +105,14 @@ const SimpleBarChart: React.FC<SimpleBarChartProps> = ({ title, data }) => {
         ctx.fillText(item.name, x + barWidth / 2, height - padding + labelHeight)
       })
 
+      const titleLineWidth = calcTitleLineWidth(title, titleFontSize) / 2
+
       // 绘制标题
       ctx.setFillStyle(`#000 bold`)
       ctx.setFontSize(titleFontSize)
       ctx.setTextAlign('center')
-      ctx.fillText(title, chartWidth / 2, titleY)
+      ctx.fillText(title, width / 2, titleY)
+      // console.log('simple-bar-chart.tsx -> title,titleLineWidth', title.length, width / 2 - titleLineWidth / 2, width / 2)
 
       ctx.draw()
 
@@ -107,13 +121,13 @@ const SimpleBarChart: React.FC<SimpleBarChartProps> = ({ title, data }) => {
     }
   }
 
-  useReady(() => {
-    if (dimensions.width > 0 && data.length > 0) {
-      setTimeout(() => {
-        drawChart()
-      }, 100)
+  const calcTitleLineWidth = (title, fontSize) => {
+    let width = 0
+    for (let c of title) {
+      width += (isChineseChar(c) ? fontSize : fontSize / 2)
     }
-  }, [data, title, dimensions])
+    return width
+  }
 
   // const drawClick = () => {
   //   drawChart()
@@ -130,7 +144,7 @@ const SimpleBarChart: React.FC<SimpleBarChartProps> = ({ title, data }) => {
         width={dimensions.width}
         height={dimensions.height}
         style={{
-          width: '100%', height: 'auto',
+          width: 'auto', height: '100%',
           aspectRatio: dimensions.width / dimensions.height
         }}
       />

@@ -9,7 +9,7 @@ export const validateAdminLogin = (req, res, next) => {
 	const {
 		error
 	} = adminValidation.login.validate(req.body);
-	console.log('admin.controller.js -> validateAdminLogin -> error', error)
+	// console.log('admin.controller.js -> validateAdminLogin -> error', error)
 
 	if (error) {
 		return res.status(400).json({

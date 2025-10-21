@@ -4,8 +4,10 @@ import Taro, { useReady } from '@tarojs/taro'
 import { jwtDecode } from 'jwt-decode'
 import { authUtils } from '../../utils/authUtils'
 import { apiRequest } from '../../utils/requestUtils'
-import CustomNavbar from '../../components/custom-navbar'
+import CustomNavbar from '../../components/custom-navbar/custom-navbar'
 import { useLanguage } from '../../shared/i18n/LanguageContext'
+import { setUserToken, saveUserAppointment, checkUserStatus, getDeviceId } from '../../utils/tokenUtils'
+import { API_URLS } from '../../shared/constants'
 import './index.scss'
 
 interface Service {
@@ -67,10 +69,6 @@ const Index: React.FC = () => {
 
   const [dateList, setDateList] = React.useState<Array<{ date: string, month: number, day: number, week: string }>>([])
 
-  React.useEffect(() => {
-    generateDateList()
-  }, [])
-
   const generateDateList = () => {
     const dates = []
     const today = new Date()
@@ -108,7 +106,7 @@ const Index: React.FC = () => {
   const loadEnums = async () => {
     try {
       const response = await apiRequest({
-        url: 'http://localhost:3000/api/enums',
+        url: API_URLS.ENUMS_URL,
         method: 'GET'
       })
 
@@ -117,7 +115,7 @@ const Index: React.FC = () => {
         setSizeOptions(response.data.data.petSizes)
       }
     } catch (error) {
-      console.error('加载枚举数据失败:', error)
+
       // 如果后端API不可用，使用默认值
       setPetTypes([
         { value: 'dog', label: '狗狗', icon: '/static/images/dog.png' },
@@ -136,7 +134,7 @@ const Index: React.FC = () => {
     setLoading(true)
     try {
       const response = await apiRequest({
-        url: 'http://localhost:3000/api/services',
+        url: API_URLS.SERVICES_URL,
         method: 'GET'
       })
 
@@ -144,7 +142,6 @@ const Index: React.FC = () => {
         setServices(response.data.data)
       }
     } catch (error) {
-      console.error('加载服务失败:', error)
       Taro.showToast({
         title: t('errors.networkError'),
         icon: 'error'
@@ -185,7 +182,7 @@ const Index: React.FC = () => {
       const serviceId = selectedService._id || selectedService.id
 
       const response = await apiRequest({
-        url: 'http://localhost:3000/api/appointments/available-slots',
+        url: API_URLS.AVAILABLE_SLOTS_URL,
         method: 'GET',
         data: {
           date: date,
@@ -200,7 +197,6 @@ const Index: React.FC = () => {
         })))
       }
     } catch (error) {
-      console.error('加载时间段失败:', error)
       Taro.showToast({
         title: t('errors.networkError'),
         icon: 'error'
@@ -236,12 +232,14 @@ const Index: React.FC = () => {
       const bookingData = {
         ...formData,
         service_id: serviceId,
+        service_name: selectedService.name,
         appointment_date: selectedDate,
-        appointment_time: selectedTime!.start_time
+        appointment_time: selectedTime!.start_time,
+        status: 'pending'
       }
 
       const response = await apiRequest({
-        url: 'http://localhost:3000/api/appointments',
+        url: API_URLS.APPOINTMENTS_URL,
         method: 'POST',
         data: bookingData
       })
@@ -252,7 +250,35 @@ const Index: React.FC = () => {
           icon: 'success'
         })
 
+        // 保存预约信息
+        const appointmentData = {
+          ...bookingData,
+          appointment_no: response.data.data.appointment_no
+        }
+        saveUserAppointment(appointmentData)
+
+        // 生成用户token（这里应该由后端返回）
+        const deviceId = getDeviceId()
+        // 调用后端API生成token
+        const tokenResponse = await apiRequest({
+          url: API_URLS.GENERATE_TOKEN_URL,
+          method: 'POST',
+          data: {
+            phone: formData.customer_phone,
+            device_id: deviceId
+          }
+        })
+
+        if (tokenResponse.data.success) {
+          setUserToken(tokenResponse.data.data.token)
+        }
+
         resetForm()
+
+        // 跳转到用户页面
+        setTimeout(() => {
+          Taro.redirectTo({ url: '/pages/user/user?tab=appointment' })
+        }, 100)
       } else {
         Taro.showToast({
           title: response.data.message || t('booking.bookingFailed'),
@@ -260,7 +286,6 @@ const Index: React.FC = () => {
         })
       }
     } catch (error) {
-      console.error('预约失败:', error)
       Taro.showToast({
         title: t('errors.networkError'),
         icon: 'error'
@@ -287,11 +312,7 @@ const Index: React.FC = () => {
   }
 
   const goToAdmin = () => {
-    Taro.navigateTo({ url: '/pages/dashboard/dashboard' })
-  }
-
-  const goToReports = () => {
-    Taro.navigateTo({ url: '/pages/reports/reports' })
+    Taro.navigateTo({ url: '/pages/management/management' })
   }
 
   const goToStore = () => {
@@ -306,8 +327,20 @@ const Index: React.FC = () => {
     return t(`sizes.${size}`) || size
   }
 
-  // 生命周期
-  React.useEffect(() => {
+  const redirectToUserPage = () => {
+    const { hasToken, hasAppointment } = checkUserStatus()
+    if (hasToken) {
+      if (hasAppointment) {
+        Taro.redirectTo({ url: '/pages/user/user?tab=profile' })
+      } else {
+        Taro.redirectTo({ url: '/pages/user/user?tab=appointments' })
+      }
+      return
+    }
+    initData()
+  }
+
+  const initData = () => {
     const token = authUtils.getToken()
     if (token) {
       try {
@@ -316,27 +349,41 @@ const Index: React.FC = () => {
         console.error('解析token失败:', error)
       }
     }
+    generateDateList()
     loadEnums()
     loadServices()
+  }
+
+  // 检查用户状态并跳转
+  React.useEffect(() => {
+    const params = Taro.getCurrentInstance().router?.params
+    if (params?.action) {
+      initData()
+    } else {
+      redirectToUserPage()
+    }
   }, [])
 
+
   return (
-    <View className='layout'>
+    <View className='layout page-index'>
       {/* 自定义导航栏 */}
       <CustomNavbar
         title={t('booking.title')}
         showBack={false}
-        rightButton={{
-          text: t('nav.store'),
+        showReports={false}
+        showLog={false}
+        personalCenter={{
+          text: t('nav.personal'),
           onClick: goToStore
         }}
       />
-      <View className='container index'>
-        <View className='content-container index'>
+      <View className='container'>
+        <View className='content-container'>
           {adminInfo?.role === 'pet-admin' && (
             <>
               <View className='header'>
-                <Button className='btn btn-primary' onClick={goToAdmin}>{t('nav.dashboard')}</Button>
+                <Button className='btn btn-primary' onClick={goToAdmin}>{t('nav.management')}</Button>
               </View>
             </>
           )}

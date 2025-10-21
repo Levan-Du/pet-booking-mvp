@@ -1,91 +1,223 @@
-.container.databoard {
-  bottom: 0;
-}
+ .page-databoard {
+   .container.databoard {
+     bottom: 0;
+   }
 
-.data-row {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  justify-content: space-between;
-  align-items: center;
-  padding: 40rpx;
-  gap: 40rpx;
-}
+   .data-row {
+     flex: 0;
+     display: grid;
+     grid-template-columns: 1fr 1fr;
+     justify-content: space-between;
+     align-items: center;
+     padding: 40rpx;
+     gap: 40rpx;
+   }
 
-.data-row .card {
-  flex: 1;
-  aspect-ratio: 3/2;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  overflow: hidden;
-  margin-bottom: 0;
-}
+   .data-row .card {
+     flex: 1;
+     aspect-ratio: 2/1;
+     display: flex;
+     flex-direction: column;
+     justify-content: center;
+     align-items: center;
+     overflow: hidden;
+     margin-bottom: 0;
+   }
 
-.data-row-title {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  background-color: #f2f2f2;
-}
+   @media(min-width:740px) {
+     .data-row {
+       grid-template-columns: 1fr 1fr 1fr;
+       padding: 30rpx;
+       gap: 30rpx;
+     }
 
-.data-row .title {
-  flex: 1;
-  font-size: 28rpx;
-  margin-bottom: 0;
-  ;
-}
+     .data-row .card {
+       aspect-ratio: 3/2;
+     }
+   }
 
-.data-row .value {
-  flex: 1;
-  color: rgb(108, 176, 5);
-  font-size: 72rpx;
-  font-weight: bold;
-  line-height: 1;
-}
+   .data-row-title {
+     flex: 1;
+     display: flex;
+     flex-direction: column;
+     justify-content: center;
+     align-items: center;
+     background-color: #f2f2f2;
+     font-size: 32rpx;
+   }
 
-.data-row .value.broken {
-  color: rgb(202, 3, 3);
-}
+   .data-row .title {
+     flex: 1;
+     font-size: 28rpx;
+     margin-bottom: 0;
+     ;
+   }
 
-.data-row .value.cancel {
-  color: rgb(225, 53, 6);
-}
+   .data-row .value {
+     flex: 1;
+     color: rgb(108, 176, 5);
+     font-size: 60rpx;
+     font-weight: bold;
+     line-height: 1;
+   }
 
-.tool-row {
-  display: flex;
-  flex-direction: column;
-  width: 100%;
-  gap: 20rpx;
-}
+   .data-row .value.broken {
+     color: rgb(202, 3, 3);
+   }
 
-.tool-row .card {
-  width: 100%;
-  align-items: center;
-}
+   .data-row .value.cancel {
+     color: rgb(225, 53, 6);
+   }
 
-.tool-row .btn-card {
-  width: 100%;
-  background-color: #007AFF;
-  color: #fff;
-}
+   .tool-row {
+     display: flex;
+     flex-direction: column;
+     width: 100%;
+     gap: 20rpx;
+   }
 
-.charts {
-  display: flex;
-  flex-direction: column;
-  width: 100%;
-  height: 100%;
-  gap: 20rpx;
-}
+   .tool-row .card {
+     width: 100%;
+     align-items: center;
+   }
 
-.summary-row {
-  display: flex;
-  flex-direction: row;
-  padding: 10rpx;
-}
+   .tool-row .btn-card {
+     width: 100%;
+     background-color: #007AFF;
+     color: #fff;
+   }
 
-.charts-box {
-  // height: 300rpx;
-}
+   .charts {
+     display: flex;
+     flex-direction: column;
+     width: 100%;
+     height: 100%;
+     gap: 20rpx;
+   }
+
+   .summary-row {
+     display: flex;
+     flex-direction: row;
+     padding: 10rpx;
+   }
+
+   // 预约列表样式
+   .appointment-list.databoard {
+     background-color: #fff;
+     border-radius: 16rpx;
+     padding: 30rpx;
+     box-shadow: 0 2rpx 12rpx rgba(0, 0, 0, 0.1);
+   }
+
+   .appointment-list-title {
+     font-size: 32rpx;
+     font-weight: bold;
+     margin-bottom: 30rpx;
+     color: #333;
+     border-bottom: 2rpx solid #f0f0f0;
+     padding-bottom: 20rpx;
+   }
+
+   .no-appointments {
+     text-align: center;
+     padding: 60rpx 0;
+     color: #999;
+     font-size: 28rpx;
+   }
+
+   .appointment-scroll {
+     max-height: 600rpx;
+   }
+
+   .appointment-item {
+     background-color: #f8f9fa;
+     border-radius: 12rpx;
+     padding: 24rpx;
+     margin-bottom: 20rpx;
+     border-left: 6rpx solid #007AFF;
+   }
+
+   .appointment-header {
+     display: flex;
+     justify-content: space-between;
+     align-items: center;
+     margin-bottom: 16rpx;
+   }
+
+   .appointment-no {
+     font-size: 26rpx;
+     font-weight: bold;
+     color: #333;
+   }
+
+   .appointment-status {
+     font-size: 24rpx;
+     padding: 6rpx 12rpx;
+     border-radius: 20rpx;
+     font-weight: 500;
+
+     &.pending {
+       background-color: #fff3cd;
+       color: #856404;
+     }
+
+     &.confirmed {
+       background-color: #d1ecf1;
+       color: #0c5460;
+     }
+
+     &.in_progress {
+       background-color: #d4edda;
+       color: #155724;
+     }
+
+     &.completed {
+       background-color: #e2e3e5;
+       color: #383d41;
+     }
+
+     &.cancelled {
+       background-color: #f8d7da;
+       color: #721c24;
+     }
+
+     &.broken {
+       background-color: #f5c6cb;
+       color: #721c24;
+     }
+   }
+
+   .appointment-info {
+     display: flex;
+     justify-content: space-between;
+     margin-bottom: 12rpx;
+   }
+
+   .customer-name {
+     font-size: 28rpx;
+     font-weight: 500;
+     color: #333;
+   }
+
+   .customer-phone {
+     font-size: 26rpx;
+     color: #666;
+   }
+
+   .appointment-details {
+     display: flex;
+     justify-content: space-between;
+     align-items: center;
+   }
+
+   .service-type {
+     font-size: 26rpx;
+     color: #007AFF;
+     font-weight: 500;
+   }
+
+   .appointment-time {
+     font-size: 24rpx;
+     color: #999;
+   }
+ }

@@ -1,6 +1,7 @@
 import {
 	AppointmentService
 } from './appointment.service.js';
+import webSocketServer from '../../core/websocket/websocket.server.js';
 
 const appointmentService = new AppointmentService();
 
@@ -35,6 +36,9 @@ export class AppointmentController {
 			const appointmentData = req.validatedData;
 			const newAppointment = await appointmentService.createAppointment(appointmentData);
 
+			// 推送WebSocket更新
+			webSocketServer.notifyAppointmentChange(newAppointment._id);
+
 			res.status(201).json({
 				success: true,
 				message: '预约成功',
@@ -47,6 +51,25 @@ export class AppointmentController {
 					message: error.message
 				});
 			}
+			next(error);
+		}
+	}
+
+	async getUserAppointments(req, res, next) {
+		try {
+			const {
+				phone
+			} = req.query;
+			const filters = { customer_phone: phone };
+
+			const appointments = await appointmentService.getAllAppointments(filters);
+			// console.log('getUserAppointments->appointments', appointments)
+
+			res.json({
+				success: true,
+				data: appointments
+			});
+		} catch (error) {
 			next(error);
 		}
 	}
@@ -67,6 +90,7 @@ export class AppointmentController {
 			}
 
 			const appointments = await appointmentService.getAllAppointments(filters);
+			// console.log('getAppointments->appointments', appointments)
 
 			res.json({
 				success: true,
@@ -118,6 +142,9 @@ export class AppointmentController {
 			}
 
 			const updatedAppointment = await appointmentService.updateAppointmentStatus(id, status);
+
+			// 推送WebSocket更新
+			webSocketServer.notifyAppointmentChange(id);
 
 			res.json({
 				success: true,

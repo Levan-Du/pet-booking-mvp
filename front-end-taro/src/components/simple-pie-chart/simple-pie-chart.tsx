@@ -2,6 +2,7 @@ import React from 'react'
 import { View, Canvas } from '@tarojs/components'
 import Taro from '@tarojs/taro'
 import './simple-pie-chart.scss'
+import { isChineseChar } from '../../utils/charUtils'
 
 interface ChartDataItem {
   name: string
@@ -15,7 +16,7 @@ interface SimplePieChartProps {
   height?: number
 }
 
-const SimplePieChart: React.FC<SimplePieChartProps> = ({ title, data, width = 300, height = 400 }) => {
+const SimplePieChart: React.FC<SimplePieChartProps> = ({ title, data }) => {
   const dpr = Taro.getSystemInfoSync().pixelRatio || 2
   const [dimensions, setDimensions] = React.useState({
     width: 360 * dpr,
@@ -29,23 +30,23 @@ const SimplePieChart: React.FC<SimplePieChartProps> = ({ title, data, width = 30
       const chartWidth = width
       const chartHeight = height
 
-      const ctx = Taro.createCanvasContext('pieChart', this)
-      // ctx.scale(dpr, dpr); // 适配高清屏幕;
-      ctx.clearRect(0, 0, chartWidth, chartHeight)
-
       const total = data.reduce((sum, item) => sum + item.value, 0)
       if (total === 0) return
 
+
       const fontSize = width * 0.05
-      const titleLineWidth = title.length * fontSize
+      const titleLineWidth = calcTitleLineWidth(title, fontSize)
       const centerX = chartHeight / 2
       const centerY = chartHeight / 2 + fontSize
       const radius = Math.min(centerX, centerY) - fontSize
 
-      console.log(width, fontSize)
-
       let startAngle = 0
       const colors = ["#4cd964", "#007aff", "#e62020ff", "#ffcc00", "#8e8e93", "#ff9500"]
+
+
+      const ctx = Taro.createCanvasContext('pieChart', this)
+      // ctx.scale(dpr, dpr); // 适配高清屏幕;
+      ctx.clearRect(0, 0, chartWidth, chartHeight)
 
       data.forEach((item, index) => {
         const sliceAngle = (item.value / total) * 2 * Math.PI
@@ -93,7 +94,7 @@ const SimplePieChart: React.FC<SimplePieChartProps> = ({ title, data, width = 30
       ctx.fillText(title, width / 2 - titleLineWidth / 2, fontSize / 2) // 调整位置避免被裁剪
 
       // 绘制图例
-      drawLegend(ctx, data, total, colors, chartWidth, chartHeight)
+      drawLegend(ctx, data, total, colors, chartWidth)
 
       ctx.draw()
 
@@ -101,6 +102,15 @@ const SimplePieChart: React.FC<SimplePieChartProps> = ({ title, data, width = 30
       console.error('绘制饼图失败:', error)
     }
   }
+
+  const calcTitleLineWidth = (title, fontSize) => {
+    let width = 0
+    for (let c of title) {
+      width += (isChineseChar(c) ? fontSize : fontSize / 2)
+    }
+    return width
+  }
+
 
   // 辅助函数：根据背景色获取对比色
   const getContrastColor = (hexColor: string) => {
@@ -112,11 +122,15 @@ const SimplePieChart: React.FC<SimplePieChartProps> = ({ title, data, width = 30
   }
 
   // 绘制图例
-  const drawLegend = (ctx, data, total, colors, width, height) => {
+  const drawLegend = (ctx, data, total, colors, width) => {
     const legendY = 50
     const fontSize = width * 0.04
-    const fontLineWidth = Math.max(...data.map(item => item.name.length)) * fontSize
-    const legendX = width - fontLineWidth - fontSize - 10
+    const maxLength = Math.max(...data.map(item => item.name.length + (item.value + '').length))
+    const maxLengthName = data.find(item => (item.name.length + (item.value + '').length) === maxLength).name
+    const fontLineWidth = calcTitleLineWidth(maxLengthName + 'aaaa', fontSize)
+    const legendX = width - fontLineWidth - fontSize
+
+    console.log('simple-pie-chart.tsx -> maxLengthName,fontLineWidth,legendX', maxLengthName, fontLineWidth, legendX)
 
     data.forEach((item, index) => {
       const y = legendY + index * fontSize
@@ -132,12 +146,13 @@ const SimplePieChart: React.FC<SimplePieChartProps> = ({ title, data, width = 30
       ctx.setFontSize(fontSize)
       ctx.setTextAlign('left')
 
-      let displayText = `${item.name} (${percentage}%)`
+      // let displayText = `${item.name} (${percentage}%)`
+      let displayText = `${item.name} (${item.value})`
       if (displayText.length > 15) {
         displayText = item.name.substring(0, 8) + '...' + `(${percentage}%)`
       }
 
-      ctx.fillText(displayText, width - fontLineWidth, y + fontSize / 2)
+      ctx.fillText(displayText, legendX + fontSize, y + fontSize / 2)
     })
   }
 
@@ -148,14 +163,18 @@ const SimplePieChart: React.FC<SimplePieChartProps> = ({ title, data, width = 30
   }, [data, title])
 
   return (
-    <View className='chart-container'>
+    <View className='chart-container'
+      style={{
+        aspectRatio: dimensions.width / dimensions.height
+      }}>
       <Canvas
         id="pieChart"
         canvasId='pieChart'
         width={dimensions.width}
         height={dimensions.height}
         style={{
-          width: '100%', height: 'auto',
+          display: 'flex',
+          width: 'auto', height: '100%',
           aspectRatio: dimensions.width / dimensions.height
         }}
       />

@@ -1,6 +1,6 @@
 import bcrypt from 'bcryptjs';
 import { getAdminModel } from '../model.factory.js';
-import { JWTUtil } from '../../core/utils/jwt.util.js';
+import { JWTUtil, JWT_ADMIN_SECRET } from '../../core/utils/jwt.util.js';
 
 export class AdminService {
 	constructor() {
@@ -24,7 +24,7 @@ export class AdminService {
 			username: admin.username,
 			role: 'pet-admin'
 		}
-		let accessToken = JWTUtil.generateAccessToken(payload);
+		let accessToken = JWTUtil.generateAccessToken(payload, JWT_ADMIN_SECRET);
 		this.saveAccessToken(admin._id || admin.id, accessToken);
 
 		return { ...payload, accessToken };

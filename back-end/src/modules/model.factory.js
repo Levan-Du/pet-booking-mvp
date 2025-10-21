@@ -7,6 +7,8 @@ import { AppointmentMongoModel } from './appointment/appointment.mongo.model.js'
 import { AppointmentPgModel } from './appointment/appointment.pg.model.js';
 import { ServiceMongoModel } from './service/service.mongo.model.js';
 import { ServicePgModel } from './service/service.pg.model.js';
+import OperationLogMongoModel from './operation-log/operation-log.mongo.model.js';
+import { OperationLogPgModel } from './operation-log/operation-log.pg.model.js';
 
 class ModelFactory {
   constructor() {
@@ -45,6 +47,14 @@ class ModelFactory {
     }
     return this.models.get('service');
   }
+
+  getOperationLogModel() {
+    if (!this.models.has('operationLog')) {
+      const model = this.dbType === 'postgres' ? new OperationLogPgModel() : new OperationLogMongoModel();
+      this.models.set('operationLog', model);
+    }
+    return this.models.get('operationLog');
+  }
 }
 
 // 创建单例实例
@@ -56,3 +66,4 @@ export const getAdminModel = () => modelFactory.getAdminModel();
 export const getAuthModel = () => modelFactory.getAuthModel();
 export const getAppointmentModel = () => modelFactory.getAppointmentModel();
 export const getServiceModel = () => modelFactory.getServiceModel();
+export const getOperationLogModel = () => modelFactory.getOperationLogModel();

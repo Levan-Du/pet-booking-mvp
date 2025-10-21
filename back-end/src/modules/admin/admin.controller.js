@@ -1,7 +1,7 @@
 import {
 	AdminService
 } from './admin.service.js';
-import { JWTUtil } from '../../core/utils/jwt.util.js';
+import { JWTUtil, JWT_ADMIN_SECRET } from '../../core/utils/jwt.util.js';
 
 const adminService = new AdminService();
 
@@ -46,7 +46,8 @@ export class AdminController {
 					message: 'Token不能为空'
 				});
 			}
-			const payload = JWTUtil.verifyToken(token);
+			const payload = JWTUtil.verifyToken(token, JWT_ADMIN_SECRET);
+			console.log('admin.controller.js -> checkToken -> payload', payload)
 			if (!payload) {
 				return res.status(401).json({
 					success: false,

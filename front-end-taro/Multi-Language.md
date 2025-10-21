@@ -341,7 +341,7 @@ function formatCurrency(amount: number, locale: string) {
 | `in_progress` | 进行中 | In Progress | 客户已到店，服务正在进行中 |
 | `completed` | 已完成 | Completed | 服务已完成 |
 | `cancelled` | 已取消 | Cancelled | 商家取消预约 |
-| `no_show` | 客户爽约 | No Show | 客户未按约定时间到达或自行取消 |
+| `broken` | 客户爽约 | Broken | 客户未按约定时间到达或自行取消 |
 
 ### 状态流转规则
 
@@ -411,7 +411,7 @@ function formatCurrency(amount: number, locale: string) {
   color: #721c24;             /* 深红色文字 */
 }
 
-.status-badge.no_show {
+.status-badge.broken {
   background-color: #e9ecef;   /* 浅灰色背景 */
   color: #495057;             /* 深灰色文字 */
 }

@@ -2,7 +2,7 @@ import jwt from 'jsonwebtoken';
 import crypto from 'crypto';
 
 // 生成随机密钥（生产环境应该从环境变量读取）
-const JWT_SECRET = process.env.JWT_SECRET || crypto.randomBytes(64).toString('hex');
+export const JWT_ADMIN_SECRET = process.env.JWT_SECRET || crypto.randomBytes(64).toString('hex');
 const JWT_EXPIRES_IN = process.env.JWT_EXPIRES_IN || '24h';
 const JWT_REFRESH_EXPIRES_IN = process.env.JWT_REFRESH_EXPIRES_IN || '7d';
 
@@ -12,16 +12,16 @@ export class JWTUtil {
 	 * @param {Object} payload - 用户信息
 	 * @returns {string} JWT token
 	 */
-	static generateAccessToken(payload) {
+	static generateAccessToken(payload, JWT_SECRET) {
 		return jwt.sign({
-				...payload,
-				type: 'access'
-			},
+			...payload,
+			type: 'access'
+		},
 			JWT_SECRET, {
-				expiresIn: JWT_EXPIRES_IN,
-				issuer: 'pet-booking-api',
-				subject: payload.id.toString()
-			}
+			expiresIn: JWT_EXPIRES_IN,
+			issuer: 'pet-booking-api',
+			subject: payload.id.toString()
+		}
 		);
 	}
 
@@ -30,16 +30,16 @@ export class JWTUtil {
 	 * @param {Object} payload - 用户信息
 	 * @returns {string} JWT refresh token
 	 */
-	static generateRefreshToken(payload) {
+	static generateRefreshToken(payload, JWT_SECRET) {
 		return jwt.sign({
-				...payload,
-				type: 'refresh'
-			},
+			...payload,
+			type: 'refresh'
+		},
 			JWT_SECRET, {
-				expiresIn: JWT_REFRESH_EXPIRES_IN,
-				issuer: 'pet-booking-api',
-				subject: payload.id.toString()
-			}
+			expiresIn: JWT_REFRESH_EXPIRES_IN,
+			issuer: 'pet-booking-api',
+			subject: payload.id.toString()
+		}
 		);
 	}
 
@@ -48,7 +48,7 @@ export class JWTUtil {
 	 * @param {string} token - JWT token
 	 * @returns {Object} 解码后的 payload 或 null
 	 */
-	static verifyToken(token) {
+	static verifyToken(token, JWT_SECRET) {
 		try {
 			return jwt.verify(token, JWT_SECRET);
 		} catch (error) {

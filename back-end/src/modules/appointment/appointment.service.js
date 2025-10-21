@@ -1,5 +1,6 @@
 import { getAppointmentModel, getServiceModel } from '../model.factory.js';
 import { APPOINTMENT_STATUS, VALID_STATUSES } from '../../shared/enums/appointment-status.js';
+import orderIdGenerator from '../../core/utils/orderid-generator.util.js'
 
 export class AppointmentService {
 	constructor() {
@@ -7,13 +8,35 @@ export class AppointmentService {
 		this.serviceModel = getServiceModel();
 	}
 
+	async getUserAppointments(filters = {}) {
+		// console.log('appointments.service.js -> getAllAppointments -> filters:', filters);
+		const appointments = await this.appointmentModel.find(filters);
+		// 确保返回的数据包含appointment_no字段
+		return appointments.map(apt => ({
+			...apt,
+			appointment_no: apt.appointment_no || apt.appointment_no // 确保字段存在
+		}));
+	}
+
 	async getAllAppointments(filters = {}) {
-		console.log('appointments.service.js -> getAllAppointments -> filters:', filters);
-		return await this.appointmentModel.find(filters);
+		// console.log('appointments.service.js -> getAllAppointments -> filters:', filters);
+		const appointments = await this.appointmentModel.find(filters);
+		// 确保返回的数据包含appointment_no字段
+		return appointments.map(apt => ({
+			...apt,
+			appointment_no: apt.appointment_no || apt.appointment_no // 确保字段存在
+		}));
 	}
 
 	async getAppointmentById(id) {
-		return await this.appointmentModel.findById(id);
+		const appointment = await this.appointmentModel.findById(id);
+		if (appointment) {
+			return {
+				...appointment,
+				appointment_no: appointment.appointment_no || appointment.appointment_no // 确保字段存在
+			};
+		}
+		return null;
 	}
 
 	async createAppointment(appointmentData) {
@@ -22,6 +45,8 @@ export class AppointmentService {
 			appointment_time,
 			service_id
 		} = appointmentData;
+
+		// console.log('appointment.service.js -> createAppointment -> appointmentData', appointmentData)
 
 		// 获取服务信息
 		const service = await this.serviceModel.findById(service_id);
@@ -47,10 +72,18 @@ export class AppointmentService {
 			throw new Error('该时段已被预约，请选择其他时间');
 		}
 
-		return await this.appointmentModel.create({
+		const apmNo = orderIdGenerator.generate('apm')
+
+		const createdAppointment = await this.appointmentModel.create({
+			appointment_no: apmNo,
 			...appointmentData,
 			end_time
 		});
+		// 确保返回的数据包含appointment_no字段
+		return {
+			...createdAppointment,
+			appointment_no: createdAppointment.appointment_no || apmNo
+		};
 	}
 
 	async updateAppointmentStatus(id, status) {
@@ -142,7 +175,7 @@ export class AppointmentService {
 			in_progress: 0,
 			completed: 0,
 			cancelled: 0,
-			no_show: 0
+			broken: 0
 		};
 
 		appointments.forEach(appointment => {
@@ -162,8 +195,8 @@ export class AppointmentService {
 				case APPOINTMENT_STATUS.CANCELLED:
 					stats.cancelled++;
 					break;
-				case APPOINTMENT_STATUS.NO_SHOW:
-					stats.no_show++;
+				case APPOINTMENT_STATUS.BROKEN:
+					stats.broken++;
 					break;
 			}
 		});

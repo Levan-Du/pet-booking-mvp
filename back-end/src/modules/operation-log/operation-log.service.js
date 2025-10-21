@@ -1,8 +1,8 @@
-import OperationLogModel from './operation-log.model.js'
+import { getOperationLogModel } from '../model.factory.js'
 
 export class OperationLogService {
   constructor() {
-    this.operationLogModel = new OperationLogModel()
+    this.operationLogModel = getOperationLogModel()
   }
 
   async createOperationLog(operationData) {
@@ -14,7 +14,7 @@ export class OperationLogService {
         message: '操作日志创建成功'
       }
     } catch (error) {
-      console.error('创建操作日志失败:', error)
+      // console.error('创建操作日志失败:', error)
       return {
         success: false,
         message: '创建操作日志失败'
@@ -31,7 +31,7 @@ export class OperationLogService {
         message: '获取操作日志成功'
       }
     } catch (error) {
-      console.error('获取操作日志失败:', error)
+      // console.error('获取操作日志失败:', error)
       return {
         success: false,
         message: '获取操作日志失败'
@@ -48,7 +48,7 @@ export class OperationLogService {
         message: '获取预约操作日志成功'
       }
     } catch (error) {
-      console.error('获取预约操作日志失败:', error)
+      // console.error('获取预约操作日志失败:', error)
       return {
         success: false,
         message: '获取预约操作日志失败'
@@ -65,7 +65,7 @@ export class OperationLogService {
         message: '获取操作员日志成功'
       }
     } catch (error) {
-      console.error('获取操作员日志失败:', error)
+      // console.error('获取操作员日志失败:', error)
       return {
         success: false,
         message: '获取操作员日志失败'

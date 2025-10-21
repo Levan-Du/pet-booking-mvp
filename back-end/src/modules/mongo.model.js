@@ -22,7 +22,7 @@ export class MongoModel extends BaseModel {
 	async findById(id) {
 		let objectId;
 		try {
-			objectId = new ObjectId(id);
+			objectId = this.getObjectId(id);
 		} catch (error) {
 			return null;
 		}
@@ -47,7 +47,7 @@ export class MongoModel extends BaseModel {
 	async update(id, data) {
 		let objectId;
 		try {
-			objectId = new ObjectId(id);
+			objectId = this.getObjectId(id);
 		} catch (error) {
 			return null;
 		}
@@ -69,7 +69,7 @@ export class MongoModel extends BaseModel {
 	async delete(id) {
 		let objectId;
 		try {
-			objectId = new ObjectId(id);
+			objectId = this.getObjectId(id);
 		} catch (error) {
 			return false;
 		}

@@ -1,0 +1,279 @@
+.page-management {
+  .container {
+    bottom: 0;
+  }
+
+  .content-container {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .header {
+    // margin-bottom: 40rpx;
+  }
+
+  .filter-section {
+    display: flex;
+    flex-direction: column;
+    gap: 30rpx;
+  }
+
+  .filter-picker {
+    background: #fff;
+    border-radius: 16rpx;
+    padding: 16rpx;
+    border: 1px solid #e0e0e0;
+  }
+
+  .picker-value {
+    color: #333;
+    font-size: 28rpx;
+  }
+
+  .filter-status-bar {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    align-items: center;
+    gap: 10rpx;
+    overflow: auto hidden;
+  }
+
+  .status-item {
+    flex: none;
+    display: flex;
+    flex-direction: row;
+    padding: 16rpx 32rpx;
+    border-radius: 16rpx;
+    background: #fff;
+    cursor: pointer;
+    transition: all 0.3s;
+  }
+
+  .status-item.active {
+    background: #007bff;
+    color: white;
+  }
+
+  .status-text {
+    font-size: 24rpx;
+    font-weight: 500;
+  }
+
+  .appointment-list {
+    flex: 1;
+  }
+
+  .appointment-card {
+    padding: 30rpx;
+  }
+
+  .card-header {
+    margin-bottom: 24rpx;
+  }
+
+  .header-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16rpx;
+  }
+
+  .appointment-no {
+    font-weight: bold;
+    color: #333;
+    font-size: 32rpx;
+  }
+
+  .status-badge {
+    padding: 8rpx 16rpx;
+    border-radius: 8rpx;
+    font-size: 28rpx;
+    font-weight: 500;
+  }
+
+  .status-badge.pending {
+    background: #fff3cd;
+    color: #856404;
+  }
+
+  .status-badge.confirmed {
+    background: #d1ecf1;
+    color: #0c5460;
+  }
+
+  .status-badge.in_progress {
+    background: #d4edda;
+    color: #155724;
+  }
+
+  .status-badge.completed {
+    background: #d1ecf1;
+    color: #0c5460;
+  }
+
+  .status-badge.cancelled {
+    background: #f8d7da;
+    color: #721c24;
+  }
+
+  .status-badge.broken {
+    background: #f8d7da;
+    color: #721c24;
+  }
+
+  .service-name {
+    font-size: 32rpx;
+    font-weight: bold;
+    color: #333;
+  }
+
+  .card-content {
+    margin-bottom: 30rpx;
+  }
+
+  .info-row {
+    display: flex;
+    // margin-bottom: 16rpx;
+  }
+
+  .label {
+    width: 160rpx;
+    color: #666;
+    font-size: 28rpx;
+  }
+
+  .value {
+    flex: 1;
+    color: #333;
+    font-size: 28rpx;
+  }
+
+  .notes {
+    color: #dc3545;
+    font-style: italic;
+  }
+
+  .card-actions {
+    display: flex;
+    // gap: 20rpx;
+    flex-wrap: wrap;
+  }
+
+  .action-btn {
+    padding: 16rpx 32rpx;
+    border-radius: 8rpx;
+    font-size: 24rpx;
+    border: none;
+    cursor: pointer;
+  }
+
+  .action-btn.confirm {
+    background: #28a745;
+    color: white;
+  }
+
+  .action-btn.start-service {
+    background: #007bff;
+    color: white;
+  }
+
+  .action-btn.complete {
+    background: #17a2b8;
+    color: white;
+  }
+
+  .action-btn.cancel {
+    background: #dc3545;
+    color: white;
+  }
+
+  .action-btn.no-show {
+    background: #ffc107;
+    color: #212529;
+  }
+
+  .loading,
+  .empty {
+    text-align: center;
+    padding: 80rpx;
+    color: #666;
+  }
+
+  .modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+  }
+
+  .modal-content {
+    background: white;
+    padding: 40rpx;
+    border-radius: 16rpx;
+    width: 80%;
+    max-width: 600rpx;
+  }
+
+  .modal-title {
+    font-size: 32rpx;
+    font-weight: bold;
+    margin-bottom: 30rpx;
+    text-align: center;
+  }
+
+  .modal-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 20rpx;
+    margin-bottom: 30rpx;
+  }
+
+  .modal-btn {
+    padding: 20rpx;
+    border-radius: 8rpx;
+    border: none;
+    cursor: pointer;
+    font-size: 28rpx;
+  }
+
+  .modal-btn.scan-btn {
+    background: #007bff;
+    color: white;
+  }
+
+  .modal-btn.manual-btn {
+    background: #28a745;
+    color: white;
+  }
+
+  .modal-btn.cancel-btn {
+    background: #6c757d;
+    color: white;
+  }
+
+  .manual-input-section {
+    margin-top: 30rpx;
+  }
+
+  .input-label {
+    font-size: 28rpx;
+    margin-bottom: 10rpx;
+    display: block;
+  }
+
+  .manual-input {
+    width: 100%;
+    padding: 16rpx;
+    border: 1px solid #ddd;
+    border-radius: 8rpx;
+    font-size: 28rpx;
+  }
+}

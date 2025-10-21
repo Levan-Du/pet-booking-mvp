@@ -1,79 +1,30 @@
-import { MongoModel } from '../mongo.model.js'
+import { getDBType } from '../../core/database/database.config.js';
+import OperationLogMongoModel from './operation-log.mongo.model.js';
+import { OperationLogPgModel } from './operation-log.pg.model.js';
 
-class OperationLogModel extends MongoModel {
+class OperationLogModel {
   constructor() {
-    super('operation_logs')
-  }
-
-  get collection() {
-    return this.getCollection()
+    this.dbType = getDBType();
+    this.model = this.dbType === 'postgres' 
+      ? new OperationLogPgModel() 
+      : new OperationLogMongoModel();
   }
 
   async create(operationData) {
-    const operationLog = {
-      operation_type: operationData.operation_type,
-      operator: operationData.operator,
-      target_appointment_id: operationData.target_appointment_id,
-      old_status: operationData.old_status,
-      new_status: operationData.new_status,
-      details: operationData.details,
-      created_at: new Date(),
-      updated_at: new Date()
-    }
-
-    return await this.getCollection().insertOne(operationLog)
+    return await this.model.create(operationData);
   }
 
   async findByAppointmentId(appointmentId) {
-    return await this.getCollection()
-      .find({ target_appointment_id: appointmentId })
-      .sort({ created_at: -1 })
-      .toArray()
+    return await this.model.findByAppointmentId(appointmentId);
   }
 
   async findAll(page = 1, limit = 20) {
-    const skip = (page - 1) * limit
-    const logs = await this.getCollection()
-      .find()
-      .sort({ created_at: -1 })
-      .skip(skip)
-      .limit(limit)
-      .toArray()
-
-    const total = await this.getCollection().countDocuments()
-
-    return {
-      logs,
-      pagination: {
-        page,
-        limit,
-        total,
-        pages: Math.ceil(total / limit)
-      }
-    }
+    return await this.model.findAll(page, limit);
   }
 
   async findByOperator(operator, page = 1, limit = 20) {
-    const skip = (page - 1) * limit
-    const logs = await this.getCollection()
-      .find({ operator })
-      .sort({ created_at: -1 })
-      .skip(skip)
-      .limit(limit)
-      .toArray()
-
-    const total = await this.getCollection().countDocuments({ operator })
-
-    return {
-      logs,
-      pagination: {
-        page,
-        limit,
-        total,
-        pages: Math.ceil(total / limit)
-      }
-    }
+    return await this.model.findByOperator(operator, page, limit);
   }
 }
 
-export default OperationLogModel
+export default OperationLogModel;

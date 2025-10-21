@@ -4,8 +4,9 @@ import Taro from '@tarojs/taro'
 import { useLanguage } from '../../shared/i18n/LanguageContext'
 import { apiRequest } from '../../utils/requestUtils'
 import { formatDate } from '../../utils/time.util'
-import CustomNavbar from '../../components/custom-navbar'
+import CustomNavbar from '../../components/custom-navbar/custom-navbar'
 import CustomToolbar from '../../components/custom-toolbar'
+import { API_URLS } from '../../shared/constants'
 import './appointment-detail.scss'
 
 interface Appointment {
@@ -47,7 +48,7 @@ const AppointmentDetail: React.FC = () => {
     setLoading(true)
     try {
       const response = await apiRequest({
-        url: `http://localhost:3000/api/appointments/${appointmentId}`,
+        url: `${API_URLS.APPOINTMENTS_URL}/${appointmentId}`,
         method: 'GET'
       })
 
@@ -57,9 +58,8 @@ const AppointmentDetail: React.FC = () => {
         setQrCodeUrl(`https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=appointment:${appointmentId}`)
       }
     } catch (error) {
-      console.error('加载预约详情失败:', error)
       Taro.showToast({
-        title: t('dashboard.loadFailed') || '加载失败',
+        title: t('management.loadFailed') || '加载失败',
         icon: 'error'
       })
     } finally {
@@ -73,12 +73,12 @@ const AppointmentDetail: React.FC = () => {
 
   const getStatusText = (status: string) => {
     const statusMap: Record<string, string> = {
-      pending: t('dashboard.pending'),
-      confirmed: t('dashboard.confirmed'),
-      in_progress: t('dashboard.in_progress'),
-      completed: t('dashboard.completed'),
-      cancelled: t('dashboard.cancelled'),
-      no_show: t('dashboard.no_show')
+      pending: t('management.pending'),
+      confirmed: t('management.confirmed'),
+      in_progress: t('management.in_progress'),
+      completed: t('management.completed'),
+      cancelled: t('management.cancelled'),
+      broken: t('management.broken')
     }
     return statusMap[status] || status
   }
@@ -89,7 +89,7 @@ const AppointmentDetail: React.FC = () => {
 
   if (loading) {
     return (
-      <View className="layout">
+      <View className="layout page-apm-detail">
         <CustomNavbar title={t('nav.booking') || '预约详情'} />
         <View className="loading">
           <Text>{t('common.loading') || '加载中...'}</Text>
@@ -100,7 +100,7 @@ const AppointmentDetail: React.FC = () => {
 
   if (!appointment) {
     return (
-      <View className="layout">
+      <View className="layout page-apm-detail">
         <CustomNavbar title={t('nav.booking') || '预约详情'} />
         <View className="error">
           <Text>预约信息不存在</Text>
@@ -110,7 +110,7 @@ const AppointmentDetail: React.FC = () => {
   }
 
   return (
-    <View className="layout">
+    <View className="layout page-apm-detail">
       <CustomNavbar title={t('nav.booking') || '预约详情'} />
       <View className="container">
         <View className="content-container">
@@ -125,15 +125,15 @@ const AppointmentDetail: React.FC = () => {
 
             <View className="card-content">
               <View className="info-row">
-                <Text className="label">{t('dashboard.customer') || '客户'}:</Text>
+                <Text className="label">{t('management.customer') || '客户'}:</Text>
                 <Text className="value">{appointment.customer_name}</Text>
               </View>
               <View className="info-row">
-                <Text className="label">{t('dashboard.phone') || '电话'}:</Text>
+                <Text className="label">{t('management.phone') || '电话'}:</Text>
                 <Text className="value">{appointment.customer_phone}</Text>
               </View>
               <View className="info-row">
-                <Text className="label">{t('dashboard.pet') || '宠物'}:</Text>
+                <Text className="label">{t('management.pet') || '宠物'}:</Text>
                 <Text className="value">
                   {getPetTypeText(appointment.pet_type)} ·
                   {appointment.pet_breed || t('common.unknown') || '未知'} ·
@@ -141,14 +141,14 @@ const AppointmentDetail: React.FC = () => {
                 </Text>
               </View>
               <View className="info-row">
-                <Text className="label">{t('dashboard.time') || '时间'}:</Text>
+                <Text className="label">{t('management.time') || '时间'}:</Text>
                 <Text className="value">
                   {formatDate(new Date(appointment.appointment_date))} {appointment.appointment_time}
                 </Text>
               </View>
               {appointment.special_notes && (
                 <View className="info-row">
-                  <Text className="label">{t('dashboard.notes') || '备注'}:</Text>
+                  <Text className="label">{t('management.notes') || '备注'}:</Text>
                   <Text className="value notes">{appointment.special_notes}</Text>
                 </View>
               )}
@@ -159,13 +159,13 @@ const AppointmentDetail: React.FC = () => {
           <View className="qr-card card">
             <Text className="qr-title">预约二维码</Text>
             <Text className="qr-desc">到店后请向商家出示此二维码进行签到</Text>
-            
+
             {qrCodeUrl && (
               <View className="qr-code-container">
                 <Image src={qrCodeUrl} className="qr-code" mode="aspectFit" />
               </View>
             )}
-            
+
             <Text className="qr-tip">商家扫描二维码后，预约状态将更新为"进行中"</Text>
           </View>
         </View>
