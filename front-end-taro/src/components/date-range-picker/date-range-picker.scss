@@ -48,7 +48,7 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: 20rpx;
+  // margin-bottom: 20rpx;
 }
 
 .nav-btn {
@@ -72,7 +72,7 @@
 
 .selection-info {
   text-align: center;
-  margin-top: 10rpx;
+  margin-bottom: 10rpx;
 }
 
 .info-text {
@@ -90,7 +90,7 @@
 .week-day {
   text-align: center;
   padding: 20rpx 0;
-  font-size: 24rpx;
+  font-size: 20rpx;
   color: #666;
   font-weight: 500;
 }
@@ -119,7 +119,7 @@
 }
 
 .date-cell:active {
-  background: #f0f0f0;
+  background: #308ff4;
 }
 
 .date-cell.current-month {
@@ -141,7 +141,7 @@
 
 .date-cell.selected-start,
 .date-cell.selected-end {
-  background: #007bff;
+  background: #d2ecff;
   color: #fff;
 }
 
@@ -152,11 +152,11 @@
 }
 
 .date-cell.in-range {
-  background: #e3f2fd;
+  background: #bae2fe;
 }
 
 .date-cell.in-range:not(.selected-start):not(.selected-end) {
-  background: #f0f8ff;
+  background: #e2f3ff;
 }
 
 .date-text {

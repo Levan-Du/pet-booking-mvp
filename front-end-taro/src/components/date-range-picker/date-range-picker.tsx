@@ -1,6 +1,7 @@
 import React, { useState, useRef } from 'react';
 import { View, Text, ScrollView, Button } from '@tarojs/components';
 import Taro from '@tarojs/taro';
+import { useLanguage } from '../../shared/i18n/LanguageContext';
 import './date-range-picker.scss';
 
 interface DateRangePickerProps {
@@ -18,6 +19,7 @@ const DateRangePicker: React.FC<DateRangePickerProps> = ({
   initialStartDate = '',
   initialEndDate = ''
 }) => {
+  const { t } = useLanguage();
   const [currentMonth, setCurrentMonth] = useState(new Date());
   const [selectedStartDate, setSelectedStartDate] = useState<string>(initialStartDate);
   const [selectedEndDate, setSelectedEndDate] = useState<string>(initialEndDate);
@@ -116,7 +118,7 @@ const DateRangePicker: React.FC<DateRangePickerProps> = ({
       onClose();
     } else {
       Taro.showToast({
-        title: '请选择完整的日期范围',
+        title: t('management.selectDateRange'),
         icon: 'none'
       });
     }
@@ -132,19 +134,19 @@ const DateRangePicker: React.FC<DateRangePickerProps> = ({
   if (!visible) return null;
 
   const monthData = generateMonthData(currentMonth);
-  const weekDays = ['周日', '周一', '周二', '周三', '周四', '周五', '周六'];
-  const monthNames = ['一月', '二月', '三月', '四月', '五月', '六月', '七月', '八月', '九月', '十月', '十一月', '十二月'];
+  const weekDays = [t('common.sunday'), t('common.monday'), t('common.tuesday'), t('common.wednesday'), t('common.thursday'), t('common.friday'), t('common.saturday')];
+  const monthNames = [t('common.january'), t('common.february'), t('common.march'), t('common.april'), t('common.may'), t('common.june'), t('common.july'), t('common.august'), t('common.september'), t('common.october'), t('common.november'), t('common.december')];
 
   return (
     <View className="date-range-picker-modal">
       <View className="date-range-picker-overlay" onClick={onClose} />
       <View className="date-range-picker-content">
         <View className="picker-header">
-          <Text className="picker-title">选择日期范围</Text>
+          <Text className="picker-title">{t('management.selectDateRange')}</Text>
           <View className="month-navigation">
             <Text className="nav-btn" onClick={goToPrevMonth}>‹</Text>
             <Text className="month-title">
-              {currentMonth.getFullYear()}年{monthNames[currentMonth.getMonth()]}
+              {currentMonth.getFullYear()}{t('common.year')}{monthNames[currentMonth.getMonth()]}
             </Text>
             <Text className="nav-btn" onClick={goToNextMonth}>›</Text>
           </View>
@@ -152,8 +154,8 @@ const DateRangePicker: React.FC<DateRangePickerProps> = ({
           <View className="selection-info">
             <Text className="info-text">
               {selectedStartDate && selectedEndDate 
-                ? `${selectedStartDate} 至 ${selectedEndDate}`
-                : selectingStart ? '请选择开始日期' : '请选择结束日期'
+                ? `${selectedStartDate} ${t('common.to')} ${selectedEndDate}`
+                : selectingStart ? t('management.selectStartDate') : t('management.selectEndDate')
               }
             </Text>
           </View>
@@ -197,8 +199,8 @@ const DateRangePicker: React.FC<DateRangePickerProps> = ({
         </ScrollView>
 
         <View className="picker-actions">
-          <Button className="action-btn clear-btn" onClick={handleClear}>清空</Button>
-          <Button className="action-btn confirm-btn" onClick={handleConfirm}>确认</Button>
+          <Button className="action-btn clear-btn" onClick={handleClear}>{t('management.clear')}</Button>
+          <Button className="action-btn confirm-btn" onClick={handleConfirm}>{t('common.confirm')}</Button>
         </View>
       </View>
     </View>
