@@ -33,7 +33,15 @@ export class AppointmentPgModel extends PgModel {
       paramCount++;
     }
 
-    if (query.appointment_date) {
+    // 处理日期范围查询
+    if (query.appointment_date && typeof query.appointment_date === 'object' && 
+        query.appointment_date.$gte && query.appointment_date.$lte) {
+      // 日期范围查询
+      conditions.push(`a.appointment_date >= $${paramCount} AND a.appointment_date <= $${paramCount + 1}`);
+      params.push(query.appointment_date.$gte, query.appointment_date.$lte);
+      paramCount += 2;
+    } else if (query.appointment_date) {
+      // 单日查询
       conditions.push(`a.appointment_date = $${paramCount}`);
       params.push(query.appointment_date);
       paramCount++;

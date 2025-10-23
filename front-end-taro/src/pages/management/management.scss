@@ -19,11 +19,45 @@
     gap: 30rpx;
   }
 
+  .date-filter-container {
+    position: relative;
+    display: flex;
+    align-items: center;
+  }
+
   .filter-picker {
     background: #fff;
     border-radius: 16rpx;
     padding: 16rpx;
     border: 1px solid #e0e0e0;
+    flex: 1;
+  }
+
+  .clear-date-btn {
+    position: absolute;
+    right: 16rpx;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 40rpx;
+    height: 40rpx;
+    border-radius: 50%;
+    background: #ccc;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    z-index: 10;
+  }
+
+  .clear-date-btn:hover {
+    background: #999;
+  }
+
+  .clear-date-text {
+    color: #fff;
+    font-size: 24rpx;
+    font-weight: bold;
+    line-height: 1;
   }
 
   .picker-value {
@@ -157,11 +191,12 @@
 
   .card-actions {
     display: flex;
-    // gap: 20rpx;
+    gap: 20rpx;
     flex-wrap: wrap;
   }
 
   .action-btn {
+    margin-top: 0;
     padding: 16rpx 32rpx;
     border-radius: 8rpx;
     font-size: 24rpx;

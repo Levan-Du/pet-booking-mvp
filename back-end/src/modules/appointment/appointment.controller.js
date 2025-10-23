@@ -85,14 +85,24 @@ export class AppointmentController {
 		try {
 			const {
 				status,
-				date
+				date,
+				startDate,
+				endDate
 			} = req.query;
 			const filters = {};
 
 			if (status && status !== 'all') {
 				filters.status = status;
 			}
-			if (date) {
+			
+			// 处理日期范围查询
+			if (startDate && endDate) {
+				filters.appointment_date = {
+					$gte: startDate,
+					$lte: endDate
+				};
+			} else if (date) {
+				// 保持原有的单日查询兼容性
 				filters.appointment_date = date;
 			}
 

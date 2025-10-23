@@ -5,6 +5,7 @@ import { apiRequest } from '../../utils/requestUtils'
 import { formatDate } from '../../utils/time.util'
 import CustomNavbar from '../../components/custom-navbar/custom-navbar'
 import QRScanner from '../../components/qr-scanner/qr-scanner'
+import DateRangePicker from '../../components/date-range-picker/date-range-picker'
 import { useLanguage } from '../../shared/i18n/LanguageContext'
 import { API_URLS } from '../../shared/constants'
 import './management.scss'
@@ -41,7 +42,8 @@ const Management: React.FC = () => {
   const [loading, setLoading] = React.useState(false)
   const [selectedStatus, setSelectedStatus] = React.useState(statusOptions[0])
   const [selectedStatusIndex, setSelectedStatusIndex] = React.useState(0)
-  const [selectedDate, setSelectedDate] = React.useState('')
+  const [selectedDateRange, setSelectedDateRange] = React.useState({ startDate: '', endDate: '' })
+  const [showDateRangePicker, setShowDateRangePicker] = React.useState(false)
   const [showQRScanner, setShowQRScanner] = React.useState(false)
   const [showSignInModal, setShowSignInModal] = React.useState(false)
   const [manualAppointmentNo, setManualAppointmentNo] = React.useState('')
@@ -55,7 +57,7 @@ const Management: React.FC = () => {
   // 监听筛选条件变化
   React.useEffect(() => {
     loadAppointments()
-  }, [selectedStatusIndex, selectedDate])
+  }, [selectedStatusIndex, selectedDateRange])
 
 
   const loadAppointments = async () => {
@@ -65,8 +67,9 @@ const Management: React.FC = () => {
       if (selectedStatus.value !== 'all') {
         params.status = selectedStatus.value
       }
-      if (selectedDate) {
-        params.date = selectedDate
+      if (selectedDateRange.startDate && selectedDateRange.endDate) {
+        params.startDate = selectedDateRange.startDate
+        params.endDate = selectedDateRange.endDate
       }
 
       const response = await apiRequest({
@@ -216,8 +219,23 @@ const Management: React.FC = () => {
     setSelectedStatusIndex(index)
   }
 
-  const onFilterDateChange = (e: any) => {
-    setSelectedDate(e.detail.value)
+  const handleDateRangeSelect = () => {
+    setShowDateRangePicker(true)
+  }
+
+  const handleDateRangeConfirm = (startDate: string, endDate: string) => {
+    setSelectedDateRange({ startDate, endDate })
+  }
+
+  const clearDateFilter = () => {
+    setSelectedDateRange({ startDate: '', endDate: '' })
+  }
+
+  const getDateRangeDisplayText = () => {
+    if (selectedDateRange.startDate && selectedDateRange.endDate) {
+      return `${selectedDateRange.startDate} 至 ${selectedDateRange.endDate}`
+    }
+    return t('management.selectDate')
   }
 
   return (
@@ -232,16 +250,18 @@ const Management: React.FC = () => {
         <View className='content-container'>
           <View className='header'>
             <View className='filter-section'>
-              <Picker
-                mode='date'
-                value={selectedDate}
-                onChange={onFilterDateChange}
-                className='filter-picker'
-              >
-                <View className='picker-value'>
-                  {selectedDate || t('management.selectDate')}
+              <View className='date-filter-container'>
+                <View className='filter-picker' onClick={handleDateRangeSelect}>
+                  <View className='picker-value'>
+                    {getDateRangeDisplayText()}
+                  </View>
                 </View>
-              </Picker>
+                {(selectedDateRange.startDate && selectedDateRange.endDate) && (
+                  <View className='clear-date-btn' onClick={clearDateFilter}>
+                    <Text className='clear-date-text'>×</Text>
+                  </View>
+                )}
+              </View>
               <View className='filter-status-bar'>
                 {statusOptions.map((item, index) => (
                   <View
@@ -408,6 +428,15 @@ const Management: React.FC = () => {
         </View>
       )}
 
+
+      {/* 日期范围选择器 */}
+      <DateRangePicker
+        visible={showDateRangePicker}
+        onClose={() => setShowDateRangePicker(false)}
+        onConfirm={handleDateRangeConfirm}
+        initialStartDate={selectedDateRange.startDate}
+        initialEndDate={selectedDateRange.endDate}
+      />
     </View>
   )
 }

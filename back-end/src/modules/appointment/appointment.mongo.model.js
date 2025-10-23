@@ -37,11 +37,24 @@ export class AppointmentMongoModel extends MongoModel {
     ];
 
     const matchStage = { ...query };
+
+    // 处理日期范围查询
+    if (query.appointment_date && typeof query.appointment_date === 'object' &&
+      query.appointment_date.$gte && query.appointment_date.$lte) {
+      // 日期范围查询
+      matchStage.appointment_date = {
+        $gte: new Date(query.appointment_date.$gte),
+        $lte: new Date(query.appointment_date.$lte)
+      };
+    } else if (query.appointment_date) {
+      // 单日查询
+      matchStage.appointment_date = query.appointment_date;
+    }
+
+    console.log('appointment.mongo.model.js -> find -> matchStage', matchStage)
+
     if (query.status) {
       matchStage.status = query.status;
-    }
-    if (query.appointment_date) {
-      matchStage.appointment_date = query.appointment_date;
     }
 
     if (Object.keys(matchStage).length > 0) {
