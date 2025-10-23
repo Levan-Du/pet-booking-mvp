@@ -54,7 +54,7 @@ async function startServer() {
 		console.log('🔗 正在连接数据库...');
 		await connectDatabase();
 
-		// initWebsocketServer()
+		initWebsocketServer()
 
 		server.listen(PORT, () => {
 			console.log(`🚀 服务器运行在端口 ${PORT}`);

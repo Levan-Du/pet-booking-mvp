@@ -38,7 +38,7 @@ export class AppointmentController {
 			const newAppointment = await appointmentService.createAppointment(appointmentData);
 
 			// 推送WebSocket更新
-			webSocketServer.notifyAppointmentChange(newAppointment._id);
+			webSocketServer.notifyAppointmentChange(newAppointment);
 
 			res.status(201).json({
 				success: true,
@@ -179,6 +179,19 @@ export class AppointmentController {
 			res.json({
 				success: true,
 				data: appointments
+			});
+		} catch (error) {
+			next(error);
+		}
+	}
+
+	async getTodayNewAppointments(req, res, next) {
+		try {
+			const data = await appointmentService.getTodayNewAppointments();
+
+			res.json({
+				success: true,
+				data
 			});
 		} catch (error) {
 			next(error);

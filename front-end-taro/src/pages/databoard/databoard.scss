@@ -103,6 +103,7 @@
 
    // 预约列表样式
    .appointment-list.databoard {
+     flex: 1;
      background-color: #fff;
      border-radius: 16rpx;
      padding: 30rpx;
@@ -135,6 +136,39 @@
      padding: 24rpx;
      margin-bottom: 20rpx;
      border-left: 6rpx solid #007AFF;
+   }
+
+   .appointment-item {
+     animation: slideDown 0.5s ease-out forwards;
+     transform-origin: top;
+     opacity: 0;
+     transform: translateY(-20px);
+   }
+
+   @keyframes slideDown {
+     0% {
+       opacity: 0;
+       transform: translateY(-20px);
+       max-height: 0;
+     }
+
+     50% {
+       opacity: 0.5;
+       transform: translateY(-10px);
+     }
+
+     100% {
+       opacity: 1;
+       transform: translateY(0);
+       max-height: 200px; // 根据实际内容调整
+     }
+   }
+
+   // 可选：添加悬停效果
+   .appointment-item:hover {
+     transform: translateY(-2px);
+     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+     transition: all 0.3s ease;
    }
 
    .appointment-header {

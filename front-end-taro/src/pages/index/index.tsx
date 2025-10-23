@@ -275,12 +275,12 @@ const Index: React.FC = () => {
           setUserToken(tokenResponse.data.data.token)
         }
 
-        resetForm()
+        // resetForm()
 
-        // 跳转到用户页面
-        setTimeout(() => {
-          Taro.redirectTo({ url: '/pages/user/user?tab=appointment' })
-        }, 100)
+        // // 跳转到用户页面
+        // setTimeout(() => {
+        //   Taro.redirectTo({ url: '/pages/user/user?tab=appointment' })
+        // }, 100)
       } else {
         Taro.showToast({
           title: response.data.message || t('booking.bookingFailed'),

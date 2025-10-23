@@ -29,6 +29,11 @@ router.get('/', authenticateAdminToken,
 	appointmentController.getAppointments.bind(appointmentController));
 router.get('/today', authenticateAdminToken,
 	appointmentController.getTodayAppointments.bind(appointmentController));
+
+router.get('/today/new', authenticateAdminToken,
+	appointmentController.getTodayNewAppointments.bind(appointmentController));
+router.get('/stats/today', authenticateAdminToken,
+	appointmentController.getTodayStats.bind(appointmentController));
 // router.get('/stats', authenticateAdminToken, appointmentController.getStats.bind(appointmentController));
 router.get('/:id', authenticateAdminToken,
 	appointmentController.getAppointmentById.bind(appointmentController));

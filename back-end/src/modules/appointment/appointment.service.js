@@ -164,6 +164,21 @@ export class AppointmentService {
 		return slots;
 	}
 
+	async getTodayNewAppointments() {
+		const today = new Date()
+		today.setHours(0, 0, 0, 0)
+		const appointments = await this.appointmentModel.getCollection().find({
+			created_at: {
+				$gte: today  // 或者 $gte: today，根据你的需求
+			}
+		}).toArray();
+		// 确保返回的数据包含appointment_no字段
+		return appointments.map(apt => ({
+			...apt,
+			appointment_no: apt.appointment_no || apt.appointment_no // 确保字段存在
+		}));
+	}
+
 	async getTodayStats(date) {
 		const appointments = await this.getAllAppointments({
 			appointment_date: date

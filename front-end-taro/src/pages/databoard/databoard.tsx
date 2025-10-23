@@ -34,18 +34,24 @@ const DataBoard: React.FC = () => {
   const [dataBoardWebSocket] = React.useState(() => new DataBoardWebSocketManager())
 
   // WebSocket消息处理
-  const handleWebSocketMessage = (stats: any, newAppointments: any[]) => {
+  const handleWebSocketMessage = (stats: any) => {
+    console.log('databoard.tsx -> handleWebSocketMessage -> stats', stats)
     setTodayStats(stats)
-    setAppointments(newAppointments)
+  }
+
+  const handleNewAppointmentMessage = (appointment) => {
+    console.log('databoard.tsx -> handleNewAppointmentMessage -> appointment', appointment)
+    setAppointments((prev => [appointment, ...prev]))
   }
 
   // 传统的HTTP请求作为备用方案
   const loadTodayStats = async () => {
     try {
       const response = await apiRequest({
-        url: API_URLS.REPORTS_TODAY_URL,
+        url: API_URLS.APPOINTMENT_STATS_TODAY_URL,
         method: 'GET'
       })
+      console.log('databoard.tsx -> loadTodayStats -> response', response.data)
 
       if (response.data.success) {
         setTodayStats(response.data.data)
@@ -54,36 +60,45 @@ const DataBoard: React.FC = () => {
       console.error('加载今日统计数据失败:', error)
     }
   }
+  const loadTodayNewAppointments = async () => {
+    try {
+      const response = await apiRequest({
+        url: API_URLS.APPOINTMENT_TODAY_NEW_URL,
+        method: 'GET'
+      })
+      console.log('databoard.tsx -> loadTodayNewAppointments -> response', response.data)
 
-  useReady(() => {
+      if (response.data.success) {
+        setAppointments(response.data.data)
+      }
+    } catch (error) {
+      console.error('加载今日统计数据失败:', error)
+    }
+  }
+
+  React.useEffect(() => {
     // 配置WebSocket消息处理器
     dataBoardWebSocket.setOnTodayStatsCallback(handleWebSocketMessage)
+    dataBoardWebSocket.setOnTodayNewAppointmentsCallback(handleNewAppointmentMessage)
 
-    // 连接WebSocket
-    dataBoardWebSocket.connect()
-    dataBoardWebSocket.subscribe()
-
-    // 备用方案：每分钟通过HTTP请求更新数据
-    const interval = setInterval(loadTodayStats, 60000)
-
-    return () => {
-      clearInterval(interval)
-      dataBoardWebSocket.close()
-    }
-  })
-
-  useDidShow(() => {
     // 页面显示时重新连接WebSocket
     if (!dataBoardWebSocket.getConnectionStatus()) {
       dataBoardWebSocket.connect()
       dataBoardWebSocket.subscribe()
     }
-  })
 
-  useDidHide(() => {
-    // 页面隐藏时关闭WebSocket以节省资源
-    dataBoardWebSocket.close()
-  })
+    loadTodayStats()
+    loadTodayNewAppointments()
+
+    // 备用方案：每分钟通过HTTP请求更新数据
+    // const interval = setInterval(loadTodayNewAppointments, 60000)
+
+    return () => {
+
+      // clearInterval(interval)
+      dataBoardWebSocket.close()
+    }
+  }, [])
 
   return (
     <View className='layout page-databoard'>
@@ -136,18 +151,18 @@ const DataBoard: React.FC = () => {
                 {appointments.map((appointment) => (
                   <View key={appointment._id} className='appointment-item'>
                     <View className='appointment-header'>
-                      <Text className='appointment-no'>#{appointment.appointmentNo}</Text>
+                      <Text className='appointment-no'>#{appointment.appointment_no}</Text>
                       <Text className={`appointment-status ${appointment.status}`}>
                         {t(`appointment_status.${appointment.status}`)}
                       </Text>
                     </View>
                     <View className='appointment-info'>
-                      <Text className='customer-name'>{appointment.customerName}</Text>
-                      <Text className='customer-phone'>{appointment.customerPhone}</Text>
+                      <Text className='customer-name'>{appointment.customer_name}</Text>
+                      <Text className='customer-phone'>{appointment.customer_phone}</Text>
                     </View>
                     <View className='appointment-details'>
-                      <Text className='service-type'>{appointment.serviceType}</Text>
-                      <Text className='appointment-time'>{appointment.appointmentTime}</Text>
+                      <Text className='service-type'>{appointment.service_name}</Text>
+                      <Text className='appointment-time'>{appointment.appointment_time}</Text>
                     </View>
                   </View>
                 ))}

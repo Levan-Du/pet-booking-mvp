@@ -45,7 +45,7 @@ class DataBoardWebSocketHandler {
                 const stats = await appointmentModel.getCollection().aggregate([
                     {
                         $match: {
-                            createdAt: {
+                            created_at: {
                                 $gte: today,
                                 $lt: tomorrow
                             }
@@ -57,7 +57,9 @@ class DataBoardWebSocketHandler {
                             count: { $sum: 1 }
                         }
                     }
-                ]);
+                ]).toArray();
+
+                console.log('databoard.handler.js -> stats', stats)
 
                 // 转换为前端需要的格式
                 const result = {
@@ -71,6 +73,7 @@ class DataBoardWebSocketHandler {
                 };
 
                 stats.forEach(stat => {
+                    console.log('databoard.handler.js -> stat._id,stat.count', stat._id, stat.count)
                     const status = stat._id;
                     const count = stat.count;
                     result[status] = count;
@@ -79,22 +82,30 @@ class DataBoardWebSocketHandler {
 
                 // 获取最新的预约列表（最近10条）
                 const latestAppointments = await appointmentModel.getCollection().find({
-                    createdAt: { $gte: today, $lt: tomorrow }
+                    created_at: { $gte: today, $lt: tomorrow }
+                }, {
+                    projection: {
+                        id: 1,
+                        appointment_no: 1,
+                        customer_Name: 1,
+                        service_name: 1,
+                        status: 1,
+                        created_at: 1
+                    }
                 })
-                    .sort({ createdAt: -1 })
+                    .sort({ created_at: -1 })
                     .limit(10)
-                    .select('appointmentNumber customerName serviceType status createdAt')
-                    .lean();
+                    .toArray();
 
                 return {
                     stats: result,
                     latestAppointments: latestAppointments.map(apt => ({
                         id: apt._id,
-                        appointmentNumber: apt.appointmentNumber,
-                        customerName: apt.customerName,
-                        serviceType: apt.serviceType,
+                        appointment_no: apt.appointment_no,
+                        customer_Name: apt.customer_Name,
+                        service_name: apt.service_name,
                         status: apt.status,
-                        createdAt: apt.createdAt
+                        created_at: apt.created_at
                     }))
                 };
             } else {
@@ -146,11 +157,11 @@ class DataBoardWebSocketHandler {
                     stats: result,
                     latestAppointments: appointmentsResult.rows.map(row => ({
                         id: row.id,
-                        appointmentNumber: row.appointment_no,
-                        customerName: row.customer_name,
-                        serviceType: row.service_name,
+                        appointment_no: row.appointment_no,
+                        customer_name: row.customer_name,
+                        service_name: row.service_name,
                         status: row.status,
-                        createdAt: row.created_at
+                        created_at: row.created_at
                     }))
                 };
             }

@@ -89,14 +89,14 @@ class WSSServer {
     }
 
     // 推送预约更新
-    notifyAppointmentChange(appointmentId) {
+    notifyAppointmentChange(appointment) {
         const message = {
             type: 'appointment_updated',
-            appointmentId: appointmentId,
+            data: appointment,
             timestamp: new Date().toISOString()
         };
         this.broadcast(message);
-        console.log(`📢 推送预约更新: ${appointmentId}`);
+        console.log(`📢 推送预约更新: ${appointment._id}`);
     }
 
     // 推送统计数据更新

@@ -153,7 +153,8 @@ export class WebSocketManager {
 
 // 数据看板专用的WebSocket管理器
 export class DataBoardWebSocketManager extends WebSocketManager {
-  private onTodayStatsCallback: ((stats: any, appointments: any[]) => void) | null = null
+  private onTodayStatsCallback: ((stats: any) => void) | null = null
+  private onTodayNewAppointmentsCallback: ((appointments: any) => void) | null = null
 
   constructor() {
     super({
@@ -171,14 +172,25 @@ export class DataBoardWebSocketManager extends WebSocketManager {
   }
 
   // 设置今日统计数据回调
-  setOnTodayStatsCallback(callback: (stats: any, appointments: any[]) => void): void {
+  setOnTodayStatsCallback(callback: (stats: any) => void): void {
+    console.log('websocket.ts -> setOnTodayStatsCallback')
     this.onTodayStatsCallback = callback
+  }
+
+  // 设置今日新增预约数据回调
+  setOnTodayNewAppointmentsCallback(callback: (appointments: any[]) => void): void {
+    console.log('websocket.ts -> setOnTodayNewAppointmentsCallback')
+    this.onTodayNewAppointmentsCallback = callback
   }
 
   // 处理消息
   private handleMessage(data: any): void {
-    if ((data.type === 'today_stats' || data.type === 'appointment_updated') && this.onTodayStatsCallback) {
-      this.onTodayStatsCallback(data.data.stats, data.data.latestAppointments || [])
+    console.log('websocket.ts -> handleMessage', data.type)
+    if ((data.type === 'today_stats' || data.type === 'stats_updated') && this.onTodayStatsCallback) {
+      this.onTodayStatsCallback(data.data.stats)
+    }
+    else if (data.type === 'appointment_updated' && this.onTodayNewAppointmentsCallback) {
+      this.onTodayNewAppointmentsCallback(data.data || {})
     }
   }
 }
