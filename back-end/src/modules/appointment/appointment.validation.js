@@ -1,5 +1,6 @@
 import Joi from 'joi';
 import { VALID_STATUSES } from '../../shared/enums/appointment-status.js';
+import { APPOINTMENT_STATUS } from '../../shared/enums/appointment-status.js'
 
 export const appointmentValidation = {
 	create: Joi.object({
@@ -35,9 +36,19 @@ export const appointmentValidation = {
 			}),
 
 		service_id: Joi.alternatives().try(
-				Joi.string().pattern(/^[0-9a-fA-F]{24}$/),
-				Joi.number().integer().positive()
-			).required()
+			Joi.string().pattern(/^[0-9a-fA-F]{24}$/),
+			Joi.number().integer().positive()
+		).required()
+			.messages({
+				'alternatives.match': '服务ID格式不正确'
+			}),
+
+		service_name: Joi.string().max(500).allow('')
+			.messages({
+				'string.max': '特殊要求不能超过500个字符'
+			}),
+
+		status: Joi.string().required()
 			.messages({
 				'alternatives.match': '服务ID格式不正确'
 			}),

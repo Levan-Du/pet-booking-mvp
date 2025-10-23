@@ -261,5 +261,21 @@ export default {
     not_logged_in: '未登录',
     not_registered: '未注册',
     add_pet_developing: '添加宠物功能开发中'
+  },
+  appointment: {
+    cancel: '取消预约',
+    cancelConfirm: '确定要取消此预约吗？此操作不可撤销。',
+    cancelSuccess: '预约取消成功',
+    cancelFailed: '取消预约失败',
+    appointmentNo: '预约单号',
+    serviceItem: '服务项目',
+    serviceDuration: '服务时长',
+    servicePrice: '服务价格',
+    estimatedEndTime: '预计结束时间',
+    createTime: '创建时间',
+    minutes: '分钟',
+    qrTitle: '预约二维码',
+    qrDesc: '到店后请向商家出示此二维码进行签到',
+    qrTip: '商家扫描二维码后，预约状态将更新为"进行中"'
   }
 }

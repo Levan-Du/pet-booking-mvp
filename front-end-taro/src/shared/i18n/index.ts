@@ -14,7 +14,7 @@ export const i18n = {
   t(key: string, locale: Locale = 'zh-CN'): string {
     const keys = key.split('.')
     let value: any = locales[locale]
-    
+
     for (const k of keys) {
       if (value && typeof value === 'object' && k in value) {
         value = value[k]
@@ -22,10 +22,10 @@ export const i18n = {
         return key // 返回原key作为fallback
       }
     }
-    
+
     return typeof value === 'string' ? value : key
   },
-  
+
   getAvailableLocales(): { code: Locale; name: string }[] {
     return [
       { code: 'zh-CN', name: '中文' },

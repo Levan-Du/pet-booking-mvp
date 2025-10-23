@@ -47,7 +47,7 @@ export class AdminController {
 				});
 			}
 			const payload = JWTUtil.verifyToken(token, JWT_ADMIN_SECRET);
-			console.log('admin.controller.js -> checkToken -> payload', payload)
+			// console.log('admin.controller.js -> checkToken -> payload', payload)
 			if (!payload) {
 				return res.status(401).json({
 					success: false,

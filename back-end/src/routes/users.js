@@ -31,7 +31,8 @@ router.post('/generate-token', async (req, res) => {
     // 生成用户token
     const payload = {
       id: phone,
-      phone: phone,
+      phone,
+      device_id,
       role: 'user'
     }
 
@@ -66,6 +67,7 @@ router.post('/verify-token', async (req, res) => {
     res.json(successResponse({
       valid: true,
       user_info: {
+        id: decoded.phone,
         phone: decoded.phone,
         device_id: decoded.device_id,
         role: decoded.role
@@ -116,5 +118,7 @@ router.post('/refresh-token', async (req, res) => {
 
 
 router.get('/appointments', authenticateUserToken, appointmentController.getUserAppointments.bind(appointmentController));
+
+router.get('/appointments/:id', authenticateUserToken, appointmentController.getUserAppointments.bind(appointmentController));
 
 export default router

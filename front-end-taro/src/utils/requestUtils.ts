@@ -1,6 +1,6 @@
 import Taro from '@tarojs/taro'
 import { authUtils } from './authUtils'
-import { getUserToken } from './tokenUtils'
+import { getUserToken, getDeviceId } from './tokenUtils'
 
 interface RequestOptions {
   url: string
@@ -29,8 +29,8 @@ export const apiRequest = async (options: RequestOptions) => {
 
     return response
   } catch (error) {
-    // console.error('API请求失败:', error)
-    // throw error
+    console.error('API请求失败:', error)
+    throw error
   }
 }
 
@@ -45,16 +45,18 @@ export const apiRequestUser = async (options: RequestOptions) => {
       header: {
         ...(options.header ? options.header : {}),
         'Content-Type': 'application/json',
-        authorization: token ? `Bearer ${token}` : ''
+        authorization: token ? `Bearer ${token}` : '',
+        device_id: getDeviceId()
       },
       timeout: 10000
     }
+    console.log('requestUtils.ts -> apiRequestUser -> device_id', getDeviceId(), token)
 
     const response = await Taro.request(requestOptions)
 
     return response
   } catch (error) {
-    // console.error('API请求失败:', error)
-    // throw error
+    console.error('API请求失败:', error)
+    throw error
   }
 }

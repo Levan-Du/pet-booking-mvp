@@ -23,6 +23,12 @@
     margin-bottom: 20rpx;
   }
 
+  .header-right {
+    display: flex;
+    align-items: center;
+    gap: 16rpx;
+  }
+
   .service-name {
     font-size: 32rpx;
     font-weight: bold;
@@ -141,5 +147,23 @@
     padding: 60rpx;
     color: #666;
     font-size: 28rpx;
+  }
+
+  .cancel-btn-small {
+    background-color: #f8f9fa;
+    color: #e74c3c;
+    padding: 8rpx 16rpx;
+    border-radius: 16rpx;
+    font-size: 22rpx;
+    font-weight: 400;
+    text-align: center;
+    cursor: pointer;
+    border: 1rpx solid #e74c3c;
+    transition: all 0.3s ease;
+
+    &:active {
+      background-color: #e74c3c;
+      color: white;
+    }
   }
 }

@@ -1,10 +1,11 @@
 import React from 'react'
 import { View, Text, ScrollView } from '@tarojs/components'
-import Taro from '@tarojs/taro'
+import Taro, { useLoad } from '@tarojs/taro'
 import { apiRequest } from '../../utils/requestUtils'
 import CustomNavbar from '../../components/custom-navbar/custom-navbar'
 import { useLanguage } from '../../shared/i18n/LanguageContext'
 import { API_URLS } from '../../shared/constants'
+import { withAuth } from '../../shared/withAuth/withAuth'
 import './operation-log.scss'
 
 interface OperationLog {
@@ -137,4 +138,4 @@ const OperationLog: React.FC = () => {
   )
 }
 
-export default OperationLog
+export default withAuth(OperationLog)

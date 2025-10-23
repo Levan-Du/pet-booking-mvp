@@ -1,12 +1,13 @@
 import React from 'react'
 import { View, Text, ScrollView } from '@tarojs/components'
 import './databoard.scss'
-import Taro, { useReady, useDidShow, useDidHide } from '@tarojs/taro'
+import Taro, { useLoad, useReady, useDidShow, useDidHide } from '@tarojs/taro'
 import CustomNavbar from '../../components/custom-navbar/custom-navbar'
 import { apiRequest } from '../../utils/requestUtils'
 import { useLanguage } from '../../shared/i18n/LanguageContext'
 import { DataBoardWebSocketManager } from '../../utils/websocket'
 import { API_URLS } from '../../shared/constants'
+import { withAuth } from '../../shared/withAuth/withAuth'
 
 interface Appointment {
   _id: string
@@ -30,7 +31,7 @@ const DataBoard: React.FC = () => {
     broken: 0
   })
   const [appointments, setAppointments] = React.useState<Appointment[]>([])
-  // const [dataBoardWebSocket] = React.useState(() => new DataBoardWebSocketManager())
+  const [dataBoardWebSocket] = React.useState(() => new DataBoardWebSocketManager())
 
   // WebSocket消息处理
   const handleWebSocketMessage = (stats: any, newAppointments: any[]) => {
@@ -55,33 +56,33 @@ const DataBoard: React.FC = () => {
   }
 
   useReady(() => {
-    // // 配置WebSocket消息处理器
-    // dataBoardWebSocket.setOnTodayStatsCallback(handleWebSocketMessage)
+    // 配置WebSocket消息处理器
+    dataBoardWebSocket.setOnTodayStatsCallback(handleWebSocketMessage)
 
-    // // 连接WebSocket
-    // dataBoardWebSocket.connect()
-    // dataBoardWebSocket.subscribe()
+    // 连接WebSocket
+    dataBoardWebSocket.connect()
+    dataBoardWebSocket.subscribe()
 
-    // // 备用方案：每分钟通过HTTP请求更新数据
-    // const interval = setInterval(loadTodayStats, 60000)
+    // 备用方案：每分钟通过HTTP请求更新数据
+    const interval = setInterval(loadTodayStats, 60000)
 
-    // return () => {
-    //   clearInterval(interval)
-    //   dataBoardWebSocket.close()
-    // }
+    return () => {
+      clearInterval(interval)
+      dataBoardWebSocket.close()
+    }
   })
 
   useDidShow(() => {
-    // // 页面显示时重新连接WebSocket
-    // if (!dataBoardWebSocket.getConnectionStatus()) {
-    //   dataBoardWebSocket.connect()
-    //   dataBoardWebSocket.subscribe()
-    // }
+    // 页面显示时重新连接WebSocket
+    if (!dataBoardWebSocket.getConnectionStatus()) {
+      dataBoardWebSocket.connect()
+      dataBoardWebSocket.subscribe()
+    }
   })
 
   useDidHide(() => {
-    // // 页面隐藏时关闭WebSocket以节省资源
-    // dataBoardWebSocket.close()
+    // 页面隐藏时关闭WebSocket以节省资源
+    dataBoardWebSocket.close()
   })
 
   return (
@@ -160,4 +161,4 @@ const DataBoard: React.FC = () => {
   )
 }
 
-export default DataBoard
+export default withAuth(DataBoard)

@@ -9,15 +9,12 @@ export const authenticateAdminToken = async (req, res, next) => {
 
 // JWT Token 认证中间件（如果需要）
 export const authenticateUserToken = async (req, res, next) => {
-	authenticateToken('pet-user', req.query.device_id, req, res, next)
+	authenticateToken('pet-user', req.headers.device_id, req, res, next)
 };
 
-const authenticateToken = (payloadHeader, JWT_ADMIN_SECRET, req, res, next) => {
-
-	// console.log('appointment.middleware.js -> authenticateToken -> req', req, req.headers.authorization);
+const authenticateToken = (payloadHeader, JWT_SECRET, req, res, next) => {
 	try {
 		const authHeader = req.headers.authorization;
-		// console.log('11111.auth.middleware.js -> authenticateAdminToken -> authHeader', authHeader)
 
 		if (!authHeader || !authHeader.startsWith('Bearer ')) {
 			return res.status(401).json({
@@ -27,7 +24,6 @@ const authenticateToken = (payloadHeader, JWT_ADMIN_SECRET, req, res, next) => {
 		}
 
 		const token = authHeader.slice(7);
-		// console.log('11111.auth.middleware.js -> authenticateAdminToken -> authHeader', token)
 
 		if (!token) {
 			return res.status(401).json({
@@ -35,9 +31,10 @@ const authenticateToken = (payloadHeader, JWT_ADMIN_SECRET, req, res, next) => {
 				message: 'Token不能为空'
 			});
 		}
+		// console.log('auth.middleware.js -> authenticateToken -> 333333333333333', req.query)
 
-		const payload = JWTUtil.verifyToken(token, JWT_ADMIN_SECRET)
-		// console.log('11111.auth.middleware.js -> authenticateAdminToken -> payload', payload)
+		const payload = JWTUtil.verifyToken(token, JWT_SECRET)
+		// console.log('auth.middleware.js -> authenticateToken -> payload', payload)
 		if (!payload) {
 			return res.status(401).json({
 				success: false,

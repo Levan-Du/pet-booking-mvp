@@ -9,7 +9,8 @@ export default {
     'pages/store/store',
     'pages/appointment-detail/appointment-detail',
     'pages/operation-log/operation-log',
-    'pages/user/user'
+    'pages/user/user',
+    'pages/test/test'
   ],
   window: {
     backgroundTextStyle: 'light',

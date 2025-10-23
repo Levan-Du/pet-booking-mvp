@@ -7,8 +7,8 @@ import CustomNavbar from '../../components/custom-navbar/custom-navbar'
 import QRScanner from '../../components/qr-scanner/qr-scanner'
 import { useLanguage } from '../../shared/i18n/LanguageContext'
 import { API_URLS } from '../../shared/constants'
-import { authUtils } from '../../utils/authUtils'
 import './management.scss'
+import { withAuth } from '../../shared/withAuth/withAuth'
 
 interface Appointment {
   _id: string
@@ -46,32 +46,17 @@ const Management: React.FC = () => {
   const [showSignInModal, setShowSignInModal] = React.useState(false)
   const [manualAppointmentNo, setManualAppointmentNo] = React.useState('')
 
-  useLoad(() => {
-    if (!authUtils.isLoggedIn()) {
-      Taro.redirectTo('/pages/admin/login')
-      return
-    }
-    checkToken()
-  })
+  console.log('management.tsx -> 11111')
+  React.useEffect(() => {
+    loadAppointments()
+  }, [])
 
-  const checkToken = async () => {
-    try {
-      const response = await apiRequest({
-        url: API_URLS.ADMIN_CHECK_TOKEN_URL,
-        method: 'GET'
-      })
 
-      console.log('management.tsx -> checkToken -> reponse', response)
+  // 监听筛选条件变化
+  React.useEffect(() => {
+    loadAppointments()
+  }, [selectedStatusIndex, selectedDate])
 
-      if (!response.data.success) {
-        Taro.navigateTo({
-          url: '/pages/admin/login'
-        })
-      }
-    } catch (error) {
-      // Token检查失败，继续显示登录页面
-    }
-  }
 
   const loadAppointments = async () => {
     setLoading(true)
@@ -90,7 +75,7 @@ const Management: React.FC = () => {
         data: params
       })
 
-      // console.log('management.tsx -> loadAppointments -> response', response)
+      console.log('management.tsx -> loadAppointments -> response', response)
 
       if (response.data.success) {
         setAppointments(response.data.data)
@@ -234,15 +219,6 @@ const Management: React.FC = () => {
   const onFilterDateChange = (e: any) => {
     setSelectedDate(e.detail.value)
   }
-
-  // 监听筛选条件变化
-  React.useEffect(() => {
-    loadAppointments()
-  }, [selectedStatusIndex, selectedDate])
-
-  // React.useEffect(() => {
-  //   loadAppointments()
-  // }, [])
 
   return (
     <View className="layout page-management">
@@ -436,4 +412,4 @@ const Management: React.FC = () => {
   )
 }
 
-export default Management
+export default withAuth(Management)

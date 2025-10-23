@@ -260,5 +260,21 @@ export default {
     not_logged_in: 'Not logged in',
     not_registered: 'Not registered',
     add_pet_developing: 'Add pet feature under development'
+  },
+  appointment: {
+    cancel: 'Cancel',
+    cancelConfirm: 'Are you sure you want to cancel this appointment? This action cannot be undone.',
+    cancelSuccess: 'Appointment cancelled successfully',
+    cancelFailed: 'Failed to cancel appointment',
+    appointmentNo: 'Appointment No',
+    serviceItem: 'Service Item',
+    serviceDuration: 'Service Duration',
+    servicePrice: 'Service Price',
+    estimatedEndTime: 'Estimated End Time',
+    createTime: 'Create Time',
+    minutes: 'minutes',
+    qrTitle: 'Appointment QR Code',
+    qrDesc: 'Please show this QR code to the merchant for check-in',
+    qrTip: 'After scanning the QR code, the appointment status will be updated to "In Progress"'
   }
 }

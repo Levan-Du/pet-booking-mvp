@@ -1,12 +1,13 @@
 import React from 'react'
 import { View, Text, ScrollView } from '@tarojs/components'
-import Taro from '@tarojs/taro'
+import Taro, { useLoad } from '@tarojs/taro'
 import SimpleBarChart from '../../components/simple-bar-chart/simple-bar-chart'
 import SimplePieChart from '../../components/simple-pie-chart/simple-pie-chart'
 import CustomNavbar from '../../components/custom-navbar/custom-navbar'
 import { useLanguage } from '../../shared/i18n/LanguageContext'
 import { authUtils } from '../../utils/authUtils'
 import { API_URLS } from '../../shared/constants'
+import { withAuth } from '../../shared/withAuth/withAuth'
 import './reports.scss'
 
 const Reports: React.FC = () => {
@@ -230,4 +231,4 @@ const Reports: React.FC = () => {
   )
 }
 
-export default Reports
+export default withAuth(Reports)

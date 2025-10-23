@@ -36,7 +36,7 @@ export class AppointmentMongoModel extends MongoModel {
     }
     ];
 
-    const matchStage = {};
+    const matchStage = { ...query };
     if (query.status) {
       matchStage.status = query.status;
     }
@@ -79,7 +79,9 @@ export class AppointmentMongoModel extends MongoModel {
       }
     });
 
-    return await this.getCollection().aggregate(pipeline).toArray();
+    const arr = await this.getCollection().aggregate(pipeline).toArray();
+    // console.log('appointment.mongo.model.js -> find -> arr', arr)
+    return arr;
   }
 
   async checkTimeConflict(appointment_date, appointment_time, end_time, excludeId = null) {

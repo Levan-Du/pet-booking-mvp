@@ -1,4 +1,7 @@
 import Taro from '@tarojs/taro'
+import React from 'react'
+import { API_URLS } from '../shared/constants'
+import { apiRequest } from '../utils/requestUtils'
 
 // Token管理工具
 export const authUtils = {
@@ -34,9 +37,13 @@ export const authUtils = {
     }
   },
 
-  // 检查是否已登录
   isLoggedIn(): boolean {
-    const token = this.getToken()
-    return !!token
+    try {
+      return !!this.getToken()
+    } catch (error) {
+      console.error('清除token失败:', error)
+      return false
+    }
   }
 }
+

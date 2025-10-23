@@ -30,17 +30,12 @@ const User: React.FC = () => {
   }, [])
 
   const loadAppointments = async () => {
-    const data = {
-      phone: jwtDecode(getUserToken()!).phone,
-      device_id: getDeviceId()
-    }
     const response = await apiRequestUser({
       url: API_URLS.USER_APPOINTMENTS_URL,
       method: 'GET',
       header: {
         'Content-Type': 'application/json'
-      },
-      data
+      }
     })
 
     if (response.data.success) {
@@ -196,7 +191,8 @@ const User: React.FC = () => {
                 ) : (
                   <View className='appointments-list'>
                     {appointments.map((appointment, index) => (
-                      <View key={index} className='appointment-card card'>
+                      <View key={index} className='appointment-card card'
+                        onClick={() => Taro.navigateTo({ url: `/pages/appointment-detail/appointment-detail?id=${appointment._id}` })}>
                         <View className='card-header'>
                           <Text className='appointment-no'>#{appointment.appointment_no}</Text>
                           <View className={`status-badge ${appointment.status}`}>

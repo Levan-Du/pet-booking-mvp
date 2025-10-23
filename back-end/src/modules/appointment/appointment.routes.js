@@ -16,7 +16,8 @@ const router = express.Router();
 const appointmentController = new AppointmentController();
 
 // 公开路由
-router.get('/available-slots', appointmentController.getAvailableSlots.bind(appointmentController));
+router.get('/available-slots',
+	appointmentController.getAvailableSlots.bind(appointmentController));
 router.post(
 	'/',
 	validateRequest(appointmentValidation.create),
@@ -24,10 +25,13 @@ router.post(
 );
 
 // 需要管理员认证的路由
-router.get('/', authenticateAdminToken, appointmentController.getAppointments.bind(appointmentController));
-router.get('/today', authenticateAdminToken, appointmentController.getTodayAppointments.bind(appointmentController));
+router.get('/', authenticateAdminToken,
+	appointmentController.getAppointments.bind(appointmentController));
+router.get('/today', authenticateAdminToken,
+	appointmentController.getTodayAppointments.bind(appointmentController));
 // router.get('/stats', authenticateAdminToken, appointmentController.getStats.bind(appointmentController));
-router.get('/:id', authenticateAdminToken, appointmentController.getAppointmentById.bind(appointmentController));
+router.get('/:id', authenticateAdminToken,
+	appointmentController.getAppointmentById.bind(appointmentController));
 router.put(
 	'/:id/status',
 	authenticateAdminToken,

@@ -1,6 +1,7 @@
 import { getAppointmentModel, getServiceModel } from '../model.factory.js';
 import { APPOINTMENT_STATUS, VALID_STATUSES } from '../../shared/enums/appointment-status.js';
 import orderIdGenerator from '../../core/utils/orderid-generator.util.js'
+import { ObjectId } from 'mongodb';
 
 export class AppointmentService {
 	constructor() {
@@ -9,8 +10,8 @@ export class AppointmentService {
 	}
 
 	async getUserAppointments(filters = {}) {
-		// console.log('appointments.service.js -> getAllAppointments -> filters:', filters);
 		const appointments = await this.appointmentModel.find(filters);
+		// console.log('appointments.service.js -> getUserAppointments -> appointments:', appointments);
 		// 确保返回的数据包含appointment_no字段
 		return appointments.map(apt => ({
 			...apt,
@@ -19,7 +20,6 @@ export class AppointmentService {
 	}
 
 	async getAllAppointments(filters = {}) {
-		// console.log('appointments.service.js -> getAllAppointments -> filters:', filters);
 		const appointments = await this.appointmentModel.find(filters);
 		// 确保返回的数据包含appointment_no字段
 		return appointments.map(apt => ({
@@ -46,7 +46,7 @@ export class AppointmentService {
 			service_id
 		} = appointmentData;
 
-		// console.log('appointment.service.js -> createAppointment -> appointmentData', appointmentData)
+		console.log('appointment.service.js -> createAppointment -> appointmentData', appointmentData)
 
 		// 获取服务信息
 		const service = await this.serviceModel.findById(service_id);
@@ -77,6 +77,7 @@ export class AppointmentService {
 		const createdAppointment = await this.appointmentModel.create({
 			appointment_no: apmNo,
 			...appointmentData,
+			service_id: new ObjectId(appointmentData.service_id),
 			end_time
 		});
 		// 确保返回的数据包含appointment_no字段

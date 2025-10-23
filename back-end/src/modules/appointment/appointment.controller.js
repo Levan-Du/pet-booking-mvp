@@ -2,6 +2,7 @@ import {
 	AppointmentService
 } from './appointment.service.js';
 import webSocketServer from '../../core/websocket/websocket.server.js';
+import { ObjectId } from 'mongodb';
 
 const appointmentService = new AppointmentService();
 
@@ -57,13 +58,9 @@ export class AppointmentController {
 
 	async getUserAppointments(req, res, next) {
 		try {
-			const {
-				phone
-			} = req.query;
-			const filters = { customer_phone: phone };
+			const filters = this.convertFilter(req.query, req.params, req.headers['pet-user']);
 
-			const appointments = await appointmentService.getAllAppointments(filters);
-			// console.log('getUserAppointments->appointments', appointments)
+			const appointments = await appointmentService.getUserAppointments(filters);
 
 			res.json({
 				success: true,
@@ -72,6 +69,16 @@ export class AppointmentController {
 		} catch (error) {
 			next(error);
 		}
+	}
+
+	convertFilter(query, params, user) {
+		console.log('appointment.controller.js -> convertFilter -> query,params', query, params)
+		const filterItems = { phone: 'customer_phone', id: '_id' }
+		const filters = { customer_phone: user.phone }
+		Object.keys(query).forEach(q => filters[filterItems[q]] = query[q])
+		Object.keys(params).forEach(q => filters[filterItems[q]] = q === 'id' ? new ObjectId(params[q]) : params[q])
+		console.log('appointment.controller.js -> convertFilter -> filters', filters)
+		return filters
 	}
 
 	async getAppointments(req, res, next) {

@@ -2,7 +2,6 @@ import React from 'react'
 import { View, Text, Input, Button } from '@tarojs/components'
 import Taro from '@tarojs/taro'
 import { authUtils } from '../../utils/authUtils'
-import { apiRequest } from '../../utils/requestUtils'
 import CustomNavbar from '../../components/custom-navbar/custom-navbar'
 import { API_URLS } from '../../shared/constants'
 import './login.scss'
@@ -10,31 +9,16 @@ import './login.scss'
 const Login: React.FC = () => {
   const [username, setUsername] = React.useState('')
   const [password, setPassword] = React.useState('')
+  const [redirect, setRedirect] = React.useState('');
 
   React.useEffect(() => {
-    // checkToken()
-  }, [])
-
-  const checkToken = async () => {
-    // try {
-    //   const response = await apiRequest({
-    //     url: 'http://localhost:3000/api/admin/checkToken',
-    //     method: 'POST',
-    //     data: {
-    //       username: username,
-    //       password: password
-    //     }
-    //   })
-
-    //   if (response.data.success) {
-    //     Taro.navigateTo({
-    //       url: '/pages/dashboard/dashboard'
-    //     })
-    //   }
-    // } catch (error) {
-    //   // Token检查失败，继续显示登录页面
-    // }
-  }
+    // 获取跳转参数
+    const currentInstance = Taro.getCurrentInstance();
+    const redirectParam = currentInstance.router?.params.redirect;
+    if (redirectParam) {
+      setRedirect(decodeURIComponent(redirectParam));
+    }
+  }, []);
 
   const handleLogin = async () => {
     if (!username || !password) {
@@ -68,9 +52,13 @@ const Login: React.FC = () => {
           icon: 'success'
         })
 
-        Taro.navigateTo({
-          url: '/pages/management/management'
-        })
+        console.log('login.tsx -> redirect', redirect)
+        const timer = setTimeout(() => {
+          clearTimeout(timer)
+          Taro.navigateTo({
+            url: redirect ? redirect : '/pages/management/management'
+          })
+        }, 100)
       } else {
         Taro.showToast({
           title: response.data.message || '登录失败',

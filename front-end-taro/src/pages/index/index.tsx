@@ -244,6 +244,8 @@ const Index: React.FC = () => {
         data: bookingData
       })
 
+      console.log('index.tsx -> submitBooking -> response', response)
+
       if (response.data.success) {
         Taro.showToast({
           title: t('booking.bookingSuccess'),
