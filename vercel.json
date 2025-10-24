@@ -2,14 +2,25 @@
   "version": 2,
   "builds": [
     {
-      "src": "src/app.js",
+      "src": "api/**/*.js",
       "use": "@vercel/node"
+    },
+    {
+      "src": "front-end-taro/package.json",
+      "use": "@vercel/static-build",
+      "config": {
+        "distDir": "dist"
+      }
     }
   ],
   "routes": [
     {
+      "src": "/api/(.*)",
+      "dest": "/api/index.js"
+    },
+    {
       "src": "/(.*)",
-      "dest": "/src/app.js"
+      "dest": "/front-end-taro/dist/$1"
     }
   ]
 }
