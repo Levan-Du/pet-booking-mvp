@@ -5,7 +5,7 @@ import Taro, { useLoad, useReady, useDidShow, useDidHide } from '@tarojs/taro'
 import CustomNavbar from '../../components/custom-navbar/custom-navbar'
 import { apiRequest } from '../../utils/requestUtils'
 import { useLanguage } from '../../shared/i18n/LanguageContext'
-import { DataBoardWebSocketManager } from '../../utils/websocket'
+// import { DataBoardWebSocketManager } from '../../utils/websocket'
 import { API_URLS } from '../../shared/constants'
 import { withAuth } from '../../shared/withAuth/withAuth'
 
@@ -31,18 +31,18 @@ const DataBoard: React.FC = () => {
     broken: 0
   })
   const [appointments, setAppointments] = React.useState<Appointment[]>([])
-  const [dataBoardWebSocket] = React.useState(() => new DataBoardWebSocketManager())
+  // const [dataBoardWebSocket] = React.useState(() => new DataBoardWebSocketManager())
 
-  // WebSocket消息处理
-  const handleWebSocketMessage = (stats: any) => {
-    console.log('databoard.tsx -> handleWebSocketMessage -> stats', stats)
-    setTodayStats(stats)
-  }
+  // // WebSocket消息处理
+  // const handleWebSocketMessage = (stats: any) => {
+  //   console.log('databoard.tsx -> handleWebSocketMessage -> stats', stats)
+  //   setTodayStats(stats)
+  // }
 
-  const handleNewAppointmentMessage = (appointment) => {
-    console.log('databoard.tsx -> handleNewAppointmentMessage -> appointment', appointment)
-    setAppointments((prev => [appointment, ...prev]))
-  }
+  // const handleNewAppointmentMessage = (appointment) => {
+  //   console.log('databoard.tsx -> handleNewAppointmentMessage -> appointment', appointment)
+  //   setAppointments((prev => [appointment, ...prev]))
+  // }
 
   // 传统的HTTP请求作为备用方案
   const loadTodayStats = async () => {
@@ -77,26 +77,26 @@ const DataBoard: React.FC = () => {
   }
 
   React.useEffect(() => {
-    // 配置WebSocket消息处理器
-    dataBoardWebSocket.setOnTodayStatsCallback(handleWebSocketMessage)
-    dataBoardWebSocket.setOnTodayNewAppointmentsCallback(handleNewAppointmentMessage)
+    // // 配置WebSocket消息处理器
+    // dataBoardWebSocket.setOnTodayStatsCallback(handleWebSocketMessage)
+    // dataBoardWebSocket.setOnTodayNewAppointmentsCallback(handleNewAppointmentMessage)
 
-    // 页面显示时重新连接WebSocket
-    if (!dataBoardWebSocket.getConnectionStatus()) {
-      dataBoardWebSocket.connect()
-      dataBoardWebSocket.subscribe()
-    }
+    // // 页面显示时重新连接WebSocket
+    // if (!dataBoardWebSocket.getConnectionStatus()) {
+    //   dataBoardWebSocket.connect()
+    //   dataBoardWebSocket.subscribe()
+    // }
 
     loadTodayStats()
     loadTodayNewAppointments()
 
     // 备用方案：每分钟通过HTTP请求更新数据
-    // const interval = setInterval(loadTodayNewAppointments, 60000)
+    const interval = setInterval(loadTodayNewAppointments, 60000)
 
     return () => {
 
-      // clearInterval(interval)
-      dataBoardWebSocket.close()
+      clearInterval(interval)
+      // dataBoardWebSocket.close()
     }
   }, [])
 
