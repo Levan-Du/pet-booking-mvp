@@ -20,7 +20,7 @@ yarn-error.log*
 pnpm-debug.log*
 
 # ─── Taro 构建输出 ───
-dist/
+#dist/
 temp/
 rn_temp/
 .rn_temp/
