@@ -20,11 +20,13 @@
     },
     {
       "src": "/(.*)",
-      "dest": "/front-end-taro/dist/index.html"
-    },
-    {
-      "src": "/(.*)",
       "dest": "/front-end-taro/dist/$1"
+    }
+  ],
+  "rewrites": [
+    {
+      "source": "/((?!api/.*).*)",
+      "destination": "/front-end-taro/dist/index.html"
     }
   ]
 }

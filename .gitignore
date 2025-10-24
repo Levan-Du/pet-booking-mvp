@@ -55,3 +55,4 @@ coverage/
 .lerna/
 nx-cache/
 .pnpm-store/
+.vercel
