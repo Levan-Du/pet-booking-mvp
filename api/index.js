@@ -5,15 +5,15 @@ import { createServer } from 'http';
 
 import {
 	connectDatabase
-} from './core/database/database.config.js';
-import routes from './routes/index.js';
+} from './src/core/database/database.config.js';
+import routes from './src/routes/index.js';
 import {
 	errorHandler,
 	notFoundHandler
-} from './core/middleware/error.middleware.js';
+} from './src/core/middleware/error.middleware.js';
 import {
 	loggingMiddleware
-} from './core/middleware/logging.middleware.js';
+} from './src/core/middleware/logging.middleware.js';
 dotenv.config();
 
 const app = express();
