@@ -10,8 +10,8 @@ export async function connectMongoDB() {
 		return database;
 	}
 
-	const uri = process.env.MONGODB_URI || 'mongodb://localhost:27017/test';
-	const dbName = process.env.MONGODB_DB_NAME || 'test';
+	const uri = process.env.MONGODB_URI || 'mongodb://localhost:27017/booking';
+	const dbName = process.env.MONGODB_DB_NAME || 'booking';
 
 	try {
 		console.log('🔗 正在连接 MongoDB...');

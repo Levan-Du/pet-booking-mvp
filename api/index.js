@@ -44,11 +44,16 @@ app.use('/api/users', usersRoutes);
 app.use(notFoundHandler);
 app.use(errorHandler);
 
-
+console.log('🚀 API 入口文件开始执行');
 // Vercel 无服务器函数入口
 let isDatabaseConnected = false;
 
 export default async function handler(req, res) {
+	// 添加详细的调试日志
+	console.log('🚀 开始连接数据库');
+	console.log('🔧 环境变量 MONGODB_URI 存在:', !!process.env.MONGODB_URI);
+	console.log('🔧 环境变量 MONGODB_DB_NAME 存在:', !!process.env.MONGODB_DB_NAME);
+	console.log('🔧 NODE_ENV:', process.env.NODE_ENV);
 	if (!isDatabaseConnected) {
 		try {
 			await connectDatabase();
