@@ -51,9 +51,6 @@ const Reports: React.FC = () => {
         header: {
           'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json'
-        },
-        data: {
-          pageSize: 10
         }
       })
 

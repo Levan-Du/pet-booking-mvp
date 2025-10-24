@@ -39,6 +39,17 @@ export class AppointmentService {
 		return null;
 	}
 
+	async getAppointmentByNo(docno) {
+		const appointment = await this.appointmentModel.findByNo(id);
+		if (appointment) {
+			return {
+				...appointment,
+				appointment_no: appointment.appointment_no || appointment.appointment_no // 确保字段存在
+			};
+		}
+		return null;
+	}
+
 	async createAppointment(appointmentData) {
 		const {
 			appointment_date,

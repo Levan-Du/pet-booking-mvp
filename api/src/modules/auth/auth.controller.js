@@ -1,10 +1,33 @@
 import {
 	AuthService
 } from './auth.service.js';
+import { BaseController } from '../base.controller.js';
 
 const authService = new AuthService();
 
-export class AuthController {
+export class AuthController extends BaseController {
+	constructor() {
+		super(null, 'auth')
+	}
+
+	buildRouteMap() {
+		return {
+			...super.buildRouteMap(),
+			'GET:/verify': {
+				handler: this.verifyToken?.bind(this),
+				middlewares: [this.authenticateAdminToken] // 需要认证
+			},
+			'POST:/logout': {
+				handler: this.logout?.bind(this),
+				middlewares: [this.authenticateAdminToken] // 需要认证
+			},
+			'DELETE:/sessions/cleanup': {
+				handler: this.cleanupSessions?.bind(this),
+				middlewares: [this.authenticateAdminToken] // 需要认证
+			}
+		}
+	}
+
 	async verifyToken(req, res, next) {
 		try {
 			res.json({
@@ -34,7 +57,7 @@ export class AuthController {
 		}
 	}
 
-	async getProfile(req, res, next) {
+	async getById(req, res, next) {
 		try {
 			const {
 				id

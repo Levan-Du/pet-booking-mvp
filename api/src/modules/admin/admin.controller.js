@@ -2,10 +2,40 @@ import {
 	AdminService
 } from './admin.service.js';
 import { JWTUtil, JWT_ADMIN_SECRET } from '../../core/utils/jwt.util.js';
+import {
+	adminValidation
+} from './admin.validation.js';
+import { BaseController } from '../base.controller.js';
 
 const adminService = new AdminService();
 
-export class AdminController {
+export class AdminController extends BaseController {
+	constructor() {
+		super(adminValidation, 'services')
+	}
+
+	buildRouteMap() {
+		return {
+			...super.buildRouteMap(),
+			'POST:/login': {
+				handler: this.login?.bind(this),
+				middlewares: [this.validateRequest(adminValidation.login)] // 需要认证
+			},
+			'POST:/password': {
+				handler: this.changePassword?.bind(this),
+				middlewares: [this.validateRequest(adminValidation.changePassword), this.authenticateAdminToken] // 需要认证
+			},
+			'GET:/check-token': {
+				handler: this.checkToken?.bind(this),
+				middlewares: [] // 需要认证
+			},
+			'GET:/stats': {
+				handler: this.getStats?.bind(this),
+				middlewares: [this.authenticateAdminToken] // 需要认证
+			}
+		}
+	}
+
 	async login(req, res, next) {
 		try {
 			const {
@@ -68,7 +98,7 @@ export class AdminController {
 		}
 	}
 
-	async getProfile(req, res, next) {
+	async getById(req, res, next) {
 		try {
 			const {
 				id

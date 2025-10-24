@@ -91,7 +91,7 @@ const DataBoard: React.FC = () => {
     loadTodayNewAppointments()
 
     // 备用方案：每分钟通过HTTP请求更新数据
-    const interval = setInterval(loadTodayNewAppointments, 60000)
+    const interval = setInterval(loadTodayNewAppointments, 5000)
 
     return () => {
 

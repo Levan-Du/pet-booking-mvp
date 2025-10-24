@@ -5,7 +5,7 @@ export const validateRequest = (schema) => {
 			value
 		} = schema.validate(req.body);
 
-		console.log('validation.middleware.js -> error', JSON.stringify(error), value)
+		// console.log('validation.middleware.js -> error', JSON.stringify(error), value)
 
 		if (error) {
 			return res.status(400).json({

@@ -106,7 +106,7 @@ const Index: React.FC = () => {
   const loadEnums = async () => {
     try {
       const response = await apiRequest({
-        url: API_URLS.ENUMS_URL,
+        url: API_URLS.USERS_ENUMS_URL,
         method: 'GET'
       })
 
@@ -134,7 +134,7 @@ const Index: React.FC = () => {
     setLoading(true)
     try {
       const response = await apiRequest({
-        url: API_URLS.SERVICES_URL,
+        url: API_URLS.USERS_SERVICES_URL,
         method: 'GET'
       })
 
@@ -180,9 +180,10 @@ const Index: React.FC = () => {
     setLoading(true)
     try {
       const serviceId = selectedService._id || selectedService.id
+      console.log('index.tsx -> loadTimeSlots -> serviceId', serviceId)
 
       const response = await apiRequest({
-        url: API_URLS.AVAILABLE_SLOTS_URL,
+        url: API_URLS.USERS_AVAILABLE_SLOTS_URL,
         method: 'GET',
         data: {
           date: date,
@@ -239,7 +240,7 @@ const Index: React.FC = () => {
       }
 
       const response = await apiRequest({
-        url: API_URLS.APPOINTMENTS_URL,
+        url: API_URLS.USERS_APPOINTMENTS_URL,
         method: 'POST',
         data: bookingData
       })
@@ -263,7 +264,7 @@ const Index: React.FC = () => {
         const deviceId = getDeviceId()
         // 调用后端API生成token
         const tokenResponse = await apiRequest({
-          url: API_URLS.GENERATE_TOKEN_URL,
+          url: API_URLS.USERS_GENERATE_TOKEN_URL,
           method: 'POST',
           data: {
             phone: formData.customer_phone,

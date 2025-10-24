@@ -1,0 +1,247 @@
+
+import { authenticateUserToken } from '../../core/middleware/auth.middleware.js';
+import { errorResponse, successResponse } from '../../core/utils/response.util.js';
+import { JWTUtil } from '../../core/utils/jwt.util.js';
+import { AppointmentService } from '../appointment/appointment.service.js';
+import { appointmentValidation } from '../appointment/appointment.validation.js';
+import { ServiceService } from '../service/service.service.js';
+import { BaseController } from '../base.user.controller.js';
+
+const appointmentService = new AppointmentService();
+const serviceService = new ServiceService()
+
+export class UserController extends BaseController {
+  constructor() {
+    super('users')
+  }
+
+  buildRouteMap() {
+    return {
+      ...super.buildRouteMap(),
+      'POST:/verify-token': {
+        handler: this.verifyToken?.bind(this),
+        middlewares: [] // 需要认证
+      },
+      'POST:/refresh-token': {
+        handler: this.refreshToken?.bind(this),
+        middlewares: [authenticateUserToken] // 需要认证
+      },
+      'POST:/appointments': {
+        handler: this.createAppointment?.bind(this),
+        middlewares: [this.validateRequest(appointmentValidation.create)] // 需要认证
+      },
+      'GET:/appointments': {
+        handler: this.getAppointments?.bind(this),
+        middlewares: [authenticateUserToken] // 需要认证
+      },
+      'GET:/appointments/:id': {
+        handler: this.getAppointmentById?.bind(this),
+        middlewares: [authenticateUserToken] // 需要认证
+      },
+      'POST:/generate-token': {
+        handler: this.generateToken?.bind(this),
+        middlewares: [] // 需要认证
+      },
+      'GET:/services': {
+        handler: this.getServices?.bind(this),
+        middlewares: []
+      },
+      'GET:/available-slots': {
+        handler: this.getAvailableSlots?.bind(this),
+        middlewares: []
+      },
+    }
+  }
+
+  async createAppointment(req, res, next) {
+    try {
+      console.log('user.controller.js -> createAppointment -> req.validatedData', req.validatedData)
+      const appointmentData = req.validatedData;
+      const newAppointment = await appointmentService.createAppointment(appointmentData);
+
+      // 推送WebSocket更新
+      // webSocketServer.notifyAppointmentChange(newAppointment);
+
+      res.status(201).json({
+        success: true,
+        message: '预约成功',
+        data: newAppointment
+      });
+    } catch (error) {
+      if (error.message.includes('时段已被预约') || error.message.includes('服务不存在')) {
+        return res.status(409).json({
+          success: false,
+          message: error.message
+        });
+      }
+      next(error);
+    }
+  }
+
+  async getAppointments(req, res, next) {
+    try {
+      console.log('user.controller.js -> getAppointments -> authorization', req.headers.authorization)
+      const filters = this.convertFilter(req);
+
+      const appointments = await appointmentService.getUserAppointments(filters);
+
+      res.json({
+        success: true,
+        data: appointments
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  async getAppointmentById(req, res, next) {
+    try {
+      const appointments = await appointmentService.getAppointmentById(filters);
+
+      res.json({
+        success: true,
+        data: appointments
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  async getServices(req, res, next) {
+    try {
+      const services = await serviceService.getAllServices()
+
+      res.json({
+        success: true,
+        data: services
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  async getAvailableSlots(req, res, next) {
+    try {
+      const {
+        date,
+        serviceId
+      } = req.query;
+
+      if (!date || !serviceId) {
+        return res.status(400).json({
+          success: false,
+          message: '日期和服务ID为必填项'
+        });
+      }
+
+      const availableSlots = await appointmentService.getAvailableSlots(date, serviceId);
+
+      res.json({
+        success: true,
+        data: availableSlots
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  async generateToken(req, res, next) {
+    try {
+      const { phone, device_id } = req.body
+      // console.log('/generate-token -> phone,device_id', phone, device_id)
+
+      if (!phone || !device_id) {
+        return res.status(400).json(errorResponse('手机号和设备ID不能为空'))
+      }
+
+      // 验证手机号格式
+      const phoneRegex = /^1[3-9]\d{9}$/
+      if (!phoneRegex.test(phone)) {
+        return res.status(400).json(errorResponse('手机号格式不正确'))
+      }
+
+      // 生成用户token
+      const payload = {
+        id: phone,
+        phone,
+        device_id,
+        role: 'user'
+      }
+
+      const token = JWTUtil.generateAccessToken(payload, device_id)
+
+      res.json(successResponse({
+        token: token,
+        expires_in: 24 * 60 * 60 // 24小时
+      }, 'Token生成成功'))
+
+    } catch (error) {
+      console.error('生成用户token失败:', error)
+      res.status(500).json(errorResponse('生成用户token失败'))
+    }
+  }
+
+  async verifyToken(req, res, next) {
+    try {
+      const { token, device_id } = req.body
+
+      if (!token) {
+        return res.status(400).json(errorResponse('Token不能为空'))
+      }
+
+      const decoded = JWTUtil.verifyToken(token, device_id)
+
+      if (!decoded) {
+        return res.status(401).json(errorResponse('Token无效或已过期'))
+      }
+
+      res.json(successResponse({
+        valid: true,
+        user_info: {
+          id: decoded.phone,
+          phone: decoded.phone,
+          device_id: decoded.device_id,
+          role: decoded.role
+        }
+      }, 'Token验证成功'))
+
+    } catch (error) {
+      // console.error('验证用户token失败:', error)
+      res.status(500).json(errorResponse('验证用户token失败'))
+    }
+  }
+  async refreshToken(req, res, next) {
+    try {
+      const { token, device_id } = req.body
+
+      if (!token) {
+        return res.status(400).json(errorResponse('Token不能为空'))
+      }
+
+      const decoded = JWTUtil.verifyToken(token, device_id)
+
+      if (!decoded) {
+        return res.status(401).json(errorResponse('原Token无效或已过期'))
+      }
+
+      // 生成新的token
+      const newPayload = {
+        id: decoded.phone,
+        phone: decoded.phone,
+        device_id: decoded.device_id,
+        role: 'user'
+      }
+
+      const newToken = JWTUtil.generateAccessToken(newPayload, device_id)
+
+      res.json(successResponse({
+        token: newToken,
+        expires_in: 24 * 60 * 60 // 24小时
+      }, 'Token刷新成功'))
+
+    } catch (error) {
+      // console.error('刷新用户token失败:', error)
+      res.status(500).json(errorResponse('刷新用户token失败'))
+    }
+  }
+}

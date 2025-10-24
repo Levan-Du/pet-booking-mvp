@@ -4,7 +4,7 @@
 	"type": "module",
 	"scripts": {
 		"start": "node src/app.js",
-		"dev": "nodemon src/app.js",
+		"dev": "nodemon src/app.server.js",
 		"init:data": "node scripts/init-data.js",
 		"test": "echo \"No tests specified\" && exit 0"
 	},

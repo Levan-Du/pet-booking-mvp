@@ -6,7 +6,6 @@ import { useLanguage } from '../../shared/i18n/LanguageContext'
 import { getUserToken, clearUserToken, getDeviceId } from '../../utils/tokenUtils'
 import { apiRequestUser } from '../../utils/requestUtils'
 import { API_URLS } from '../../shared/constants'
-import { jwtDecode } from 'jwt-decode'
 import './user.scss'
 
 const User: React.FC = () => {
@@ -31,7 +30,7 @@ const User: React.FC = () => {
 
   const loadAppointments = async () => {
     const response = await apiRequestUser({
-      url: API_URLS.USER_APPOINTMENTS_URL,
+      url: API_URLS.USERS_APPOINTMENTS_URL,
       method: 'GET',
       header: {
         'Content-Type': 'application/json'

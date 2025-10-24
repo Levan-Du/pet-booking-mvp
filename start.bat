@@ -1,25 +1,25 @@
 @echo off
-echo ğŸš€ å¯åŠ¨å® ç‰©é¢„çº¦ç³»ç»Ÿ...
+echo ?? Æô¶¯³èÎïÔ¤Ô¼ÏµÍ³...
 
 echo.
-echo ğŸ“¦ 1. å¯åŠ¨åç«¯æœåŠ¡...
+echo ?? 1. Æô¶¯ºó¶Ë·şÎñ...
 cd back-end
 start "Backend Server" cmd /k "npm run dev"
 
 echo.
-echo â³ ç­‰å¾…åç«¯æœåŠ¡å¯åŠ¨...
+echo ? µÈ´ıºó¶Ë·şÎñÆô¶¯...
 timeout /t 3 /nobreak > nul
 
 echo.
-echo ğŸŒ 2. å¯åŠ¨å‰ç«¯é¡¹ç›®...
+echo ?? 2. Æô¶¯Ç°¶ËÏîÄ¿...
 cd ../front-end-taro
 start "Frontend Dev" cmd /k "npm run dev:h5"
 
 echo.
-echo âœ… ç³»ç»Ÿå¯åŠ¨å®Œæˆï¼
-echo ğŸ“ åç«¯æœåŠ¡: http://localhost:3000
-echo ğŸ“ å‰ç«¯é¡µé¢: è¯·æŸ¥çœ‹ HBuilderX æ§åˆ¶å°
-echo ğŸ“ æµ‹è¯•é¡µé¢: /pages/test-admin
-echo ğŸ“ Admin ç™»å½•: /pages/admin/admin
+echo ? ÏµÍ³Æô¶¯Íê³É£¡
+echo ?? ºó¶Ë·şÎñ: http://localhost:3000
+echo ?? Ç°¶ËÒ³Ãæ: Çë²é¿´ HBuilderX ¿ØÖÆÌ¨
+echo ?? ²âÊÔÒ³Ãæ: /pages/test-admin
+echo ?? Admin µÇÂ¼: /pages/admin/admin
 
 pause

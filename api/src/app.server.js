@@ -54,7 +54,7 @@ async function startServer() {
     console.log('🔗 正在连接数据库...');
     await connectDatabase();
 
-    initWebsocketServer()
+    // initWebsocketServer()
 
     server.listen(PORT, () => {
       console.log(`🚀 服务器运行在端口 ${PORT}`);
@@ -68,22 +68,22 @@ async function startServer() {
   }
 }
 
-const initWebsocketServer = () => {
-  // 初始化WebSocket服务器
-  webSocketServer.init(server);
+// const initWebsocketServer = () => {
+//   // 初始化WebSocket服务器
+//   webSocketServer.init(server);
 
-  console.log(`📡 WebSocket服务: ws://localhost:${PORT}/ws/databoard`);
+//   console.log(`📡 WebSocket服务: ws://localhost:${PORT}/ws/databoard`);
 
-  // 设置WebSocket处理器
-  const databoardHandler = new DataBoardWebSocketHandler();
-  databoardHandler.setWebSocketServer(webSocketServer);
-  databoardHandler.registerHandlers();
+//   // 设置WebSocket处理器
+//   const databoardHandler = new DataBoardWebSocketHandler();
+//   databoardHandler.setWebSocketServer(webSocketServer);
+//   databoardHandler.registerHandlers();
 
-  // 每分钟推送一次数据更新
-  setInterval(() => {
-    databoardHandler.pushStatsUpdate();
-  }, 60000); // 60秒
-}
+//   // 每分钟推送一次数据更新
+//   setInterval(() => {
+//     databoardHandler.pushStatsUpdate();
+//   }, 60000); // 60秒
+// }
 
 startServer();
 

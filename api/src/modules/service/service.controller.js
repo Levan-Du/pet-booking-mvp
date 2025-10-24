@@ -1,11 +1,27 @@
 import {
 	ServiceService
 } from './service.service.js';
+import { BaseController } from '../base.controller.js';
+import { serviceValidation } from './service.validation.js';
 
 const serviceService = new ServiceService();
 
-export class ServiceController {
-	async getServices(req, res, next) {
+export class ServiceController extends BaseController {
+	constructor() {
+		super(serviceValidation, 'services')
+	}
+
+	buildRouteMap() {
+		return {
+			...super.buildRouteMap(),
+			'GET:/daily': {
+				handler: this.getAll?.bind(this),
+				middlewares: [this.authenticateAdminToken] // 需要认证
+			}
+		}
+	}
+
+	async getAll(req, res, next) {
 		try {
 			const activeOnly = req.query.active !== 'false';
 			const services = await serviceService.getAllServices(activeOnly);
@@ -19,7 +35,7 @@ export class ServiceController {
 		}
 	}
 
-	async getServiceById(req, res, next) {
+	async getById(req, res, next) {
 		try {
 			const {
 				id
@@ -42,7 +58,7 @@ export class ServiceController {
 		}
 	}
 
-	async createService(req, res, next) {
+	async create(req, res, next) {
 		try {
 			const serviceData = req.validatedData;
 			const newService = await serviceService.createService(serviceData);
@@ -57,7 +73,7 @@ export class ServiceController {
 		}
 	}
 
-	async updateService(req, res, next) {
+	async update(req, res, next) {
 		try {
 			const {
 				id
@@ -84,7 +100,7 @@ export class ServiceController {
 		}
 	}
 
-	async deleteService(req, res, next) {
+	async delete(req, res, next) {
 		try {
 			const {
 				id

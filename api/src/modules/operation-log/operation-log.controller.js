@@ -1,11 +1,27 @@
 import OperationLogService from './operation-log.service.js'
+import { BaseController } from '../base.controller.js';
 
-export class OperationLogController {
+export class OperationLogController extends BaseController {
   constructor() {
+    super(null, 'operation-logs')
     this.operationLogService = new OperationLogService()
   }
 
-  async createOperationLog(req, res) {
+  buildRouteMap() {
+    return {
+      ...super.buildRouteMap(),
+      '/appointment/:appointmentId': {
+        handler: this.getLogsByAppointmentId?.bind(this),
+        middlewares: [this.authenticateAdminToken] // 需要认证
+      },
+      '/operator/:operator': {
+        handler: this.getLogsByOperator?.bind(this),
+        middlewares: [this.authenticateAdminToken] // 需要认证
+      },
+    }
+  }
+
+  async create(req, res, next) {
     try {
       const operationData = req.body
 
@@ -33,7 +49,7 @@ export class OperationLogController {
     }
   }
 
-  async getOperationLogs(req, res) {
+  async getAll(req, res, next) {
     try {
       const page = parseInt(req.query.page) || 1
       const limit = parseInt(req.query.limit) || 20

@@ -19,6 +19,12 @@ export class AppointmentMongoModel extends MongoModel {
     }).toArray();
   }
 
+  async findByNo(docNo) {
+    return await this.getCollection().findOne({
+      appointment_no: docNo
+    });
+  }
+
   async find(query = {}) {
     const pipeline = [{
       $lookup: {

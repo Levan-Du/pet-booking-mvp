@@ -15,6 +15,15 @@ export class AppointmentPgModel extends PgModel {
     return result.rows;
   }
 
+  async findByNo(docNo) {
+    const pool = this.getPool();
+    const result = await pool.query(
+      `SELECT * FROM ${this.collectionName} WHERE appointment_no = $1`,
+      [docNo]
+    );
+    return result.rows[0];
+  }
+
   async find(query = {}) {
     const pool = this.getPool();
     let sql = `
@@ -34,8 +43,8 @@ export class AppointmentPgModel extends PgModel {
     }
 
     // 处理日期范围查询
-    if (query.appointment_date && typeof query.appointment_date === 'object' && 
-        query.appointment_date.$gte && query.appointment_date.$lte) {
+    if (query.appointment_date && typeof query.appointment_date === 'object' &&
+      query.appointment_date.$gte && query.appointment_date.$lte) {
       // 日期范围查询
       conditions.push(`a.appointment_date >= $${paramCount} AND a.appointment_date <= $${paramCount + 1}`);
       params.push(query.appointment_date.$gte, query.appointment_date.$lte);
