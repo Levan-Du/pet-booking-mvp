@@ -12,6 +12,7 @@
   "scripts": {
     "prepare": "husky",
     "new": "taro new",
+    "build": "taro build --type h5 --env production",
     "build:weapp": "taro build --type weapp",
     "build:swan": "taro build --type swan",
     "build:alipay": "taro build --type alipay",
