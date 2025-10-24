@@ -1,0 +1,1 @@
+import{j as s,V as e}from"./vendors.680e87f1.js";import{w as t}from"./common.f753854d.js";const o=()=>{const t="\u6d4b\u8bd5\u9875";return s.jsxs(e,{className:"layout",children:[s.jsx(e,{style:"font-size:40rpx;",children:"I am a test Page"}),s.jsx(e,{style:"font-size:40rpx;",children:t})]})},r=t(o);export{r as default};
