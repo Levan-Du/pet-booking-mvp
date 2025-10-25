@@ -83,10 +83,11 @@ pet-booking-mvp/
 │   ├── stylelint.config.mjs                # StyleLint配置
 │   ├── tsconfig.json                       # TypeScript配置
 │   └── README.md                           # 前端文档
+│
 ├── api/                                    # Node.js + Express 后端
-│   ├── src/
-│   │   ├── app.js                          # 应用入口
-│   │   ├── app.server.js                   # 服务器配置
+│   │── index.js                            # vercel api入口
+│   ├── app.server.js                       # 本地测试服务器入口
+│   ├── src/                                #
 │   │   ├── core/                           # 核心组件
 │   │   │   ├── database/                   # 数据库配置
 │   │   │   │   ├── database.config.js      # 数据库配置
