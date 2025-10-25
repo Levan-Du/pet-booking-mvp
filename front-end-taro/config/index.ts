@@ -30,6 +30,12 @@ export default defineConfig<'vite'>(async (merge, { command, mode }) => {
     },
     framework: 'react',
     compiler: 'vite',
+    // Vite 相关的配置
+    vite: {
+      build: {
+        assetsInlineLimit: 0, // 设置为0，所有图片都作为独立文件输出,
+      }
+    },
     mini: {
       postcss: {
         pxtransform: {
@@ -50,7 +56,9 @@ export default defineConfig<'vite'>(async (merge, { command, mode }) => {
     h5: {
       publicPath: '/',
       staticDirectory: 'static',
-
+      imageUrlLoaderOption: {
+        limit: 0 // 设置为0，所有图片都作为独立文件输出:cite[1]
+      },
       miniCssExtractPluginOption: {
         ignoreOrder: true,
         filename: 'css/[name].[hash].css',
@@ -68,7 +76,7 @@ export default defineConfig<'vite'>(async (merge, { command, mode }) => {
             generateScopedName: '[name]__[local]___[hash:base64:5]'
           }
         }
-      },
+      }
     },
     rn: {
       appName: 'taroDemo',

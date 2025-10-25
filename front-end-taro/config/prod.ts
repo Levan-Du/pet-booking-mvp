@@ -5,7 +5,9 @@ export default {
   h5: {
     // 在H5环境下启用导航栏
     enableExtract: true,
-    navigationStyle: 'default',
+    imageUrlLoaderOption: {
+      limit: 0 // 设置为0，所有图片都作为独立文件输出:cite[1]
+    },
     /**
      * WebpackChain 插件配置
      * @docs https://github.com/neutrinojs/webpack-chain
