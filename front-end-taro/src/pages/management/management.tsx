@@ -48,7 +48,6 @@ const Management: React.FC = () => {
   const [showSignInModal, setShowSignInModal] = React.useState(false)
   const [manualAppointmentNo, setManualAppointmentNo] = React.useState('')
 
-  console.log('management.tsx -> 11111')
   React.useEffect(() => {
     loadAppointments()
   }, [])
@@ -77,8 +76,6 @@ const Management: React.FC = () => {
         method: 'GET',
         data: params
       })
-
-      console.log('management.tsx -> loadAppointments -> response', response)
 
       if (response.data.success) {
         setAppointments(response.data.data)

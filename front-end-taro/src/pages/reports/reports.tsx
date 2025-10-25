@@ -54,8 +54,6 @@ const Reports: React.FC = () => {
         }
       })
 
-      console.log('reports.tsx -> fetchReportData -> response', response)
-
       if (response.data.success) {
         const data = response.data.data
         processChartData(data, filterType)
@@ -63,7 +61,6 @@ const Reports: React.FC = () => {
         setError(t('reports.error') || '加载失败')
       }
     } catch (err) {
-      console.error('获取报表数据错误:', err)
       setError(t('reports.error') || '加载失败')
     } finally {
       setLoading(false)
@@ -79,9 +76,7 @@ const Reports: React.FC = () => {
       { name: t('reports.canceled'), value: data.reduce((sum, item) => sum + (item.canceled || 0), 0) }
     ]
     setPieChartData(pieData)
-
-
-    console.log('reports.tsx -> processChartData -> pieChartData', pieChartData)
+    console.log('reports.tsx -> processChartData -> pieChartData', t('reports.completed'))
 
     // 柱状图数据 - 显示各时间段的总预约数
     const barData = data.map(item => {
@@ -108,20 +103,18 @@ const Reports: React.FC = () => {
 
     const dBarData = filterType === 'month' ? barData.filter(d => parseInt(d.name) <= new Date().getMonth() + 1) : barData
     setBarChartData(dBarData)
-    console.log('reports.tsx -> processChartData -> barChartData', barChartData)
   }
 
   // 获取月份名称
   const getMonthName = (month: string) => {
-    // console.log('reports.tsx -> getMonthName -> month', month)
-    // const months = [
-    //   t('reports.january'), t('reports.february'), t('reports.march'),
-    //   t('reports.april'), t('reports.may'), t('reports.june'),
-    //   t('reports.july'), t('reports.august'), t('reports.september'),
-    //   t('reports.october'), t('reports.november'), t('reports.december')
-    // ]
-    // return months[parseInt(month) - 1] || month
-    return month
+    const months = [
+      t('reports.january'), t('reports.february'), t('reports.march'),
+      t('reports.april'), t('reports.may'), t('reports.june'),
+      t('reports.july'), t('reports.august'), t('reports.september'),
+      t('reports.october'), t('reports.november'), t('reports.december')
+    ]
+    return months[parseInt(month) - 1] || month
+    // return month
   }
 
   // 切换筛选类型
@@ -132,7 +125,6 @@ const Reports: React.FC = () => {
 
   // 初始化加载数据
   React.useEffect(() => {
-    console.log('reports.tsx -> useEffect -> selectedFilter', selectedFilter)
     fetchReportData(selectedFilter)
   }, [selectedFilter])
 

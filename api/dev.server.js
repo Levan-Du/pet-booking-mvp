@@ -3,19 +3,19 @@ import cors from 'cors';
 import dotenv from 'dotenv';
 import { createServer } from 'http';
 
-import { connectDatabase } from './core/database/database.config.js';
-import { errorHandler, notFoundHandler } from './core/middleware/error.middleware.js';
-import { loggingMiddleware } from './core/middleware/logging.middleware.js';
-import webSocketServer from './core/websocket/websocket.server.js';
-import { DataBoardWebSocketHandler } from './core/websocket/handlers/databoard.handler.js';
-import serviceRoutes from '../src/modules/service/service.routes.js';
-import appointmentRoutes from '../src/modules/appointment/appointment.routes.js';
-import adminRoutes from '../src/modules/admin/admin.routes.js';
-import authRoutes from '../src/modules/auth/auth.routes.js';
-import operationLogRoutes from '../src/modules/operation-log/operation-log.routes.js';
-import enumRoutes from '../src/routes/enums.route.js';
-import reportsRoutes from '../src/routes/reports.route.js';
-import usersRoutes from '../src/routes/users.route.js';
+import { connectDatabase } from './src/core/database/database.config.js';
+import { errorHandler, notFoundHandler } from './src/core/middleware/error.middleware.js';
+import { loggingMiddleware } from './src/core/middleware/logging.middleware.js';
+import webSocketServer from './src/core/websocket/websocket.server.js';
+import { DataBoardWebSocketHandler } from './src/core/websocket/handlers/databoard.handler.js';
+import serviceRoutes from './src/modules/service/service.routes.js';
+import appointmentRoutes from './src/modules/appointment/appointment.routes.js';
+import adminRoutes from './src/modules/admin/admin.routes.js';
+import authRoutes from './src/modules/auth/auth.routes.js';
+import operationLogRoutes from './src/modules/operation-log/operation-log.routes.js';
+import enumRoutes from './src/routes/enums.route.js';
+import reportsRoutes from './src/routes/reports.route.js';
+import usersRoutes from './src/routes/users.route.js';
 
 dotenv.config();
 

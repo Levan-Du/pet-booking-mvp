@@ -16,7 +16,7 @@ interface SimplePieChartProps {
   height?: number
 }
 
-const SimplePieChart: React.FC<SimplePieChartProps> = ({ title, data }) => {
+const SimplePieChart: React.FC<SimplePieChartProps> = ({ title, data, width = 360, height = 250 }) => {
   const dpr = Taro.getSystemInfoSync().pixelRatio || 2
   const [dimensions, setDimensions] = React.useState({
     width: 360 * dpr,
@@ -130,16 +130,15 @@ const SimplePieChart: React.FC<SimplePieChartProps> = ({ title, data }) => {
     const fontLineWidth = calcTitleLineWidth(maxLengthName + 'aaaa', fontSize)
     const legendX = width - fontLineWidth - fontSize
 
-    console.log('simple-pie-chart.tsx -> maxLengthName,fontLineWidth,legendX', maxLengthName, fontLineWidth, legendX)
-
     data.forEach((item, index) => {
-      const y = legendY + index * fontSize
+      const legendSize = fontSize * 1.5
+      const y = legendY + index * legendSize
       const color = colors[index % colors.length]
       const percentage = ((item.value / total) * 100).toFixed(1)
 
       // 绘制颜色方块
       ctx.setFillStyle(color)
-      ctx.fillRect(legendX, y, fontSize, fontSize)
+      ctx.fillRect(legendX, y, legendSize, legendSize)
 
       // 绘制图例文字
       ctx.setFillStyle('#333')
@@ -152,7 +151,7 @@ const SimplePieChart: React.FC<SimplePieChartProps> = ({ title, data }) => {
         displayText = item.name.substring(0, 8) + '...' + `(${percentage}%)`
       }
 
-      ctx.fillText(displayText, legendX + fontSize, y + fontSize / 2)
+      ctx.fillText(displayText, legendX + legendSize, y + legendSize / 2)
     })
   }
 

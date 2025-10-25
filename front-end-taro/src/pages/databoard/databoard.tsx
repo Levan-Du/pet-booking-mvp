@@ -51,7 +51,6 @@ const DataBoard: React.FC = () => {
         url: API_URLS.APPOINTMENT_STATS_TODAY_URL,
         method: 'GET'
       })
-      console.log('databoard.tsx -> loadTodayStats -> response', response.data)
 
       if (response.data.success) {
         setTodayStats(response.data.data)
@@ -66,7 +65,6 @@ const DataBoard: React.FC = () => {
         url: API_URLS.APPOINTMENT_TODAY_NEW_URL,
         method: 'GET'
       })
-      console.log('databoard.tsx -> loadTodayNewAppointments -> response', response.data)
 
       if (response.data.success) {
         setAppointments(response.data.data)

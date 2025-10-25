@@ -50,7 +50,6 @@ const User: React.FC = () => {
   // 根据URL参数设置默认tab
   React.useEffect(() => {
     const params = Taro.getCurrentInstance().router?.params
-    console.log('user.tsx -> params', params)
     if (params?.tab) {
       setActiveTab(params.tab as string)
     }

@@ -96,11 +96,16 @@ export class UserController extends BaseController {
 
   async getAppointmentById(req, res, next) {
     try {
-      const appointments = await appointmentService.getAppointmentById(filters);
+      const {
+        id
+      } = req.params;
+      console.log('user.controller.js -> getAppointmentById -> id', id)
+      const appointment = await appointmentService.getAppointmentById(id);
+      console.log('user.controller.js -> getAppointmentById -> appointment', appointment)
 
       res.json({
         success: true,
-        data: appointments
+        data: appointment
       });
     } catch (error) {
       next(error);
@@ -206,7 +211,7 @@ export class UserController extends BaseController {
       }, 'Token验证成功'))
 
     } catch (error) {
-      // console.error('验证用户token失败:', error)
+      console.error('验证用户token失败:', error)
       res.status(500).json(errorResponse('验证用户token失败'))
     }
   }
@@ -240,7 +245,7 @@ export class UserController extends BaseController {
       }, 'Token刷新成功'))
 
     } catch (error) {
-      // console.error('刷新用户token失败:', error)
+      console.error('刷新用户token失败:', error)
       res.status(500).json(errorResponse('刷新用户token失败'))
     }
   }

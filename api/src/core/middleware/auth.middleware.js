@@ -14,7 +14,6 @@ export const authenticateUserToken = async (req, res, next) => {
 
 const authenticateToken = (payloadHeader, JWT_SECRET, req, res, next) => {
 	try {
-		// console.log('auth.middleware.js -> authenticateToken -> authorization', req.headers.authorization)
 		const authHeader = req.headers.authorization;
 
 		if (!authHeader || !authHeader.startsWith('Bearer ')) {
@@ -32,10 +31,9 @@ const authenticateToken = (payloadHeader, JWT_SECRET, req, res, next) => {
 				message: 'Token不能为空'
 			});
 		}
-		// console.log('auth.middleware.js -> authenticateToken -> 333333333333333', req.query)
 
 		const payload = JWTUtil.verifyToken(token, JWT_SECRET)
-		console.log('auth.middleware.js -> authenticateToken -> payload', payload)
+		// console.log('auth.middleware.js -> authenticateToken -> payload', payload)
 		if (!payload) {
 			return res.status(401).json({
 				success: false,

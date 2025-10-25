@@ -151,10 +151,6 @@ const Index: React.FC = () => {
     }
   }
 
-  useReady(() => {
-    console.log('Page loaded.')
-  })
-
   const selectService = (service: Service) => {
     setSelectedService(service)
     setSelectedDate('')
@@ -180,7 +176,6 @@ const Index: React.FC = () => {
     setLoading(true)
     try {
       const serviceId = selectedService._id || selectedService.id
-      console.log('index.tsx -> loadTimeSlots -> serviceId', serviceId)
 
       const response = await apiRequestUser({
         url: API_URLS.USERS_AVAILABLE_SLOTS_URL,
@@ -244,8 +239,6 @@ const Index: React.FC = () => {
         method: 'POST',
         data: bookingData
       })
-
-      console.log('index.tsx -> submitBooking -> response', response)
 
       if (response.data.success) {
         Taro.showToast({

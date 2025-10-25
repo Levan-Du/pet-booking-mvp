@@ -222,12 +222,11 @@ export class BaseController {
     const filters = { customer_phone: user.phone }
     Object.keys(query).forEach(q => filters[filterItems[q]] = query[q])
     Object.keys(params).forEach(q => filters[filterItems[q]] = q === 'id' ? new ObjectId(params[q]) : params[q])
-    console.log('appointment.controller.js -> convertFilter -> filters', filters)
+
     return filters
   }
 
   getAllEnums(req, res, next) {
-    console.log('base.controller.js -> getAllEnums -> 1111111111111111')
     try {
       const enumData = {
         petTypes: Object.values(PET_TYPES).map(type => ({

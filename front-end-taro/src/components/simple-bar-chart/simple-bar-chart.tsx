@@ -27,7 +27,6 @@ const SimpleBarChart: React.FC<SimpleBarChartProps> = ({ title, type, data }) =>
   const [chartData, setChartData] = React.useState(data)
 
   React.useEffect(() => {
-    console.log('simple-bar-chart -> useEffect -> data', data)
     setChartData(data)
     if (dimensions.width > 0 && data.length > 0) {
       setTimeout(() => {
@@ -112,7 +111,6 @@ const SimpleBarChart: React.FC<SimpleBarChartProps> = ({ title, type, data }) =>
       ctx.setFontSize(titleFontSize)
       ctx.setTextAlign('center')
       ctx.fillText(title, width / 2, titleY)
-      // console.log('simple-bar-chart.tsx -> title,titleLineWidth', title.length, width / 2 - titleLineWidth / 2, width / 2)
 
       ctx.draw()
 

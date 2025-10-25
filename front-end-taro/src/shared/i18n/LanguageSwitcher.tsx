@@ -12,7 +12,7 @@ interface LanguageSwitcherProps {
 const getTabBarTexts = (locale: string) => {
   if (locale === 'en-US') {
     return {
-      dashboard: 'Appointment Management',
+      management: 'Appointment Management',
       databoard: 'Data Board',
       reports: 'Reports'
     }
@@ -29,22 +29,22 @@ const LanguageSwitcher: React.FC<LanguageSwitcherProps> = ({ className = '' }) =
 
   const handleLanguageSelect = (code: string) => {
     setLocale(code as any)
-    
+
     // 更新tabBar文本
     const tabBarTexts = getTabBarTexts(code)
-    
+
     // 更新management tabBar
     Taro.setTabBarItem({
       index: 0,
       text: tabBarTexts.management
     })
-    
+
     // 更新databoard tabBar
     Taro.setTabBarItem({
       index: 1,
       text: tabBarTexts.databoard
     })
-    
+
     // 更新reports tabBar
     Taro.setTabBarItem({
       index: 2,

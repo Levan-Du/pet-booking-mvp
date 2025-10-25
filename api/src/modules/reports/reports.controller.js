@@ -35,12 +35,10 @@ export class ReportsController extends BaseController {
       const dbType = getDBType();
 
       if (dbType === 'mongodb') {
-        console.log('reports.controller.js -> route -> getDailyStats 222222222222222222')
         // MongoDB查询逻辑
         const endDate = new Date();
         const startDate = new Date();
         startDate.setDate(startDate.getDate() - 9); // 最近10天
-        console.log('reports.controller.js -> route -> getDailyStats 33333333333333333')
 
         const stats = await appointmentModel.getCollection().aggregate([
           {
@@ -82,7 +80,6 @@ export class ReportsController extends BaseController {
           }
         ]).toArray();
 
-        console.log('reports.controller.js -> route -> fillMissingDates', this.fillMissingDates)
         // 填充缺失的日期
         const result = this.fillMissingDates(stats, startDate, endDate, 'day');
         res.json({ success: true, data: result });
@@ -114,7 +111,6 @@ export class ReportsController extends BaseController {
 
   // 获取月报表数据 - 今年到目前为止
   async getMonthlyStats(req, res) {
-    console.log('reports.controller.js -> route -> 2222222222222222222')
     try {
       const appointmentModel = getAppointmentModel();
       const dbType = getDBType();
@@ -185,7 +181,6 @@ export class ReportsController extends BaseController {
 
   // 获取年报表数据 - 最近6年
   async getYearlyStats(req, res) {
-    console.log('reports.controller.js -> route -> 3333333333333333')
     try {
       const appointmentModel = getAppointmentModel();
       const dbType = getDBType();

@@ -54,14 +54,12 @@ const AppointmentDetail: React.FC = () => {
     setLoading(true)
     try {
       const response = await apiRequestUser({
-        url: `${API_URLS.USER_APPOINTMENTS_URL}/${appointmentId}`,
+        url: `${API_URLS.USERS_APPOINTMENTS_URL}/${appointmentId}`,
         method: 'GET'
       })
 
-      console.log('response:', response)
-
       if (response.data.success) {
-        setAppointment(response.data.data[0])
+        setAppointment(response.data.data)
         // 生成二维码URL（实际项目中应该由后端生成）
         setQrCodeUrl(`https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=appointment:${appointmentId}`)
       }
@@ -113,7 +111,7 @@ const AppointmentDetail: React.FC = () => {
       if (result.confirm) {
         setLoading(true)
         const response = await apiRequestUser({
-          url: `${API_URLS.APPOINTMENTS_URL}/${appointment._id}/status`,
+          url: `${API_URLS.USERS_APPOINTMENTS_URL}/${appointment._id}/status`,
           method: 'PUT',
           data: {
             status: 'cancelled'

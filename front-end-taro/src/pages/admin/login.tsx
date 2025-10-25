@@ -52,7 +52,6 @@ const Login: React.FC = () => {
           icon: 'success'
         })
 
-        console.log('login.tsx -> redirect', redirect)
         const timer = setTimeout(() => {
           clearTimeout(timer)
           Taro.navigateTo({

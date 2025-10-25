@@ -202,17 +202,16 @@ export class BaseController {
 
   convertFilter(req) {
     const { query, params, user } = { query: req.query, params: req.params, user: req.headers['pet-user'] }
-    // console.log('base.controller.js -> convertFilter -> query,params', query, params)
+
     const filterItems = { phone: 'customer_phone', id: '_id' }
     const filters = { customer_phone: user.phone }
     Object.keys(query).forEach(q => filters[filterItems[q]] = query[q])
     Object.keys(params).forEach(q => filters[filterItems[q]] = q === 'id' ? new ObjectId(params[q]) : params[q])
-    console.log('appointment.controller.js -> convertFilter -> filters', filters)
+
     return filters
   }
 
   getAllEnums(req, res, next) {
-    console.log('base.controller.js -> getAllEnums -> 1111111111111111')
     try {
       const enumData = {
         petTypes: Object.values(PET_TYPES).map(type => ({
@@ -296,7 +295,7 @@ export class BaseController {
         data: appointmentStatus
       });
     } catch (error) {
-      // console.error('获取预约状态枚举失败:', error);
+      console.error('获取预约状态枚举失败:', error);
       res.status(500).json({
         success: false,
         message: '获取预约状态枚举失败'

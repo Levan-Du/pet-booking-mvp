@@ -62,7 +62,6 @@ export class AdminController extends BaseController {
 
 	async checkToken(req, res, next) {
 		try {
-			console.log('admin.controller.js -> checkToken -> 1111111111')
 			const authHeader = req.headers.authorization;
 			if (!authHeader || !authHeader.startsWith('Bearer ')) {
 				return res.status(401).json({
@@ -70,7 +69,6 @@ export class AdminController extends BaseController {
 					message: '需要Token认证'
 				});
 			}
-			console.log('admin.controller.js -> checkToken -> 2222222222')
 			const token = authHeader.slice(7);
 			if (!token) {
 				return res.status(401).json({
@@ -79,7 +77,6 @@ export class AdminController extends BaseController {
 				});
 			}
 			const payload = JWTUtil.verifyToken(token, JWT_ADMIN_SECRET);
-			console.log('admin.controller.js -> checkToken -> payload', payload)
 			if (!payload) {
 				return res.status(401).json({
 					success: false,

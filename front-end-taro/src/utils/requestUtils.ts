@@ -50,7 +50,6 @@ export const apiRequestUser = async (options: RequestOptions) => {
       },
       timeout: 10000
     }
-    console.log('requestUtils.ts -> apiRequestUser -> device_id', getDeviceId(), token)
 
     const response = await Taro.request(requestOptions)
 

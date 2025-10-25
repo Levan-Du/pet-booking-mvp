@@ -57,8 +57,6 @@ export class AppointmentService {
 			service_id
 		} = appointmentData;
 
-		// console.log('appointment.service.js -> createAppointment -> appointmentData', appointmentData)
-
 		// 获取服务信息
 		const service = await this.serviceModel.findById(service_id);
 		if (!service) {

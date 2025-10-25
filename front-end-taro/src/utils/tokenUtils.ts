@@ -23,7 +23,7 @@ export const generateUserToken = async (phone: string): Promise<string | null> =
     const deviceId = getDeviceId()
 
     const response = await Taro.request({
-      url: API_URLS.GENERATE_TOKEN_URL,
+      url: API_URLS.USERS_GENERATE_TOKEN_URL,
       method: 'POST',
       data: {
         phone: phone,
@@ -49,7 +49,7 @@ export const generateUserToken = async (phone: string): Promise<string | null> =
 export const verifyUserToken = async (token: string): Promise<boolean> => {
   try {
     const response = await Taro.request({
-      url: API_URLS.VERIFY_TOKEN_URL,
+      url: API_URLS.USERS_VERIFY_TOKEN_URL,
       method: 'POST',
       data: {
         token: token

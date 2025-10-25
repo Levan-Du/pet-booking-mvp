@@ -57,8 +57,6 @@ export class AppointmentMongoModel extends MongoModel {
       matchStage.appointment_date = query.appointment_date;
     }
 
-    // console.log('appointment.mongo.model.js -> find -> matchStage', matchStage)
-
     if (query.status) {
       matchStage.status = query.status;
     }
@@ -99,7 +97,6 @@ export class AppointmentMongoModel extends MongoModel {
     });
 
     const arr = await this.getCollection().aggregate(pipeline).toArray();
-    // console.log('appointment.mongo.model.js -> find -> arr', arr)
     return arr;
   }
 
