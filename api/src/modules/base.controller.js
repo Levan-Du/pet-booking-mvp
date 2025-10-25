@@ -80,7 +80,6 @@ export class BaseController {
       ...extraRouteMap
     };
   }
-
   // 主路由方法
   async route(req, res, next) {
     const { method, path } = req;
@@ -89,22 +88,18 @@ export class BaseController {
       // 解析路径参数（支持动态资源路径）
       const pathWithoutBase = path.replace(this.basePath, '') || '/';
 
-      // 构建路由键
+      // 获取路由映射表
+      const routeMap = this.buildRouteMap();
+
+      // 构建精确路由键
       let routeKey = `${method}:${pathWithoutBase}`;
 
-      // 获取路由映射表
-      const routeMap = this.buildRouteMap()
-
-      // 尝试匹配动态路由 (如 /:id)
-      if (!routeMap[routeKey] && pathWithoutBase.includes('/')) {
-        const pathSegments = pathWithoutBase.split('/').filter(Boolean);
-        if (pathSegments.length === 2 && !isNaN(pathSegments[1])) {
-          // 匹配 /resource/:id 模式
-          routeKey = `${method}:/${pathSegments[0]}/:id`;
-        }
+      // 如果精确匹配失败，尝试模式匹配
+      if (!routeMap[routeKey]) {
+        routeKey = this.findMatchingRoute(method, routeKey, routeMap);
       }
+
       const routeConfig = routeMap[routeKey];
-      // routeConfig.middlewares = routeConfig.middlewares.map(mw => mw.handler.bind(this))
 
       if (!routeConfig) {
         return res.status(404).json({
@@ -122,11 +117,8 @@ export class BaseController {
 
       // 执行中间件和处理器
       await this.executeMiddlewares(boundMiddlewares, req, res, () => {
-        boundHandler(req, res);
+        boundHandler(req, res, next);
       });
-
-      // 执行中间件链
-      // await this.executeMiddlewares(routeConfig.middlewares, req, res, next);
 
       // 如果中间件已经发送了响应，则停止执行
       if (res.headersSent) return;
@@ -138,6 +130,25 @@ export class BaseController {
       console.error('Route handling error:', error);
       next(error);
     }
+  }
+
+  // 新增：路由模式匹配方法// 新增：路由模式匹配方法（简洁版）
+  findMatchingRoute(method, routeKey, routeMap) {
+    const countSlash = (str) => (str.match(/\//g) || []).length;
+    const slashCount = countSlash(routeKey);
+
+    // 构建正则表达式：匹配 method:/任意段{slashCount次}
+    // const regexPattern = new RegExp(`^${method}:(/\\:?\\w+){${slashCount}}$`);
+    const regexPattern = new RegExp(`^${method}:(/\\:?[^\\s/]+){${slashCount}}$`);
+
+    for (const mapKey of Object.keys(routeMap)) {
+      // 只检查包含参数的路由
+      if (mapKey.includes(':') && regexPattern.test(mapKey)) {
+        return mapKey;
+      }
+    }
+
+    return routeKey;
   }
 
   // 执行中间件链（优化版）

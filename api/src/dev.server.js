@@ -3,19 +3,19 @@ import cors from 'cors';
 import dotenv from 'dotenv';
 import { createServer } from 'http';
 
-import {
-  connectDatabase
-} from './core/database/database.config.js';
-import routes from './routes/index.js';
-import {
-  errorHandler,
-  notFoundHandler
-} from './core/middleware/error.middleware.js';
-import {
-  loggingMiddleware
-} from './core/middleware/logging.middleware.js';
+import { connectDatabase } from './core/database/database.config.js';
+import { errorHandler, notFoundHandler } from './core/middleware/error.middleware.js';
+import { loggingMiddleware } from './core/middleware/logging.middleware.js';
 import webSocketServer from './core/websocket/websocket.server.js';
 import { DataBoardWebSocketHandler } from './core/websocket/handlers/databoard.handler.js';
+import serviceRoutes from '../src/modules/service/service.routes.js';
+import appointmentRoutes from '../src/modules/appointment/appointment.routes.js';
+import adminRoutes from '../src/modules/admin/admin.routes.js';
+import authRoutes from '../src/modules/auth/auth.routes.js';
+import operationLogRoutes from '../src/modules/operation-log/operation-log.routes.js';
+import enumRoutes from '../src/routes/enums.route.js';
+import reportsRoutes from '../src/routes/reports.route.js';
+import usersRoutes from '../src/routes/users.route.js';
 
 dotenv.config();
 
@@ -41,8 +41,15 @@ app.get('/health', (req, res) => {
   });
 });
 
-// API 路由
-app.use('/api', routes);
+// 挂载所有路由
+app.use('/api/services', serviceRoutes);
+app.use('/api/appointments', appointmentRoutes);
+app.use('/api/admin', adminRoutes);
+app.use('/api/auth', authRoutes);
+app.use('/api/operation-logs', operationLogRoutes);
+app.use('/api/enums', enumRoutes);
+app.use('/api/reports', reportsRoutes);
+app.use('/api/users', usersRoutes);
 
 // 错误处理
 app.use(notFoundHandler);

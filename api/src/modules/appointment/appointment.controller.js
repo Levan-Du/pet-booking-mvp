@@ -147,6 +147,8 @@ export class AppointmentController extends BaseController {
 				status
 			} = req.body;
 
+			console.log('appointment.controller.js -> updateStatus -> id', id)
+
 			const existingAppointment = await appointmentService.getAppointmentById(id);
 			if (!existingAppointment) {
 				return res.status(404).json({

@@ -1,12 +1,8 @@
 import express from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
-
 import { connectDatabase } from './src/core/database/database.config.js';
-import {
-	errorHandler,
-	notFoundHandler
-} from './src/core/middleware/error.middleware.js';
+import { errorHandler, notFoundHandler } from './src/core/middleware/error.middleware.js';
 import serviceRoutes from './src/modules/service/service.routes.js';
 import appointmentRoutes from './src/modules/appointment/appointment.routes.js';
 import adminRoutes from './src/modules/admin/admin.routes.js';
@@ -21,8 +17,14 @@ dotenv.config();
 
 const app = express();
 
-// 中间件
-app.use(cors());
+// 或者进行更精细的配置
+// app.use(cors());
+app.use(cors({
+	origin: 'http://localhost:10086', // 指定允许访问的源
+	methods: ['GET', 'POST', 'PUT', 'DELETE'], // 允许的HTTP方法
+	credentials: true // 如果需要携带cookie等凭证，则设置为true
+}));
+
 app.use(express.json());
 app.use(express.urlencoded({
 	extended: true
