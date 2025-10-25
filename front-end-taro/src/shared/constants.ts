@@ -1,6 +1,6 @@
 // API配置常量
 const BASE_URL = process.env.NODE_ENV === 'production'
-  ? 'https://levan-pet-booking.vercel.app/api'  // ✅ 修正：添加 /api
+  ? 'https://levan-pet-booking-service.vercel.app/api'  // ✅ 修正：添加 /api
   : 'http://localhost:3000/api';
 
 // 具体的API URL常量
