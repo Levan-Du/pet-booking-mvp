@@ -19,8 +19,8 @@ export const API_URLS = {
   USERS_AVAILABLE_SLOTS_URL: `${BASE_URL}/users/available-slots`,
 
   // 管理员相关
-  ADMIN_LOGIN_URL: `${BASE_URL}/admin/login`,
-  ADMIN_CHECK_TOKEN_URL: `${BASE_URL}/admin/check-token`,
+  AUTH_LOGIN_URL: `${BASE_URL}/auth/login`,
+  AUTH_CHECK_TOKEN_URL: `${BASE_URL}/auth/check-token`,
 
   // 预约管理相关
   APPOINTMENTS_URL: `${BASE_URL}/appointments`,
@@ -29,7 +29,7 @@ export const API_URLS = {
   APPOINTMENT_BY_NO_URL: `${BASE_URL}/appointments/doc/:doc_no`,
   APPOINTMENT_STATS_TODAY_URL: `${BASE_URL}/appointments/stats/today`,
   APPOINTMENT_TODAY_URL: `${BASE_URL}/appointments/today`,
-  APPOINTMENT_TODAY_NEW_URL: `${BASE_URL}/appointments/new`,
+  APPOINTMENT_TODAY_NEW_URL: `${BASE_URL}/appointments/new/today`,
 
   // 服务相关
   SERVICES_URL: `${BASE_URL}/services`,

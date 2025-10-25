@@ -13,11 +13,7 @@ export class ServiceController extends BaseController {
 
 	buildRouteMap() {
 		return {
-			...super.buildRouteMap(),
-			'GET:/daily': {
-				handler: this.getAll?.bind(this),
-				middlewares: [this.authenticateAdminToken] // 需要认证
-			}
+			...super.buildRouteMap()
 		}
 	}
 

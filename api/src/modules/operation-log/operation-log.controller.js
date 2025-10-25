@@ -10,11 +10,11 @@ export class OperationLogController extends BaseController {
   buildRouteMap() {
     return {
       ...super.buildRouteMap(),
-      '/appointment/:appointmentId': {
+      'GET:/appointment/:appointmentId': {
         handler: this.getLogsByAppointmentId?.bind(this),
         middlewares: [this.authenticateAdminToken] // 需要认证
       },
-      '/operator/:operator': {
+      'GET:/operator/:operator': {
         handler: this.getLogsByOperator?.bind(this),
         middlewares: [this.authenticateAdminToken] // 需要认证
       },

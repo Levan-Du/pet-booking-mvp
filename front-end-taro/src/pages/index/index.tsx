@@ -3,7 +3,7 @@ import { View, Text, Button, Input, Textarea, Image, ScrollView } from '@tarojs/
 import Taro, { useReady } from '@tarojs/taro'
 import { jwtDecode } from 'jwt-decode'
 import { authUtils } from '../../utils/authUtils'
-import { apiRequest } from '../../utils/requestUtils'
+import { apiRequestUser } from '../../utils/requestUtils'
 import CustomNavbar from '../../components/custom-navbar/custom-navbar'
 import { useLanguage } from '../../shared/i18n/LanguageContext'
 import { setUserToken, saveUserAppointment, checkUserStatus, getDeviceId } from '../../utils/tokenUtils'
@@ -105,8 +105,8 @@ const Index: React.FC = () => {
   // 方法
   const loadEnums = async () => {
     try {
-      const response = await apiRequest({
-        url: API_URLS.USERS_ENUMS_URL,
+      const response = await apiRequestUser({
+        url: API_URLS.ENUMS_URL,
         method: 'GET'
       })
 
@@ -133,7 +133,7 @@ const Index: React.FC = () => {
   const loadServices = async () => {
     setLoading(true)
     try {
-      const response = await apiRequest({
+      const response = await apiRequestUser({
         url: API_URLS.USERS_SERVICES_URL,
         method: 'GET'
       })
@@ -182,7 +182,7 @@ const Index: React.FC = () => {
       const serviceId = selectedService._id || selectedService.id
       console.log('index.tsx -> loadTimeSlots -> serviceId', serviceId)
 
-      const response = await apiRequest({
+      const response = await apiRequestUser({
         url: API_URLS.USERS_AVAILABLE_SLOTS_URL,
         method: 'GET',
         data: {
@@ -239,7 +239,7 @@ const Index: React.FC = () => {
         status: 'pending'
       }
 
-      const response = await apiRequest({
+      const response = await apiRequestUser({
         url: API_URLS.USERS_APPOINTMENTS_URL,
         method: 'POST',
         data: bookingData
@@ -263,7 +263,7 @@ const Index: React.FC = () => {
         // 生成用户token（这里应该由后端返回）
         const deviceId = getDeviceId()
         // 调用后端API生成token
-        const tokenResponse = await apiRequest({
+        const tokenResponse = await apiRequestUser({
           url: API_URLS.USERS_GENERATE_TOKEN_URL,
           method: 'POST',
           data: {

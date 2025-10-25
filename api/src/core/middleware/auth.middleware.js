@@ -14,7 +14,7 @@ export const authenticateUserToken = async (req, res, next) => {
 
 const authenticateToken = (payloadHeader, JWT_SECRET, req, res, next) => {
 	try {
-		console.log('auth.middleware.js -> authenticateToken -> authorization', req.headers.authorization)
+		// console.log('auth.middleware.js -> authenticateToken -> authorization', req.headers.authorization)
 		const authHeader = req.headers.authorization;
 
 		if (!authHeader || !authHeader.startsWith('Bearer ')) {

@@ -57,7 +57,7 @@ export class AppointmentMongoModel extends MongoModel {
       matchStage.appointment_date = query.appointment_date;
     }
 
-    console.log('appointment.mongo.model.js -> find -> matchStage', matchStage)
+    // console.log('appointment.mongo.model.js -> find -> matchStage', matchStage)
 
     if (query.status) {
       matchStage.status = query.status;

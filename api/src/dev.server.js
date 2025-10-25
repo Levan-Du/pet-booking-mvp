@@ -44,7 +44,7 @@ app.get('/health', (req, res) => {
 // 挂载所有路由
 app.use('/api/services', serviceRoutes);
 app.use('/api/appointments', appointmentRoutes);
-app.use('/api/admin', adminRoutes);
+app.use('/api/admins', adminRoutes);
 app.use('/api/auth', authRoutes);
 app.use('/api/operation-logs', operationLogRoutes);
 app.use('/api/enums', enumRoutes);

@@ -17,13 +17,8 @@ dotenv.config();
 
 const app = express();
 
-// 或者进行更精细的配置
-// app.use(cors());
-app.use(cors({
-	origin: 'http://localhost:10086', // 指定允许访问的源
-	methods: ['GET', 'POST', 'PUT', 'DELETE'], // 允许的HTTP方法
-	credentials: true // 如果需要携带cookie等凭证，则设置为true
-}));
+//跨域
+app.use(cors());
 
 app.use(express.json());
 app.use(express.urlencoded({
@@ -34,7 +29,8 @@ app.use(express.urlencoded({
 // 挂载所有路由
 app.use('/api/services', serviceRoutes);
 app.use('/api/appointments', appointmentRoutes);
-app.use('/api/admin', adminRoutes);
+// app.use('/api/admins', adminRoutes);
+app.use('/api/admins/login', (req, res, next) => { console.log('11111111111111111111111') })
 app.use('/api/auth', authRoutes);
 app.use('/api/operation-logs', operationLogRoutes);
 app.use('/api/enums', enumRoutes);

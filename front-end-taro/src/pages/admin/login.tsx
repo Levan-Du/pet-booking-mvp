@@ -31,7 +31,7 @@ const Login: React.FC = () => {
 
     try {
       const response = await Taro.request({
-        url: API_URLS.ADMIN_LOGIN_URL,
+        url: API_URLS.AUTH_LOGIN_URL,
         method: 'POST',
         header: {
           'Content-Type': 'application/json'

@@ -147,7 +147,7 @@ export class AppointmentController extends BaseController {
 				status
 			} = req.body;
 
-			console.log('appointment.controller.js -> updateStatus -> id', id)
+			// console.log('appointment.controller.js -> updateStatus -> id', id)
 
 			const existingAppointment = await appointmentService.getAppointmentById(id);
 			if (!existingAppointment) {
@@ -159,8 +159,8 @@ export class AppointmentController extends BaseController {
 
 			const updatedAppointment = await appointmentService.updateAppointmentStatus(id, status);
 
-			// 推送WebSocket更新
-			webSocketServer.notifyAppointmentChange(id);
+			// // 推送WebSocket更新
+			// webSocketServer.notifyAppointmentChange(id);
 
 			res.json({
 				success: true,

@@ -55,7 +55,7 @@ export class UserController extends BaseController {
 
   async createAppointment(req, res, next) {
     try {
-      console.log('user.controller.js -> createAppointment -> req.validatedData', req.validatedData)
+      // console.log('user.controller.js -> createAppointment -> req.validatedData', req.validatedData)
       const appointmentData = req.validatedData;
       const newAppointment = await appointmentService.createAppointment(appointmentData);
 
@@ -80,7 +80,7 @@ export class UserController extends BaseController {
 
   async getAppointments(req, res, next) {
     try {
-      console.log('user.controller.js -> getAppointments -> authorization', req.headers.authorization)
+      // console.log('user.controller.js -> getAppointments -> authorization', req.headers.authorization)
       const filters = this.convertFilter(req);
 
       const appointments = await appointmentService.getUserAppointments(filters);

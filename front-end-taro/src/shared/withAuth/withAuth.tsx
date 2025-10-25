@@ -43,7 +43,7 @@ export const withAuth = (WrappedComponent: React.FC, options: navOptions = {}) =
           // 验证 token 是否有效
           // console.log('withAuth.tsx -> 开始API验证')
           const response = await apiRequest({
-            url: API_URLS.ADMIN_CHECK_TOKEN_URL,
+            url: API_URLS.AUTH_CHECK_TOKEN_URL,
             method: 'GET'
           })
 
