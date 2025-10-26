@@ -1,5 +1,8 @@
+H5应用，使用手机/平板体验
+
 用户入口：
 https://levan-pet-booking.vercel.app/
+
 后台入口：
 https://levan-pet-booking.vercel.app/#/pages/management/management
 
