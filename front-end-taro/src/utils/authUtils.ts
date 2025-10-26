@@ -1,7 +1,4 @@
 import Taro from '@tarojs/taro'
-import React from 'react'
-import { API_URLS } from '../shared/constants'
-import { apiRequest } from '../utils/requestUtils'
 
 // Token管理工具
 export const authUtils = {

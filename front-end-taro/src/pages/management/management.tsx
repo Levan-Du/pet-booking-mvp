@@ -77,8 +77,11 @@ const Management: React.FC = () => {
         data: params
       })
 
+
       if (response.data.success) {
-        setAppointments(response.data.data)
+        const data = response.data.data
+        data.sort((a, b) => new Date(b.appointment_date).getTime() - new Date(a.appointment_date).getTime())
+        setAppointments(data)
       }
     } catch (error) {
       Taro.showToast({
