@@ -4,7 +4,7 @@ H5应用，使用手机/平板体验
 https://levan-pet-booking.vercel.app/
 
 后台入口：
-https://levan-pet-booking.vercel.app/#/pages/management/management
+https://levan-pet-booking.vercel.app/#/pages/management/management 用户：admin 密码：123456
 
 宠物店预约系统 (Pet Booking System) 🐕🐈
 一个完整的全栈宠物店在线预约系统，包含 Taro 前端和 Node.js 后端，支持微信小程序、H5 等多端部署。
