@@ -15,6 +15,7 @@ export const API_URLS = {
 
   // 用户预约相关
   USERS_APPOINTMENTS_URL: `${BASE_URL}/users/appointments`,
+  USERS_APPOINTMENT_STATS_TODAY_URL: `${BASE_URL}/users/appointments/stats/today`,
   USERS_SERVICES_URL: `${BASE_URL}/users/services`,
   USERS_AVAILABLE_SLOTS_URL: `${BASE_URL}/users/available-slots`,
 

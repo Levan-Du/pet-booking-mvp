@@ -187,44 +187,78 @@ export class AppointmentService {
 			appointment_no: apt.appointment_no || apt.appointment_no // 确保字段存在
 		}));
 	}
+	async getTodayStats() {
+		const today = new Date();
+		today.setHours(0, 0, 0, 0);
 
-	async getTodayStats(date) {
-		const appointments = await this.getAllAppointments({
-			appointment_date: date
-		});
+		const tomorrow = new Date(today);
+		tomorrow.setDate(tomorrow.getDate() + 1);
 
-		const stats = {
-			total: appointments.length,
+		const statsArr = await this.appointmentModel.getCollection().aggregate([
+			{
+				$match: {
+					created_at: {
+						$gte: today,      // 大于等于今天00:00:00
+						$lt: tomorrow     // 小于明天00:00:00
+					}
+				}
+			},
+			{
+				$group: {
+					_id: {
+						$dateToString: {
+							format: '%Y-%m-%d',
+							date: '$created_at'
+						}
+					},
+					completed: {
+						$sum: {
+							$cond: [{ $eq: ['$status', 'completed'] }, 1, 0]
+						}
+					},
+					pending: {
+						$sum: {
+							$cond: [{ $eq: ['$status', 'pending'] }, 1, 0]
+						}
+					},
+					confirmed: {
+						$sum: {
+							$cond: [{ $eq: ['$status', 'confirmed'] }, 1, 0]
+						}
+					},
+					in_progress: {
+						$sum: {
+							$cond: [{ $eq: ['$status', 'in_progress'] }, 1, 0]
+						}
+					},
+					broken: {
+						$sum: {
+							$cond: [{ $eq: ['$status', 'broken'] }, 1, 0]
+						}
+					},
+					canceled: {
+						$sum: {
+							$cond: [{ $eq: ['$status', 'canceled'] }, 1, 0]
+						}
+					},
+					total: { $sum: 1 }
+				}
+			},
+			{
+				$sort: { _id: 1 }
+			}
+		]).toArray();
+
+		const stats = statsArr.length > 0 ? statsArr[0] : {
+			_id: today.toISOString().split('T')[0],
+			total: 0,
 			pending: 0,
 			confirmed: 0,
 			in_progress: 0,
 			completed: 0,
-			cancelled: 0,
+			canceled: 0,
 			broken: 0
 		};
-
-		appointments.forEach(appointment => {
-			switch (appointment.status) {
-				case APPOINTMENT_STATUS.PENDING:
-					stats.pending++;
-					break;
-				case APPOINTMENT_STATUS.CONFIRMED:
-					stats.confirmed++;
-					break;
-				case APPOINTMENT_STATUS.IN_PROGRESS:
-					stats.in_progress++;
-					break;
-				case APPOINTMENT_STATUS.COMPLETED:
-					stats.completed++;
-					break;
-				case APPOINTMENT_STATUS.CANCELLED:
-					stats.cancelled++;
-					break;
-				case APPOINTMENT_STATUS.BROKEN:
-					stats.broken++;
-					break;
-			}
-		});
 
 		return stats;
 	}

@@ -52,6 +52,7 @@ const DataBoard: React.FC = () => {
         method: 'GET'
       })
 
+      console.log('databoard.tsx -> loadTodayStats -> response', response)
       if (response.data.success) {
         setTodayStats(response.data.data)
       }

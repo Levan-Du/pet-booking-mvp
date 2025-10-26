@@ -96,12 +96,23 @@ export class UserController extends BaseController {
 
   async getAppointmentById(req, res, next) {
     try {
-      const {
-        id
-      } = req.params;
-      console.log('user.controller.js -> getAppointmentById -> id', id)
+      const { id } = req.params;
       const appointment = await appointmentService.getAppointmentById(id);
-      console.log('user.controller.js -> getAppointmentById -> appointment', appointment)
+
+      res.json({
+        success: true,
+        data: appointment
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  async getTodayStats(req, res, next) {
+    try {
+      const today = new Date()
+      today.setHours(0, 0, 0, 0)
+      const appointment = await appointmentService.getTodayStats();
 
       res.json({
         success: true,

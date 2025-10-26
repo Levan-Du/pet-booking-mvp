@@ -80,7 +80,8 @@ const Management: React.FC = () => {
 
       if (response.data.success) {
         const data = response.data.data
-        data.sort((a, b) => new Date(b.appointment_date).getTime() - new Date(a.appointment_date).getTime())
+        console.log('management.trs -> loadAppointments -> data', data)
+        data.sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime())
         setAppointments(data)
       }
     } catch (error) {

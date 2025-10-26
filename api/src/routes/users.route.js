@@ -36,6 +36,9 @@ router.get('/appointments',
 router.get('/appointments/:id',
   authenticateUserToken, userController.getAppointmentById?.bind(userController))
 
+router.get('/appointments/stats/today',
+  authenticateUserToken, userController.getTodayStats?.bind(userController))
+
 router.post('/generate-token', userController.generateToken?.bind(userController))
 
 router.get('/services', userController.getServices?.bind(userController))

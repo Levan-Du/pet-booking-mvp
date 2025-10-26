@@ -292,8 +292,8 @@ export class AppointmentController extends BaseController {
 
 	async getTodayStats(req, res, next) {
 		try {
-			const today = new Date().toISOString().split('T')[0];
-			const stats = await appointmentService.getTodayStats(today);
+			const stats = await appointmentService.getTodayStats();
+			console.log('appointment.controller.js -> getTodayStats -> stats', stats)
 
 			res.json({
 				success: true,
